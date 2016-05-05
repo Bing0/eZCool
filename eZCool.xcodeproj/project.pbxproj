@@ -7,23 +7,91 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D7155D081CD67654009D8726 /* DatProcessCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D071CD67654009D8726 /* DatProcessCenter.swift */; };
+		D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */; };
+		D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D221CD6F182009D8726 /* WBUserModel.swift */; };
+		D718EFAD1CD5FD68009C2084 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D718EFAC1CD5FD68009C2084 /* Assets.xcassets */; };
+		D718EFDF1CD63540009C2084 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D718EFDE1CD63540009C2084 /* DataController.swift */; };
+		D73770841CD989D8006E636A /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73770821CD989D8006E636A /* ImageViewController.swift */; };
+		D73770851CD989D8006E636A /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73770831CD989D8006E636A /* PageViewController.swift */; };
+		D798A6DE1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */; };
+		D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D798A6DD1CD720B900016D43 /* WBContentModel.swift */; };
 		D7D047841CD43531008DCC7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047831CD43531008DCC7D /* AppDelegate.swift */; };
-		D7D047861CD43531008DCC7D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047851CD43531008DCC7D /* ViewController.swift */; };
 		D7D047891CD43531008DCC7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7D047871CD43531008DCC7D /* Main.storyboard */; };
 		D7D0478C1CD43531008DCC7D /* eZCool.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D7D0478A1CD43531008DCC7D /* eZCool.xcdatamodeld */; };
-		D7D0478E1CD43531008DCC7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7D0478D1CD43531008DCC7D /* Assets.xcassets */; };
 		D7D047911CD43531008DCC7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7D0478F1CD43531008DCC7D /* LaunchScreen.storyboard */; };
+		D7D047A61CD435AF008DCC7D /* libWeiboSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047991CD435AF008DCC7D /* libWeiboSDK.a */; };
+		D7D047A71CD435AF008DCC7D /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D7D047A21CD435AF008DCC7D /* WeiboSDK.bundle */; };
+		D7D047AC1CD438C7008DCC7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047AB1CD438C7008DCC7D /* QuartzCore.framework */; };
+		D7D047AE1CD438D0008DCC7D /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047AD1CD438D0008DCC7D /* ImageIO.framework */; };
+		D7D047B01CD438D9008DCC7D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047AF1CD438D9008DCC7D /* SystemConfiguration.framework */; };
+		D7D047B21CD438EA008DCC7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047B11CD438EA008DCC7D /* Security.framework */; };
+		D7D047B41CD438F5008DCC7D /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047B31CD438F5008DCC7D /* CoreTelephony.framework */; };
+		D7D047B61CD43951008DCC7D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047B51CD43951008DCC7D /* CoreText.framework */; };
+		D7D047B81CD4395D008DCC7D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047B71CD4395D008DCC7D /* UIKit.framework */; };
+		D7D047BA1CD43963008DCC7D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047B91CD43963008DCC7D /* Foundation.framework */; };
+		D7D047BC1CD43970008DCC7D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047BB1CD43970008DCC7D /* CoreGraphics.framework */; };
+		D7D047BF1CD43995008DCC7D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047BD1CD43995008DCC7D /* libsqlite3.dylib */; };
+		D7D047C01CD43995008DCC7D /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D047BE1CD43995008DCC7D /* libz.1.dylib */; };
+		D7D047E51CD46C3E008DCC7D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047E41CD46C3E008DCC7D /* MainViewController.swift */; };
+		D7D047E71CD47CFA008DCC7D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047E61CD47CFA008DCC7D /* UserDefaults.swift */; };
+		D7D047E91CD47DE0008DCC7D /* TimeLineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */; };
+		D7D047EB1CD47F0E008DCC7D /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */; };
+		D7D047ED1CD48E26008DCC7D /* BaseTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047EC1CD48E26008DCC7D /* BaseTypeTableViewCell.swift */; };
+		D7D047EF1CD4937E008DCC7D /* ParseWBContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047EE1CD4937E008DCC7D /* ParseWBContent.swift */; };
+		D7D6103C1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */; };
+		D7D6103D1CD7519500FA81FD /* WBPictureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D6103B1CD7519500FA81FD /* WBPictureModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D7155D071CD67654009D8726 /* DatProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatProcessCenter.swift; sourceTree = "<group>"; };
+		D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBUserModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		D7155D221CD6F182009D8726 /* WBUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBUserModel.swift; sourceTree = "<group>"; };
+		D718EFAC1CD5FD68009C2084 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D718EFDE1CD63540009C2084 /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		D73770821CD989D8006E636A /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		D73770831CD989D8006E636A /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
+		D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBContentModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		D798A6DD1CD720B900016D43 /* WBContentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBContentModel.swift; sourceTree = "<group>"; };
 		D7D047801CD43531008DCC7D /* eZCool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eZCool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7D047831CD43531008DCC7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D7D047851CD43531008DCC7D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D7D047881CD43531008DCC7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D7D0478B1CD43531008DCC7D /* eZCool.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = eZCool.xcdatamodel; sourceTree = "<group>"; };
-		D7D0478D1CD43531008DCC7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7D047901CD43531008DCC7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D7D047921CD43531008DCC7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D7D047991CD435AF008DCC7D /* libWeiboSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeiboSDK.a; sourceTree = "<group>"; };
+		D7D0479A1CD435AF008DCC7D /* WBHttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBHttpRequest.h; sourceTree = "<group>"; };
+		D7D0479B1CD435AF008DCC7D /* WBHttpRequest+WeiboGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WBHttpRequest+WeiboGame.h"; sourceTree = "<group>"; };
+		D7D0479C1CD435AF008DCC7D /* WBHttpRequest+WeiboShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WBHttpRequest+WeiboShare.h"; sourceTree = "<group>"; };
+		D7D0479D1CD435AF008DCC7D /* WBHttpRequest+WeiboToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WBHttpRequest+WeiboToken.h"; sourceTree = "<group>"; };
+		D7D0479E1CD435AF008DCC7D /* WBHttpRequest+WeiboUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WBHttpRequest+WeiboUser.h"; sourceTree = "<group>"; };
+		D7D0479F1CD435AF008DCC7D /* WBSDKBasicButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBSDKBasicButton.h; sourceTree = "<group>"; };
+		D7D047A01CD435AF008DCC7D /* WBSDKCommentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBSDKCommentButton.h; sourceTree = "<group>"; };
+		D7D047A11CD435AF008DCC7D /* WBSDKRelationshipButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBSDKRelationshipButton.h; sourceTree = "<group>"; };
+		D7D047A21CD435AF008DCC7D /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = WeiboSDK.bundle; sourceTree = "<group>"; };
+		D7D047A31CD435AF008DCC7D /* WeiboSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboSDK.h; sourceTree = "<group>"; };
+		D7D047A41CD435AF008DCC7D /* WeiboSDK+Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WeiboSDK+Statistics.h"; sourceTree = "<group>"; };
+		D7D047A51CD435AF008DCC7D /* WeiboUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboUser.h; sourceTree = "<group>"; };
+		D7D047A81CD43831008DCC7D /* eZCool-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "eZCool-Bridging-Header.h"; sourceTree = "<group>"; };
+		D7D047AB1CD438C7008DCC7D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D7D047AD1CD438D0008DCC7D /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		D7D047AF1CD438D9008DCC7D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D7D047B11CD438EA008DCC7D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		D7D047B31CD438F5008DCC7D /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		D7D047B51CD43951008DCC7D /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		D7D047B71CD4395D008DCC7D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D7D047B91CD43963008DCC7D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D7D047BB1CD43970008DCC7D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D7D047BD1CD43995008DCC7D /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
+		D7D047BE1CD43995008DCC7D /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = /usr/lib/libz.1.dylib; sourceTree = "<absolute>"; };
+		D7D047E41CD46C3E008DCC7D /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		D7D047E61CD47CFA008DCC7D /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineTableViewController.swift; sourceTree = "<group>"; };
+		D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
+		D7D047EC1CD48E26008DCC7D /* BaseTypeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTypeTableViewCell.swift; sourceTree = "<group>"; };
+		D7D047EE1CD4937E008DCC7D /* ParseWBContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseWBContent.swift; sourceTree = "<group>"; };
+		D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBPictureModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		D7D6103B1CD7519500FA81FD /* WBPictureModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBPictureModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,15 +99,42 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7D047BF1CD43995008DCC7D /* libsqlite3.dylib in Frameworks */,
+				D7D047C01CD43995008DCC7D /* libz.1.dylib in Frameworks */,
+				D7D047BC1CD43970008DCC7D /* CoreGraphics.framework in Frameworks */,
+				D7D047BA1CD43963008DCC7D /* Foundation.framework in Frameworks */,
+				D7D047B81CD4395D008DCC7D /* UIKit.framework in Frameworks */,
+				D7D047B61CD43951008DCC7D /* CoreText.framework in Frameworks */,
+				D7D047B41CD438F5008DCC7D /* CoreTelephony.framework in Frameworks */,
+				D7D047B21CD438EA008DCC7D /* Security.framework in Frameworks */,
+				D7D047B01CD438D9008DCC7D /* SystemConfiguration.framework in Frameworks */,
+				D7D047AE1CD438D0008DCC7D /* ImageIO.framework in Frameworks */,
+				D7D047AC1CD438C7008DCC7D /* QuartzCore.framework in Frameworks */,
+				D7D047A61CD435AF008DCC7D /* libWeiboSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D7155D061CD6738A009D8726 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */,
+				D798A6DD1CD720B900016D43 /* WBContentModel.swift */,
+				D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */,
+				D7D6103B1CD7519500FA81FD /* WBPictureModel.swift */,
+				D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */,
+				D7155D221CD6F182009D8726 /* WBUserModel.swift */,
+			);
+			name = DataModel;
+			sourceTree = "<group>";
+		};
 		D7D047771CD43531008DCC7D = {
 			isa = PBXGroup;
 			children = (
+				D7155D061CD6738A009D8726 /* DataModel */,
+				D7D047981CD43585008DCC7D /* libWeiboSDK */,
 				D7D047821CD43531008DCC7D /* eZCool */,
 				D7D047811CD43531008DCC7D /* Products */,
 			);
@@ -57,14 +152,71 @@
 			isa = PBXGroup;
 			children = (
 				D7D047831CD43531008DCC7D /* AppDelegate.swift */,
-				D7D047851CD43531008DCC7D /* ViewController.swift */,
+				D7D047E41CD46C3E008DCC7D /* MainViewController.swift */,
+				D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */,
+				D73770821CD989D8006E636A /* ImageViewController.swift */,
+				D73770831CD989D8006E636A /* PageViewController.swift */,
+				D7D047EC1CD48E26008DCC7D /* BaseTypeTableViewCell.swift */,
+				D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */,
+				D7D047EE1CD4937E008DCC7D /* ParseWBContent.swift */,
 				D7D047871CD43531008DCC7D /* Main.storyboard */,
-				D7D0478D1CD43531008DCC7D /* Assets.xcassets */,
+				D7D047C21CD439CC008DCC7D /* Support */,
+				D7D047C11CD439A0008DCC7D /* library */,
+			);
+			path = eZCool;
+			sourceTree = "<group>";
+		};
+		D7D047981CD43585008DCC7D /* libWeiboSDK */ = {
+			isa = PBXGroup;
+			children = (
+				D7D047991CD435AF008DCC7D /* libWeiboSDK.a */,
+				D7D0479A1CD435AF008DCC7D /* WBHttpRequest.h */,
+				D7D0479B1CD435AF008DCC7D /* WBHttpRequest+WeiboGame.h */,
+				D7D0479C1CD435AF008DCC7D /* WBHttpRequest+WeiboShare.h */,
+				D7D0479D1CD435AF008DCC7D /* WBHttpRequest+WeiboToken.h */,
+				D7D0479E1CD435AF008DCC7D /* WBHttpRequest+WeiboUser.h */,
+				D7D0479F1CD435AF008DCC7D /* WBSDKBasicButton.h */,
+				D7D047A01CD435AF008DCC7D /* WBSDKCommentButton.h */,
+				D7D047A11CD435AF008DCC7D /* WBSDKRelationshipButton.h */,
+				D7D047A21CD435AF008DCC7D /* WeiboSDK.bundle */,
+				D7D047A31CD435AF008DCC7D /* WeiboSDK.h */,
+				D7D047A41CD435AF008DCC7D /* WeiboSDK+Statistics.h */,
+				D7D047A51CD435AF008DCC7D /* WeiboUser.h */,
+			);
+			name = libWeiboSDK;
+			sourceTree = "<group>";
+		};
+		D7D047C11CD439A0008DCC7D /* library */ = {
+			isa = PBXGroup;
+			children = (
+				D7D047BD1CD43995008DCC7D /* libsqlite3.dylib */,
+				D7D047BE1CD43995008DCC7D /* libz.1.dylib */,
+				D7D047BB1CD43970008DCC7D /* CoreGraphics.framework */,
+				D7D047B91CD43963008DCC7D /* Foundation.framework */,
+				D7D047B71CD4395D008DCC7D /* UIKit.framework */,
+				D7D047B51CD43951008DCC7D /* CoreText.framework */,
+				D7D047B31CD438F5008DCC7D /* CoreTelephony.framework */,
+				D7D047B11CD438EA008DCC7D /* Security.framework */,
+				D7D047AF1CD438D9008DCC7D /* SystemConfiguration.framework */,
+				D7D047AD1CD438D0008DCC7D /* ImageIO.framework */,
+				D7D047AB1CD438C7008DCC7D /* QuartzCore.framework */,
+			);
+			name = library;
+			sourceTree = "<group>";
+		};
+		D7D047C21CD439CC008DCC7D /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				D718EFDE1CD63540009C2084 /* DataController.swift */,
+				D7155D071CD67654009D8726 /* DatProcessCenter.swift */,
+				D7D047E61CD47CFA008DCC7D /* UserDefaults.swift */,
+				D718EFAC1CD5FD68009C2084 /* Assets.xcassets */,
 				D7D0478F1CD43531008DCC7D /* LaunchScreen.storyboard */,
 				D7D047921CD43531008DCC7D /* Info.plist */,
 				D7D0478A1CD43531008DCC7D /* eZCool.xcdatamodeld */,
+				D7D047A81CD43831008DCC7D /* eZCool-Bridging-Header.h */,
 			);
-			path = eZCool;
+			name = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -99,6 +251,7 @@
 				TargetAttributes = {
 					D7D0477F1CD43531008DCC7D = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = JG7P2QYPN7;
 					};
 				};
 			};
@@ -126,8 +279,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7D047911CD43531008DCC7D /* LaunchScreen.storyboard in Resources */,
-				D7D0478E1CD43531008DCC7D /* Assets.xcassets in Resources */,
 				D7D047891CD43531008DCC7D /* Main.storyboard in Resources */,
+				D718EFAD1CD5FD68009C2084 /* Assets.xcassets in Resources */,
+				D7D047A71CD435AF008DCC7D /* WeiboSDK.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,9 +292,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7D047861CD43531008DCC7D /* ViewController.swift in Sources */,
+				D7D047E71CD47CFA008DCC7D /* UserDefaults.swift in Sources */,
+				D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */,
+				D7D047ED1CD48E26008DCC7D /* BaseTypeTableViewCell.swift in Sources */,
+				D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */,
+				D7D6103C1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift in Sources */,
+				D7D6103D1CD7519500FA81FD /* WBPictureModel.swift in Sources */,
+				D798A6DE1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift in Sources */,
+				D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */,
+				D7D047EB1CD47F0E008DCC7D /* UserProfileViewController.swift in Sources */,
+				D7D047E91CD47DE0008DCC7D /* TimeLineTableViewController.swift in Sources */,
+				D73770841CD989D8006E636A /* ImageViewController.swift in Sources */,
 				D7D047841CD43531008DCC7D /* AppDelegate.swift in Sources */,
+				D718EFDF1CD63540009C2084 /* DataController.swift in Sources */,
 				D7D0478C1CD43531008DCC7D /* eZCool.xcdatamodeld in Sources */,
+				D73770851CD989D8006E636A /* PageViewController.swift in Sources */,
+				D7D047EF1CD4937E008DCC7D /* ParseWBContent.swift in Sources */,
+				D7155D081CD67654009D8726 /* DatProcessCenter.swift in Sources */,
+				D7D047E51CD46C3E008DCC7D /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,10 +424,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = eZCool/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = Bingo.eZCool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "eZCool/eZCool-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -266,10 +445,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = eZCool/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = Bingo.eZCool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "eZCool/eZCool-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -292,6 +480,7 @@
 				D7D047971CD43531008DCC7D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
+    <entity name="WBContentModel" representedClassName=".WBContentModel" syncable="YES">
+        <attribute name="attitudeCount" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cellHeight" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="commentCount" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="createdDate" attributeType="Date" syncable="YES"/>
+        <attribute name="isInTimeline" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="repostCount" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wbID" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="belongToWBUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBUserModel" inverseName="wbContents" inverseEntity="WBUserModel" syncable="YES"/>
+        <relationship name="beReposted" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WBContentModel" inverseName="repostContent" inverseEntity="WBContentModel" syncable="YES"/>
+        <relationship name="pictures" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WBPictureModel" inverseName="belongToWBContent" inverseEntity="WBPictureModel" syncable="YES"/>
+        <relationship name="repostContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBContentModel" inverseName="beReposted" inverseEntity="WBContentModel" syncable="YES"/>
+    </entity>
+    <entity name="WBPictureModel" representedClassName=".WBPictureModel" syncable="YES">
+        <attribute name="index" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="pictureHigh" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="pictureLow" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="pictureMedium" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="picURLHigh" attributeType="String" syncable="YES"/>
+        <attribute name="picURLLow" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="picURLMedium" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="belongToWBContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBContentModel" inverseName="pictures" inverseEntity="WBContentModel" syncable="YES"/>
+    </entity>
+    <entity name="WBUserModel" representedClassName=".WBUserModel" syncable="YES">
+        <attribute name="avatarHD" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="avatarHDUpdateDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="avatarHDURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="isVerified" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="lastUpdateDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="profileURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="screenName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="verifiedReason" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="wbContents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WBContentModel" inverseName="belongToWBUser" inverseEntity="WBContentModel" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="WBContentModel" positionX="-477" positionY="-549" width="128" height="240"/>
+        <element name="WBPictureModel" positionX="-225" positionY="-468" width="128" height="165"/>
+        <element name="WBUserModel" positionX="-693" positionY="-481" width="128" height="223"/>
+    </elements>
 </model>
