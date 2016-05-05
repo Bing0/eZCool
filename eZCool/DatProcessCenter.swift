@@ -173,21 +173,88 @@ class DataProcessCenter :NSObject{
         return weiboContent.count
     }
     
-    func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath, isShowPic: Bool) {
+//    func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath, isShowPic: Bool) {
+//        let wbContent = weiboContent[indexPath.row]
+//        let wbUser = wbContent.belongToWBUser!
+//        var wbPics = wbContent.pictures
+//        var wbPicsWBContent = wbContent
+//        
+//        cell.name.text = wbUser.name
+//        cell.time.text = wbContent.createdDate?.getRelativeTime()
+//        
+//        cell.profileImage.image = nil
+//        if isShowPic {
+//            cell.wbUserID = Int(wbUser.userID!)
+//            cell.weiboID = 0
+//            loadProfileImage(wbUser, forCell: cell)
+//        }
+//        
+//        cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
+//        cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
+//        cell.attitudeButton.setTitle(wbContent.attitudeCount != 0 ? " \(wbContent.attitudeCount!)" : "", forState: UIControlState.Normal)
+//        
+//        for imageView in cell.originalImageCollection {
+//            imageView.image = nil
+//        }
+//        
+//        var reposted = false
+//        
+//        if let repostedWBContent = wbContent.repostContent{
+//            cell.repostText.text = wbContent.text
+//            let repostedWBUser = repostedWBContent.belongToWBUser
+//            
+//            let userName = (repostedWBUser?.name != nil) ? "\(repostedWBUser!.name!):"  : ""
+//            cell.originalText.text = "\(userName)\(repostedWBContent.text!)"
+//            wbPics = repostedWBContent.pictures
+//            wbPicsWBContent = repostedWBContent
+//            reposted = true
+//        }else{
+//            cell.originalText.text = wbContent.text
+//            wbPics = wbContent.pictures
+//        }
+//        
+//        if let picModels =  wbPics?.allObjects as? [WBPictureModel]{
+//            
+//            switch picModels.count {
+//            case 0:
+//                cell.setOriginalTextStyle(OriginalViewStyle.textOnly, reposted: reposted)
+//            case 1 ... 3:
+//                cell.setOriginalTextStyle(OriginalViewStyle.textWithOneLineImages, reposted: reposted)
+//            case 4 ... 6:
+//                cell.setOriginalTextStyle(OriginalViewStyle.textWithTwoLineImages, reposted: reposted)
+//            case 7 ... 9:
+//                cell.setOriginalTextStyle(OriginalViewStyle.textWithThreeLineImages, reposted: reposted)
+//            default:
+//                break
+//            }
+//            
+//            if isShowPic {
+//                cell.weiboID = Int(wbPicsWBContent.wbID!)
+//                
+//                for picModel in picModels {
+//                    cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
+//                    loadWeiboImage(picModel, weiboID: Int(wbPicsWBContent.wbID!), forCell: cell)
+//                }
+//            }
+//        }
+//    }
+
+    
+    func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
         let wbContent = weiboContent[indexPath.row]
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
-        var wbPicsWBContent = wbContent
+//        var wbPicsWBContent = wbContent
         
         cell.name.text = wbUser.name
         cell.time.text = wbContent.createdDate?.getRelativeTime()
         
         cell.profileImage.image = nil
-        if isShowPic {
-            cell.wbUserID = Int(wbUser.userID!)
-            cell.weiboID = 0
-            loadProfileImage(wbUser, forCell: cell)
-        }
+//        if isShowPic {
+//            cell.wbUserID = Int(wbUser.userID!)
+//            cell.weiboID = 0
+//            loadProfileImage(wbUser, forCell: cell)
+//        }
         
         cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
         cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
@@ -206,7 +273,7 @@ class DataProcessCenter :NSObject{
             let userName = (repostedWBUser?.name != nil) ? "\(repostedWBUser!.name!):"  : ""
             cell.originalText.text = "\(userName)\(repostedWBContent.text!)"
             wbPics = repostedWBContent.pictures
-            wbPicsWBContent = repostedWBContent
+//            wbPicsWBContent = repostedWBContent
             reposted = true
         }else{
             cell.originalText.text = wbContent.text
@@ -228,14 +295,44 @@ class DataProcessCenter :NSObject{
                 break
             }
             
-            if isShowPic {
-                cell.weiboID = Int(wbPicsWBContent.wbID!)
-                
-                for picModel in picModels {
-                    cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
-                    loadWeiboImage(picModel, weiboID: Int(wbPicsWBContent.wbID!), forCell: cell)
-                }
-            }
+//            if isShowPic {
+//                cell.weiboID = Int(wbPicsWBContent.wbID!)
+//                
+//                for picModel in picModels {
+//                    cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
+//                    loadWeiboImage(picModel, weiboID: Int(wbPicsWBContent.wbID!), forCell: cell)
+//                }
+//            }
+        }
+    }
+    
+    func loadImageFor(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
+        let wbContent = weiboContent[indexPath.row]
+        let wbUser = wbContent.belongToWBUser!
+        var wbPics = wbContent.pictures
+        var cellWeibID :Int!
+        
+        cell.name.text = wbUser.name
+        cell.time.text = wbContent.createdDate?.getRelativeTime()
+        
+        cell.profileImage.image = nil
+        
+        cell.wbUserID = Int(wbUser.userID!)
+        cell.weiboID = 0
+        loadProfileImage(wbUser, forCell: cell)
+        
+        if let repostedWBContent = wbContent.repostContent{
+            wbPics = repostedWBContent.pictures
+            cellWeibID = Int(repostedWBContent.wbID!)
+        }else{
+            cell.originalText.text = wbContent.text
+            wbPics = wbContent.pictures
+            cellWeibID = Int(wbContent.wbID!)
+        }
+        cell.weiboID = cellWeibID
+        for picModel in (wbPics?.allObjects as? [WBPictureModel])! {
+            cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
+            loadWeiboImage(picModel, weiboID: cellWeibID, forCell: cell)
         }
     }
     
@@ -248,7 +345,7 @@ class DataProcessCenter :NSObject{
             return CGFloat.init(cellHeight)
         }else{
             
-            configureCell(cell, cellForRowAtIndexPath: index, isShowPic: false)
+            configureCell(cell, cellForRowAtIndexPath: index)
             
             cell.setNeedsUpdateConstraints()
             cell.updateConstraintsIfNeeded()

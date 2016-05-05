@@ -116,7 +116,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCellWithIdentifier("baseTypeCell", forIndexPath: indexPath) as? BaseTypeTableViewCell {
             // Configure the cell...
-            dataProcessCenter.configureCell(cell, cellForRowAtIndexPath: indexPath, isShowPic: true)
+            dataProcessCenter.configureCell(cell, cellForRowAtIndexPath: indexPath)
             cell.callbackDelegate = self
             return cell
         }
@@ -126,6 +126,27 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return calculateHeight(heightForRowAtIndexPath: indexPath)
     }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+//        if ((tableView.indexPathsForVisibleRows?.contains(indexPath)) != nil) {
+//            print("visible \(indexPath)")
+//        }
+//        
+//        print("will \(indexPath)")
+//        print("vis \(tableView.indexPathsForVisibleRows)\n")
+        if let visibleIndexPathes = tableView.indexPathsForVisibleRows {
+            for visibleIndexPath in visibleIndexPathes  {
+                if visibleIndexPath == indexPath {
+//                    print("visible \(indexPath)")
+                    if let cell = cell as? BaseTypeTableViewCell {
+                        dataProcessCenter.loadImageFor(cell, cellForRowAtIndexPath: indexPath)
+                    }
+                }
+            }
+        }
+        
+    }
+    
     
     /*
      // Override to support conditional editing of the table view.
