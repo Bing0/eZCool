@@ -21,23 +21,39 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
  
-    var image: UIImage!
+    @IBOutlet weak var indexIndicator: UILabel!
+    
+    var picModel: WBPictureModel!
+    
+    var totalCount = 1
+    var currentIndex = 0
+    
+    var finalImage: UIImage!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
         scrollView.delegate = self
         
         imageViewWidthConstraint.active = false
         imageViewHeightConstraint.active = false
         
-        imageView.image = image
+        //TODO load image in another thread
+        finalImage = UIImage(data: picModel.pictureHigh!)!
+        imageView.image = finalImage
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
         
-        imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height)
+        imageView.frame = CGRectMake(0, 0, finalImage.size.width, finalImage.size.height)
 
         view.layoutIfNeeded()
+        
+        if totalCount == 1 {
+            indexIndicator.text = ""
+        }else{
+            indexIndicator.text = "\(currentIndex + 1)/\(totalCount)"
+        }
         
         let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapToGoBack(_:)))
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTapToZoom(_:)))
@@ -49,10 +65,13 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        updateMinZoomScaleForSize(view.bounds.size)
+        updateZoomScaleForSize(view.bounds.size)
+        updateConstraintsForSize(view.bounds.size)
+        
+        //TODO animate
     }
     
-    private func updateMinZoomScaleForSize(size: CGSize) {
+    private func updateZoomScaleForSize(size: CGSize) {
         let widthScale = size.width / imageView.bounds.width
         let heightScale = size.height / imageView.bounds.height
         let minScale = min(widthScale, heightScale, 1)
@@ -60,6 +79,18 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
         scrollView.minimumZoomScale = minScale
         // 3
         scrollView.zoomScale = minScale
+        
+        if finalImage.size.width <= view.frame.width {
+            scrollView.minimumZoomScale = 1
+            scrollView.maximumZoomScale = view.frame.width / finalImage.size.width
+            scrollView.zoomScale = scrollView.maximumZoomScale
+        }else{
+            scrollView.maximumZoomScale = 1
+            scrollView.minimumZoomScale = view.frame.width / finalImage.size.width
+            scrollView.zoomScale = scrollView.minimumZoomScale
+
+        }
+        
     }
     
     func tapToGoBack(sender: UITapGestureRecognizer) {
@@ -70,7 +101,7 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
     func doubleTapToZoom(sender: UITapGestureRecognizer) {
         let point = sender.locationInView(imageView)
 
-        if scrollView.zoomScale != 1 {
+        if scrollView.zoomScale != scrollView.maximumZoomScale {
             scrollView.zoomToRect(CGRectMake(point.x - 1, point.y - 1, 3, 3), animated: true)
         }else{
             scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)

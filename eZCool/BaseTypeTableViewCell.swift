@@ -18,7 +18,7 @@ enum OriginalViewStyle {
 }
 
 protocol  CellContentClickedCallback{
-    func weiboImageClicked(weiboID: Int, imageIndex: Int)
+    func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView)
 }
 
 class BaseTypeTableViewCell: UITableViewCell {
@@ -43,6 +43,8 @@ class BaseTypeTableViewCell: UITableViewCell {
     var wbUserID = 0
     //the weibo id that has photo, not the repost weibo id
     var weiboID = 0
+    
+    var inDisplay = 0
     
     var callbackDelegate: CellContentClickedCallback!
     
@@ -124,11 +126,6 @@ class BaseTypeTableViewCell: UITableViewCell {
             }
         }
         
-        
-        for i in 0 ..< 9 {
-            let tap = UITapGestureRecognizer(target: self, action: #selector(BaseTypeTableViewCell.weiboImageTapped(_:)))
-            originalImageCollection[i].addGestureRecognizer(tap)
-        }
         weiboID = 0
         wbUserID = 0
         setOriginalTextStyle(.textOnly, reposted: false)
@@ -139,7 +136,7 @@ class BaseTypeTableViewCell: UITableViewCell {
         let view = sender.view
         for i in 0 ..< 9 {
             if view == originalImageCollection[i] {
-                callbackDelegate.weiboImageClicked(weiboID, imageIndex: i)
+                callbackDelegate.weiboImageClicked(weiboID, imageIndex: i, sourceImageView: originalImageCollection[i])
                 return
             }
         }
@@ -191,5 +188,26 @@ class BaseTypeTableViewCell: UITableViewCell {
         case .textWithVideo:
             break
         }
-    }    
+    }
+    
+    func addTapGestureToImages(imageCounts: Int) {
+        for i in 0 ..< imageCounts {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(BaseTypeTableViewCell.weiboImageTapped(_:)))
+            originalImageCollection[i].addGestureRecognizer(tap)
+        }
+    }
+    
+    func removeTapGestureFromAllImages() {
+        for i in 0 ..< 9 {
+            if let gestures = originalImageCollection[i].gestureRecognizers{
+                if gestures.count > 0 {
+                    originalImageCollection[i].removeGestureRecognizer(gestures[0])
+                }else{
+                    return
+                }
+            }else{
+                return
+            }
+        }
+    }
 }

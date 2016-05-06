@@ -9,40 +9,65 @@
 import UIKit
 
 class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
-
-    var dataProcessCenter: DataProcessCenter!
     var segueData: SegueData!
     
-    var currentIndex = -1
+    var originalFrame :CGRect!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        currentIndex = self.segueData.imageIndex
-        
+
         dataSource = self
         
-        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-        dispatch_async(dispatch_get_global_queue(qos, 0)) {
-            if let image = self.dataProcessCenter.getWeiboOriginalImage(self.segueData.weiboID, imageIndex: self.currentIndex) {
-                dispatch_async(dispatch_get_main_queue()){
-                if let viewController = self.viewImageShowController(image) {
-                    self.setViewControllers([viewController], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
-                    }
-                }
-            }
-        }
     }
     
+    
+    override func viewWillAppear(animated: Bool) {
+        print("will appear")
+        
+        let view = UIView(frame: self.view.frame)
+        view.backgroundColor = UIColor.blackColor()
+        
+        originalFrame = segueData.sourceImageView.convertRect(segueData.sourceImageView.bounds, toView: self.view)
+        let animationImageView = UIImageView(frame: originalFrame)
+        
+        animationImageView.image = segueData.sourceImageView.image
+        animationImageView.contentMode = segueData.sourceImageView.contentMode
+        animationImageView.clipsToBounds = segueData.sourceImageView.clipsToBounds
+        
+        view.addSubview(animationImageView)
+        
+        self.view.addSubview(view)
+        
+        let animationImageSize = animationImageView.image!.size
+        let targetImageFrameHeight = view.frame.width * animationImageSize.height / animationImageSize.width
+        let targetImageFrameOriginY = targetImageFrameHeight >= view.frame.height ? 0 : (view.frame.height - targetImageFrameHeight) / 2
+        
+        let targetFrame = CGRect(x: 0, y: targetImageFrameOriginY, width: view.frame.width, height: targetImageFrameHeight)
+        
+        UIView.animateWithDuration(0.3, animations: { animationImageView.frame = targetFrame}) {
+            (_) in
+            print("complete")
+            if let viewController = self.viewImageShowController() {
+                viewController.totalCount = self.segueData.picModels.count
+                viewController.currentIndex = self.segueData.imageIndex
+                viewController.picModel = self.segueData.picModels[viewController.currentIndex]
+                self.setViewControllers([viewController], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+                //TODO download pics
+                
+            }
+            view.removeFromSuperview()
+        }
+    }
+
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
-    
-    func viewImageShowController(image: UIImage) -> ImageViewController? {
+
+    func viewImageShowController() -> ImageViewController? {
         if let storyboard = storyboard,
             page = storyboard.instantiateViewControllerWithIdentifier("ImageViewerController") as? ImageViewController {
-            page.image = image
             return page
         }
         return nil
@@ -54,20 +79,31 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-        if currentIndex > 0 {
-            currentIndex -= 1
-            let image = self.dataProcessCenter.getWeiboOriginalImage(self.segueData.weiboID, imageIndex: currentIndex )
-            return self.viewImageShowController(image!)
-        }else{
-            return nil
+        if let viewController = viewController as? ImageViewController {
+            let currentIndex = viewController.currentIndex
+            if currentIndex > 0 {
+                if let viewController =  self.viewImageShowController(){
+                    viewController.totalCount = segueData.picModels.count
+                    viewController.currentIndex = currentIndex - 1
+                    viewController.picModel = segueData.picModels[viewController.currentIndex]
+                    return viewController
+                }
+            }
         }
+        return nil
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-        
-        if let image = self.dataProcessCenter.getWeiboOriginalImage(self.segueData.weiboID, imageIndex: currentIndex + 1){
-            currentIndex += 1
-            return self.viewImageShowController(image)
+        if let viewController = viewController as? ImageViewController {
+            let currentIndex = viewController.currentIndex
+            if currentIndex < segueData.picModels.count - 1 {
+                if let viewController =  self.viewImageShowController(){
+                    viewController.totalCount = segueData.picModels.count
+                    viewController.currentIndex = currentIndex + 1
+                    viewController.picModel = segueData.picModels[viewController.currentIndex]
+                    return viewController
+                }
+            }
         }
         return nil
     }

@@ -75,7 +75,10 @@ class DataProcessCenter :NSObject{
         if isInTimeline { wbContentModel.isInTimeline = true}
         
         if let retweetedWBContent = wbContent.retweeted_status {
-            wbContentModel.repostContent =  parseOneWeiboRecord(retweetedWBContent, isInTimeline: false)
+            if let reposted = parseOneWeiboRecord(retweetedWBContent, isInTimeline: false) {
+                wbContentModel.repostContent =  reposted
+                reposted.addBeRepostedObject(wbContentModel)
+            }
         }
         
         for i in 0 ..< wbContent.pic_urls.count {
@@ -172,89 +175,24 @@ class DataProcessCenter :NSObject{
         }
         return weiboContent.count
     }
-    
-//    func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath, isShowPic: Bool) {
-//        let wbContent = weiboContent[indexPath.row]
-//        let wbUser = wbContent.belongToWBUser!
-//        var wbPics = wbContent.pictures
-//        var wbPicsWBContent = wbContent
-//        
-//        cell.name.text = wbUser.name
-//        cell.time.text = wbContent.createdDate?.getRelativeTime()
-//        
-//        cell.profileImage.image = nil
-//        if isShowPic {
-//            cell.wbUserID = Int(wbUser.userID!)
-//            cell.weiboID = 0
-//            loadProfileImage(wbUser, forCell: cell)
-//        }
-//        
-//        cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
-//        cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
-//        cell.attitudeButton.setTitle(wbContent.attitudeCount != 0 ? " \(wbContent.attitudeCount!)" : "", forState: UIControlState.Normal)
-//        
-//        for imageView in cell.originalImageCollection {
-//            imageView.image = nil
-//        }
-//        
-//        var reposted = false
-//        
-//        if let repostedWBContent = wbContent.repostContent{
-//            cell.repostText.text = wbContent.text
-//            let repostedWBUser = repostedWBContent.belongToWBUser
-//            
-//            let userName = (repostedWBUser?.name != nil) ? "\(repostedWBUser!.name!):"  : ""
-//            cell.originalText.text = "\(userName)\(repostedWBContent.text!)"
-//            wbPics = repostedWBContent.pictures
-//            wbPicsWBContent = repostedWBContent
-//            reposted = true
-//        }else{
-//            cell.originalText.text = wbContent.text
-//            wbPics = wbContent.pictures
-//        }
-//        
-//        if let picModels =  wbPics?.allObjects as? [WBPictureModel]{
-//            
-//            switch picModels.count {
-//            case 0:
-//                cell.setOriginalTextStyle(OriginalViewStyle.textOnly, reposted: reposted)
-//            case 1 ... 3:
-//                cell.setOriginalTextStyle(OriginalViewStyle.textWithOneLineImages, reposted: reposted)
-//            case 4 ... 6:
-//                cell.setOriginalTextStyle(OriginalViewStyle.textWithTwoLineImages, reposted: reposted)
-//            case 7 ... 9:
-//                cell.setOriginalTextStyle(OriginalViewStyle.textWithThreeLineImages, reposted: reposted)
-//            default:
-//                break
-//            }
-//            
-//            if isShowPic {
-//                cell.weiboID = Int(wbPicsWBContent.wbID!)
-//                
-//                for picModel in picModels {
-//                    cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
-//                    loadWeiboImage(picModel, weiboID: Int(wbPicsWBContent.wbID!), forCell: cell)
-//                }
-//            }
-//        }
-//    }
 
+//    func makeAttributedString(string: String) -> NSAttributedString {
+//        string.rangeOfString(<#T##aString: String##String#>)
+//    }
+    
     
     func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
         let wbContent = weiboContent[indexPath.row]
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
-//        var wbPicsWBContent = wbContent
+        
+        cell.wbUserID = 0
+        cell.weiboID = 0
         
         cell.name.text = wbUser.name
         cell.time.text = wbContent.createdDate?.getRelativeTime()
         
         cell.profileImage.image = nil
-//        if isShowPic {
-//            cell.wbUserID = Int(wbUser.userID!)
-//            cell.weiboID = 0
-//            loadProfileImage(wbUser, forCell: cell)
-//        }
         
         cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
         cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
@@ -267,15 +205,17 @@ class DataProcessCenter :NSObject{
         var reposted = false
         
         if let repostedWBContent = wbContent.repostContent{
+            //
             cell.repostText.text = wbContent.text
             let repostedWBUser = repostedWBContent.belongToWBUser
             
             let userName = (repostedWBUser?.name != nil) ? "\(repostedWBUser!.name!):"  : ""
+            //
             cell.originalText.text = "\(userName)\(repostedWBContent.text!)"
             wbPics = repostedWBContent.pictures
-//            wbPicsWBContent = repostedWBContent
             reposted = true
         }else{
+            //
             cell.originalText.text = wbContent.text
             wbPics = wbContent.pictures
         }
@@ -294,15 +234,7 @@ class DataProcessCenter :NSObject{
             default:
                 break
             }
-            
-//            if isShowPic {
-//                cell.weiboID = Int(wbPicsWBContent.wbID!)
-//                
-//                for picModel in picModels {
-//                    cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
-//                    loadWeiboImage(picModel, weiboID: Int(wbPicsWBContent.wbID!), forCell: cell)
-//                }
-//            }
+            cell.addTapGestureToImages(picModels.count)
         }
     }
     
@@ -318,7 +250,7 @@ class DataProcessCenter :NSObject{
         cell.profileImage.image = nil
         
         cell.wbUserID = Int(wbUser.userID!)
-        cell.weiboID = 0
+//        cell.weiboID = 0
         loadProfileImage(wbUser, forCell: cell)
         
         if let repostedWBContent = wbContent.repostContent{
@@ -424,8 +356,9 @@ class DataProcessCenter :NSObject{
             if let picture = picModel.pictureHigh {
                 //has been downloaded
                 if cell.weiboID == weiboID {
-                    //                let image = cutToSquareImage(UIImage(data: picture)!, length: cell.originalImageCollection[Int(picModel.index!)].frame.width)
-                    let image = self.cutToSquareImage(UIImage(data: picture)!)
+//                    let image = self.cutToSquareImage(UIImage(data: picture)!)
+                    let image = UIImage(data: picture)!
+                    
                     dispatch_async(dispatch_get_main_queue()){
                         cell.originalImageCollection[Int(picModel.index!)].image = image
                         print("get weibo image from disk")
@@ -447,7 +380,8 @@ class DataProcessCenter :NSObject{
                     //store the image
                     picModel.pictureHigh = imageData
                     //to do. extral picture from high
-                    let image = self.cutToSquareImage(UIImage(data: imageData)!)
+//                    let image = self.cutToSquareImage(UIImage(data: imageData)!)
+                    let image = UIImage(data: imageData)!
                     //cache
                     if var cachedWeiboImageCollection = self.cachedWeiboImage[weiboID] {
                         cachedWeiboImageCollection[Int(picModel.index!)] = image
@@ -469,7 +403,9 @@ class DataProcessCenter :NSObject{
         }
     }
     
-    func getWeiboOriginalImage(weiboID: Int, imageIndex: Int) -> UIImage? {
+    
+    // run not in the main queue
+    func getWeiboOriginalImage(weiboID: Int) -> [WBPictureModel]? {
         let request  = NSFetchRequest(entityName: "WBContentModel")
         request.predicate = NSPredicate(format: "wbID = %ld", weiboID)
         var weibos: [WBContentModel]!
@@ -484,18 +420,32 @@ class DataProcessCenter :NSObject{
         
         let weibo = weibos[0]
         
-        if let pics = weibo.pictures?.allObjects as? [WBPictureModel] {
-            for pic in pics {
-                if pic.index == imageIndex {
-                    //find
-                    if let highPic = pic.pictureHigh {
-                        return UIImage(data: highPic)
-                    }else{
-                        // this is dangerous
-                        return UIImage(data: NSData(contentsOfURL: NSURL(string: pic.picURLHigh!)!)!)
-                    }
+        if var pics = weibo.pictures?.allObjects as? [WBPictureModel] {
+//            var images = [UIImage]()
+            pics = pics.sort(){
+                if Int($0.index!) < Int($1.index!){
+                    return true
                 }
+                return false
             }
+//            for pic in pics {
+//                if let highPic = pic.pictureHigh {
+//                    let formatedURLString = pic.picURLHigh?.lowercaseString
+//                    if let range = formatedURLString?.rangeOfString(".gif"){
+//                        if range.endIndex == formatedURLString?.endIndex{
+//                            // gif file
+//                            images.append(UIImage.gifWithData(highPic)!)
+//                            continue
+//                        }
+//                    }
+//                    images.append(UIImage(data: highPic)!)
+//                }else{
+//                    // this is dangerous
+//                    images.append(UIImage(data: NSData(contentsOfURL: NSURL(string: pic.picURLHigh!)!)!)!)
+//                }
+//            }
+//            return images
+            return pics
         }
         return nil
     }

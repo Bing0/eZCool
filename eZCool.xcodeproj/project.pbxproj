@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C2BBE3131CDC448B003C2D89 /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */; };
+		C2BBE3151CDC62DB003C2D89 /* WeiboDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */; };
 		D7155D081CD67654009D8726 /* DatProcessCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D071CD67654009D8726 /* DatProcessCenter.swift */; };
 		D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */; };
 		D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D221CD6F182009D8726 /* WBUserModel.swift */; };
@@ -43,7 +45,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D7155D071CD67654009D8726 /* DatProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatProcessCenter.swift; sourceTree = "<group>"; };
+		C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Gif.swift"; path = "eZCool/UIImage+Gif.swift"; sourceTree = "<group>"; };
+		C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeiboDetailViewController.swift; sourceTree = "<group>"; };
+		D7155D071CD67654009D8726 /* DatProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DatProcessCenter.swift; path = eZCool/DatProcessCenter.swift; sourceTree = "<group>"; };
 		D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBUserModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D7155D221CD6F182009D8726 /* WBUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBUserModel.swift; sourceTree = "<group>"; };
 		D718EFAC1CD5FD68009C2084 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -115,9 +119,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C2BBE3161CDC62F4003C2D89 /* GIFSupport */ = {
+			isa = PBXGroup;
+			children = (
+				C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */,
+			);
+			name = GIFSupport;
+			sourceTree = "<group>";
+		};
+		C2BBE3171CDC6394003C2D89 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				D7D047871CD43531008DCC7D /* Main.storyboard */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		C2BBE3181CDC63A7003C2D89 /* ImageBrower */ = {
+			isa = PBXGroup;
+			children = (
+				D73770821CD989D8006E636A /* ImageViewController.swift */,
+				D73770831CD989D8006E636A /* PageViewController.swift */,
+			);
+			name = ImageBrower;
+			sourceTree = "<group>";
+		};
+		C2BBE3191CDC63FA003C2D89 /* JSONFormat */ = {
+			isa = PBXGroup;
+			children = (
+				D7D047EE1CD4937E008DCC7D /* ParseWBContent.swift */,
+			);
+			name = JSONFormat;
+			sourceTree = "<group>";
+		};
 		D7155D061CD6738A009D8726 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
+				D7155D071CD67654009D8726 /* DatProcessCenter.swift */,
 				D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */,
 				D798A6DD1CD720B900016D43 /* WBContentModel.swift */,
 				D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */,
@@ -131,8 +169,9 @@
 		D7D047771CD43531008DCC7D = {
 			isa = PBXGroup;
 			children = (
-				D7155D061CD6738A009D8726 /* DataModel */,
 				D7D047981CD43585008DCC7D /* libWeiboSDK */,
+				C2BBE3161CDC62F4003C2D89 /* GIFSupport */,
+				D7155D061CD6738A009D8726 /* DataModel */,
 				D7D047821CD43531008DCC7D /* eZCool */,
 				D7D047811CD43531008DCC7D /* Products */,
 			);
@@ -149,15 +188,14 @@
 		D7D047821CD43531008DCC7D /* eZCool */ = {
 			isa = PBXGroup;
 			children = (
-				D7D047831CD43531008DCC7D /* AppDelegate.swift */,
 				D7D047E41CD46C3E008DCC7D /* MainViewController.swift */,
 				D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */,
-				D73770821CD989D8006E636A /* ImageViewController.swift */,
-				D73770831CD989D8006E636A /* PageViewController.swift */,
+				C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */,
 				D7D047EC1CD48E26008DCC7D /* BaseTypeTableViewCell.swift */,
 				D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */,
-				D7D047EE1CD4937E008DCC7D /* ParseWBContent.swift */,
-				D7D047871CD43531008DCC7D /* Main.storyboard */,
+				C2BBE3191CDC63FA003C2D89 /* JSONFormat */,
+				C2BBE3181CDC63A7003C2D89 /* ImageBrower */,
+				C2BBE3171CDC6394003C2D89 /* UI */,
 				D7D047C21CD439CC008DCC7D /* Support */,
 				D7D047C11CD439A0008DCC7D /* library */,
 			);
@@ -205,7 +243,7 @@
 		D7D047C21CD439CC008DCC7D /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				D7155D071CD67654009D8726 /* DatProcessCenter.swift */,
+				D7D047831CD43531008DCC7D /* AppDelegate.swift */,
 				D7D047E61CD47CFA008DCC7D /* UserDefaults.swift */,
 				D718EFAC1CD5FD68009C2084 /* Assets.xcassets */,
 				D7D0478F1CD43531008DCC7D /* LaunchScreen.storyboard */,
@@ -248,7 +286,7 @@
 				TargetAttributes = {
 					D7D0477F1CD43531008DCC7D = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = JG7P2QYPN7;
+						DevelopmentTeam = KU7YA4FSNW;
 					};
 				};
 			};
@@ -299,8 +337,10 @@
 				D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */,
 				D7D047EB1CD47F0E008DCC7D /* UserProfileViewController.swift in Sources */,
 				D7D047E91CD47DE0008DCC7D /* TimeLineTableViewController.swift in Sources */,
+				C2BBE3151CDC62DB003C2D89 /* WeiboDetailViewController.swift in Sources */,
 				D73770841CD989D8006E636A /* ImageViewController.swift in Sources */,
 				D7D047841CD43531008DCC7D /* AppDelegate.swift in Sources */,
+				C2BBE3131CDC448B003C2D89 /* UIImage+Gif.swift in Sources */,
 				D7D0478C1CD43531008DCC7D /* eZCool.xcdatamodeld in Sources */,
 				D73770851CD989D8006E636A /* PageViewController.swift in Sources */,
 				D7D047EF1CD4937E008DCC7D /* ParseWBContent.swift in Sources */,

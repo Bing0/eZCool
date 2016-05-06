@@ -1,14 +1,14 @@
 //
-//  UserProfileViewController.swift
+//  WeiboDetailViewController.swift
 //  eZCool
 //
-//  Created by BinWu on 4/30/16.
+//  Created by POD on 5/6/16.
 //  Copyright © 2016 BinWu. All rights reserved.
 //
 
 import UIKit
 
-class UserProfileViewController: UIViewController {
+class WeiboDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

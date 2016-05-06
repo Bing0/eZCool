@@ -9,8 +9,9 @@
 import UIKit
 
 class SegueData {
-    var weiboID = 0
     var imageIndex = 0
+    var picModels = [WBPictureModel]()
+    var sourceImageView =  UIImageView()
 }
 
 class TimeLineTableViewController: UITableViewController, CellContentClickedCallback{
@@ -36,6 +37,8 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
 
         tableView.tableFooterView = UIView()
         
+        tableView.rowHeight = UITableViewAutomaticDimension
+//        tableView.estimatedRowHeight = 1000
         
         self.refreshControl?.addTarget(self, action: #selector(TimeLineTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
@@ -86,11 +89,15 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         }
     }
     
-    func weiboImageClicked(weiboID: Int, imageIndex: Int) {
+    func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView) {
         if dataProcessCenter.hasCacheImageAt(weiboID, imgaeIndex: imageIndex) {
-            segueData.weiboID = weiboID
-            segueData.imageIndex = imageIndex
-            performSegueWithIdentifier("showWeiboImage", sender: segueData)
+            if let picModels = dataProcessCenter.getWeiboOriginalImage(weiboID){
+                segueData.imageIndex = imageIndex
+                segueData.sourceImageView = sourceImageView
+                segueData.picModels = picModels
+                performSegueWithIdentifier("showWeiboImage", sender: segueData)
+            }
+            
         }else{
             print("Please wait until image downloaded")
         }
@@ -124,29 +131,21 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     }
     
     override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return calculateHeight(heightForRowAtIndexPath: indexPath)
+        let height = calculateHeight(heightForRowAtIndexPath: indexPath)
+        return height
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-//        if ((tableView.indexPathsForVisibleRows?.contains(indexPath)) != nil) {
-//            print("visible \(indexPath)")
-//        }
-//        
-//        print("will \(indexPath)")
-//        print("vis \(tableView.indexPathsForVisibleRows)\n")
-        if let visibleIndexPathes = tableView.indexPathsForVisibleRows {
-            for visibleIndexPath in visibleIndexPathes  {
-                if visibleIndexPath == indexPath {
-//                    print("visible \(indexPath)")
-                    if let cell = cell as? BaseTypeTableViewCell {
-                        dataProcessCenter.loadImageFor(cell, cellForRowAtIndexPath: indexPath)
-                    }
-                }
-            }
+        if let cell = cell as? BaseTypeTableViewCell {
+            dataProcessCenter.loadImageFor(cell, cellForRowAtIndexPath: indexPath)
         }
-        
     }
     
+    override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? BaseTypeTableViewCell {
+            cell.removeTapGestureFromAllImages()
+        }
+    }
     
     /*
      // Override to support conditional editing of the table view.
@@ -192,7 +191,6 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
      // Pass the selected object to the new view controller.
         if let dest = segue.destinationViewController as? PageViewController {
             dest.segueData = segueData
-            dest.dataProcessCenter = dataProcessCenter
         }
      }
     

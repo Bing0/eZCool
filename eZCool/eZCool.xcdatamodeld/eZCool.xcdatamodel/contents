@@ -2,7 +2,7 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
     <entity name="WBContentModel" representedClassName=".WBContentModel" syncable="YES">
         <attribute name="attitudeCount" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="cellHeight" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cellHeight" optional="YES" attributeType="Double" syncable="YES"/>
         <attribute name="commentCount" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="createdDate" attributeType="Date" syncable="YES"/>
         <attribute name="isInTimeline" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
