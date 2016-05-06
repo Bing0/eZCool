@@ -24,8 +24,6 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     
     
     override func viewWillAppear(animated: Bool) {
-        print("will appear")
-        
         let view = UIView(frame: self.view.frame)
         view.backgroundColor = UIColor.blackColor()
         
@@ -46,9 +44,8 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
         
         let targetFrame = CGRect(x: 0, y: targetImageFrameOriginY, width: view.frame.width, height: targetImageFrameHeight)
         
-        UIView.animateWithDuration(0.3, animations: { animationImageView.frame = targetFrame}) {
+        UIView.animateWithDuration(0.5, animations: { animationImageView.frame = targetFrame}) {
             (_) in
-            print("complete")
             if let viewController = self.viewImageShowController() {
                 viewController.totalCount = self.segueData.picModels.count
                 viewController.currentIndex = self.segueData.imageIndex
