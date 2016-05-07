@@ -42,9 +42,9 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         
         self.refreshControl?.addTarget(self, action: #selector(TimeLineTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
-        dispatch_async(dispatch_get_main_queue()) {
+//        dispatch_async(dispatch_get_main_queue()) {
 //            self.getTimeline(1)
-        }
+//        }
     }
 
     func handleRefresh(refreshControl: UIRefreshControl) {

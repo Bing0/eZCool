@@ -52,7 +52,7 @@ class DataProcessCenter :NSObject{
                 }
             }
             print("Parse finished")
-            //            saveData()
+            saveData()
         }
     }
     
@@ -176,9 +176,30 @@ class DataProcessCenter :NSObject{
         return weiboContent.count
     }
 
-//    func makeAttributedString(string: String) -> NSAttributedString {
-//        string.rangeOfString(<#T##aString: String##String#>)
-//    }
+    func makeAttributedString(string: String) -> NSAttributedString {
+        let attributedString:NSMutableAttributedString = NSMutableAttributedString(string:string)
+        let textRange = NSRange(location: 0, length: string.characters.count)
+        
+        //规则检查
+        var ranges:[NSRange] = []
+        
+        let kRegexPattern = "@[\\w-_]+|#[\\w]+#|\\[\\w+\\]|(https?)://(?:(\\S+?)(?::(\\S+?))?@)?([a-zA-Z0-9\\-.]+)(?::(\\d+))?((?:/[a-zA-Z0-9\\-._?,'+\\&%$=~*!():@\\\\]*)+)?"
+        
+        let reg = try? NSRegularExpression(pattern: kRegexPattern, options: [])
+        reg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
+            if let result = result
+            {
+                ranges.append(result.range)
+            }
+        })
+        
+        let specialColorAttribute = [ NSForegroundColorAttributeName: UIColor.colorWithHex("EB7350", alpha: 1.0) ]
+        
+        for range in ranges {
+            attributedString.addAttributes(specialColorAttribute, range: range)
+        }    
+        return attributedString
+    }
     
     
     func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
@@ -206,17 +227,18 @@ class DataProcessCenter :NSObject{
         
         if let repostedWBContent = wbContent.repostContent{
             //
-            cell.repostText.text = wbContent.text
+            cell.repostText.attributedText = makeAttributedString(wbContent.text ?? "")
             let repostedWBUser = repostedWBContent.belongToWBUser
             
-            let userName = (repostedWBUser?.name != nil) ? "\(repostedWBUser!.name!):"  : ""
+            let userName = (repostedWBUser?.name != nil) ? "@\(repostedWBUser!.name!):"  : ""
             //
-            cell.originalText.text = "\(userName)\(repostedWBContent.text!)"
+            cell.originalText.attributedText = makeAttributedString("\(userName)\(repostedWBContent.text!)")
+            
             wbPics = repostedWBContent.pictures
             reposted = true
         }else{
             //
-            cell.originalText.text = wbContent.text
+            cell.originalText.attributedText = makeAttributedString(wbContent.text ?? "")
             wbPics = wbContent.pictures
         }
         
@@ -528,5 +550,25 @@ extension NSDate {
             dateFormatterForShow.dateFormat = "yyyy/MM/dd HH:mm::ss"
             return dateFormatterForShow.stringFromDate(self)
         }
+    }
+}
+
+extension UIColor{
+    
+    class func colorWithHex(hex: String, alpha: CGFloat = 1.0) -> UIColor {
+        var rgb: CUnsignedInt = 0;
+        let scanner = NSScanner(string: hex)
+        
+        if hex.hasPrefix("#") {
+            // skip '#' character
+            scanner.scanLocation = 1
+        }
+        scanner.scanHexInt(&rgb)
+        
+        let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+        let g = CGFloat((rgb & 0xFF00) >> 8) / 255.0
+        let b = CGFloat(rgb & 0xFF) / 255.0
+        
+        return UIColor(red: r, green: g, blue: b, alpha: alpha)
     }
 }
