@@ -326,7 +326,7 @@ class DataProcessCenter :NSObject{
             if cell.wbUserID == Int(wbUser.userID!) {
                 // has been cached
                 cell.profileImage.image = profileImage
-                //                print("get profile image from cahce")
+                // print("get profile image from cache")
                 return
             }
         }
@@ -362,65 +362,87 @@ class DataProcessCenter :NSObject{
         }
     }
     
+    func getCachedWeiboImgae(weiboID: Int, imageIndex: Int) -> UIImage? {
+        if let cachedWeiboImageCollection = self.cachedWeiboImage[weiboID] {
+            if let cachedWeiboImage = cachedWeiboImageCollection[imageIndex] {
+                //has been cached
+                return cachedWeiboImage
+            }
+        }
+        return nil
+    }
+    
+    func cacheWeiboImgae(weiboID: Int, imageIndex: Int, image: UIImage) {
+        //cache
+        if var cachedWeiboImageCollection = self.cachedWeiboImage[weiboID] {
+            cachedWeiboImageCollection[imageIndex] = image
+            self.cachedWeiboImage[weiboID] = cachedWeiboImageCollection
+        }else{
+            self.cachedWeiboImage[weiboID] = [imageIndex: image]
+        }
+    }
+    
+    func getWeiboImgaeFromDisk(picModel: WBPictureModel) -> UIImage? {
+        if let picture = picModel.pictureHigh {
+            return  UIImage(data: picture)!
+        }
+        if let picture = picModel.pictureMedium {
+            return  UIImage(data: picture)!
+        }
+        if let picture = picModel.pictureLow {
+            return  UIImage(data: picture)!
+        }
+        return nil
+    }
+    
+    func downloadWeiboImgae(picModel: WBPictureModel) -> UIImage? {
+        if let imageData = NSData(contentsOfURL: NSURL(string: picModel.picURLMedium!)!){
+            //store the image
+            picModel.pictureMedium = imageData
+
+            return UIImage(data: imageData)!
+        }
+        return nil
+    }
+    
+    
     func loadWeiboImage(picModel: WBPictureModel, weiboID: Int, forCell cell: BaseTypeTableViewCell) {
-        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-        dispatch_async(dispatch_get_global_queue(qos, 0)) {
-            if let cachedWeiboImageCollection = self.cachedWeiboImage[weiboID] {
-                if let cachedWeiboImage = cachedWeiboImageCollection[Int(picModel.index!)] {
-                    //has been cached
+        
+        var updateWeiboImage :UIImage! {
+            willSet{
+                if cell.weiboID == weiboID {
                     dispatch_async(dispatch_get_main_queue()){
-                        cell.originalImageCollection[Int(picModel.index!)].image = cachedWeiboImage
-                        // print("get weibo image from cahce. size: \(cachedWeiboImage.size)")
+                        cell.originalImageCollection[Int(picModel.index!)].image = newValue
                     }
-                    return
                 }
             }
-            if let picture = picModel.pictureHigh {
-                //has been downloaded
-                if cell.weiboID == weiboID {
-//                    let image = self.cutToSquareImage(UIImage(data: picture)!)
-                    let image = UIImage(data: picture)!
-                    
-                    dispatch_async(dispatch_get_main_queue()){
-                        cell.originalImageCollection[Int(picModel.index!)].image = image
-                        print("get weibo image from disk")
-                    }
-                    //cache
-                    if var cachedWeiboImageCollection = self.cachedWeiboImage[weiboID] {
-                        cachedWeiboImageCollection[Int(picModel.index!)] = image
-                        self.cachedWeiboImage[weiboID] = cachedWeiboImageCollection
-                    }else{
-                        self.cachedWeiboImage[weiboID] =  [Int(picModel.index!): image]
-                    }
-                }else{
-                    print("~~~wrong weibo image!!!!!!!!!! weibo: \(weiboID) index: \(picModel.index!)")
+        }
+        
+        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+        dispatch_async(dispatch_get_global_queue(qos, 0)) {
+            //cached
+            if let cachedWeiboImage = self.getCachedWeiboImgae(weiboID, imageIndex: Int(picModel.index!)) {
+                dispatch_async(dispatch_get_main_queue()){
+                    cell.originalImageCollection[Int(picModel.index!)].image = cachedWeiboImage
+                    // print("get weibo image from cache. size: \(cachedWeiboImage.size)")
                 }
-            }else{
-                //need download
+                return
+            }
+            //get from disk
+            if let image = self.getWeiboImgaeFromDisk(picModel) {
+                //cache
+                self.cacheWeiboImgae(weiboID, imageIndex: Int(picModel.index!), image: image)
                 
-                if let imageData = NSData(contentsOfURL: NSURL(string: picModel.picURLHigh!)!){
-                    //store the image
-                    picModel.pictureHigh = imageData
-                    //to do. extral picture from high
-//                    let image = self.cutToSquareImage(UIImage(data: imageData)!)
-                    let image = UIImage(data: imageData)!
-                    //cache
-                    if var cachedWeiboImageCollection = self.cachedWeiboImage[weiboID] {
-                        cachedWeiboImageCollection[Int(picModel.index!)] = image
-                        self.cachedWeiboImage[weiboID] = cachedWeiboImageCollection
-                    }else{
-                        self.cachedWeiboImage[weiboID] =  [Int(picModel.index!): image]
-                    }
-                    dispatch_async(dispatch_get_main_queue()){
-                        //try to display the image
-                        if cell.weiboID == weiboID {
-                            cell.originalImageCollection[Int(picModel.index!)].image = image
-                            print("download weibo image for weibo: \(weiboID) index: \(picModel.index!)")
-                        }else{
-                            print("~~~wrong weibo image~~~")
-                        }
-                    }
-                }
+                //has been downloaded
+                updateWeiboImage = image
+                return
+            }
+            //need download
+            if let image = self.downloadWeiboImgae(picModel) {
+                //cache
+                self.cacheWeiboImgae(weiboID, imageIndex: Int(picModel.index!), image: image)
+                //has been downloaded
+                updateWeiboImage = image
             }
         }
     }
@@ -450,23 +472,6 @@ class DataProcessCenter :NSObject{
                 }
                 return false
             }
-//            for pic in pics {
-//                if let highPic = pic.pictureHigh {
-//                    let formatedURLString = pic.picURLHigh?.lowercaseString
-//                    if let range = formatedURLString?.rangeOfString(".gif"){
-//                        if range.endIndex == formatedURLString?.endIndex{
-//                            // gif file
-//                            images.append(UIImage.gifWithData(highPic)!)
-//                            continue
-//                        }
-//                    }
-//                    images.append(UIImage(data: highPic)!)
-//                }else{
-//                    // this is dangerous
-//                    images.append(UIImage(data: NSData(contentsOfURL: NSURL(string: pic.picURLHigh!)!)!)!)
-//                }
-//            }
-//            return images
             return pics
         }
         return nil

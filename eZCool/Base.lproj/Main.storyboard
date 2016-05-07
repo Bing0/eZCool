@@ -380,12 +380,19 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="xdd-jR-c5j">
+                                <rect key="frame" x="0.0" y="299" width="600" height="2"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="MKG-Xm-F65" firstAttribute="top" secondItem="wFm-EL-gOM" secondAttribute="bottom" id="5wE-x8-AI7"/>
+                            <constraint firstAttribute="trailing" secondItem="xdd-jR-c5j" secondAttribute="trailing" id="AKP-Jf-SjG"/>
+                            <constraint firstItem="xdd-jR-c5j" firstAttribute="centerY" secondItem="cIQ-ce-2FX" secondAttribute="centerY" id="FJh-ad-KyX"/>
                             <constraint firstItem="wFm-EL-gOM" firstAttribute="leading" secondItem="cIQ-ce-2FX" secondAttribute="leading" id="ITy-gj-Dnv"/>
                             <constraint firstItem="wFm-EL-gOM" firstAttribute="top" secondItem="cIQ-ce-2FX" secondAttribute="top" id="MDX-zI-Mfg"/>
+                            <constraint firstItem="xdd-jR-c5j" firstAttribute="leading" secondItem="cIQ-ce-2FX" secondAttribute="leading" id="Xfm-NW-NNK"/>
+                            <constraint firstItem="xdd-jR-c5j" firstAttribute="centerX" secondItem="cIQ-ce-2FX" secondAttribute="centerX" id="YkH-74-FrZ"/>
                             <constraint firstAttribute="trailing" secondItem="wFm-EL-gOM" secondAttribute="trailing" id="aDi-HD-qxO"/>
                             <constraint firstItem="Ajs-Nb-GZf" firstAttribute="top" secondItem="6hX-Nv-HfM" secondAttribute="bottom" constant="8" symbolic="YES" id="v0o-DR-8Jg"/>
                             <constraint firstItem="Ajs-Nb-GZf" firstAttribute="centerX" secondItem="cIQ-ce-2FX" secondAttribute="centerX" id="zuS-wk-QUf"/>
@@ -398,6 +405,7 @@
                         <outlet property="imageViewWidthConstraint" destination="nhn-Nx-cKw" id="onH-Zp-FAH"/>
                         <outlet property="indexIndicator" destination="Ajs-Nb-GZf" id="zkc-wa-iBw"/>
                         <outlet property="leadingPadConstraint" destination="WVc-p7-H8D" id="nuV-K2-CrD"/>
+                        <outlet property="progressView" destination="xdd-jR-c5j" id="F9n-he-qcw"/>
                         <outlet property="scrollView" destination="wFm-EL-gOM" id="k4t-pt-CLo"/>
                         <outlet property="topPadConstraint" destination="lIl-yY-Pyk" id="whx-cS-icL"/>
                         <outlet property="trailingPadConstraint" destination="ftY-cO-PJo" id="Uy8-pC-1vx"/>

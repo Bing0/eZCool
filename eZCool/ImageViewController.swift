@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate, NSURLSessionDownloadDelegate {
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var imageView: UIImageView!
@@ -23,12 +23,38 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
  
     @IBOutlet weak var indexIndicator: UILabel!
     
+    @IBOutlet weak var progressView: UIProgressView!
     var picModel: WBPictureModel!
     
     var totalCount = 1
     var currentIndex = 0
     
-    var finalImage: UIImage!
+    var _finalImage: UIImage!
+    
+    var finalImage: UIImage! {
+        set{
+            _finalImage = newValue
+            imageView.image = newValue
+            imageView.bounds = CGRectMake(0, 0, newValue.size.width, newValue.size.height)
+            updateZoomScaleForSize(view.bounds.size)
+            updateConstraintsForSize(view.bounds.size)
+        }
+        get{
+            return _finalImage
+        }
+    }
+    var needDownload: Bool! {
+        willSet{
+            if newValue == true {
+                progressView.hidden = false
+                progressView.progress = 0
+            }else{
+                progressView.hidden = true
+            }
+        }
+    }
+    
+    var downloadTask: NSURLSessionDownloadTask!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,14 +66,19 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
         imageViewWidthConstraint.active = false
         imageViewHeightConstraint.active = false
         
-        //TODO load image in another thread
-        finalImage = UIImage(data: picModel.pictureHigh!)!
-        imageView.image = finalImage
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
         
-        imageView.frame = CGRectMake(0, 0, finalImage.size.width, finalImage.size.height)
-
-        view.layoutIfNeeded()
+        
+        
+        if let finalImage = getFinalImage(picModel) {
+            self.finalImage = finalImage
+            needDownload = false
+        }else{
+            if let tempImage = getLowerQualityImage(picModel) {
+                finalImage = tempImage
+            }
+            needDownload = true
+        }
         
         if totalCount == 1 {
             indexIndicator.text = ""
@@ -61,14 +92,51 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
         singleTapGesture.requireGestureRecognizerToFail(doubleTapGesture)
         view.addGestureRecognizer(singleTapGesture)
         view.addGestureRecognizer(doubleTapGesture)
+     
+        if needDownload == true {
+            //Download Image
+            if let audioUrl = NSURL(string: picModel.picURLHigh!) {
+                let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: self, delegateQueue: nil)
+                downloadTask = session.downloadTaskWithURL(audioUrl)
+                downloadTask.resume()
+            }
+        }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        updateZoomScaleForSize(view.bounds.size)
-        updateConstraintsForSize(view.bounds.size)
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+        if let imageData = NSData(contentsOfURL: location) {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.finalImage = UIImage(data: imageData)
+                self.picModel.pictureHigh = imageData
+                self.needDownload = false
+            }
+        }
+    }
+    
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        // println("download task did write data")
         
-        //TODO animate
+        let progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+        print("progress: \(progress)")
+        dispatch_async(dispatch_get_main_queue()) {
+            self.progressView.progress = progress
+        }
+    }
+    
+    func getFinalImage(picModel: WBPictureModel) -> UIImage? {
+        if let imagedata = picModel.pictureHigh {
+            return UIImage(data: imagedata)!
+        }
+        return nil
+    }
+    func getLowerQualityImage(picModel: WBPictureModel) -> UIImage? {
+        if let imagedata = picModel.pictureMedium {
+            return UIImage(data: imagedata)!
+        }
+        if let imagedata = picModel.pictureLow{
+            return UIImage(data: imagedata)!
+        }
+        return nil
     }
     
     private func updateZoomScaleForSize(size: CGSize) {
@@ -88,12 +156,14 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
             scrollView.maximumZoomScale = 1
             scrollView.minimumZoomScale = view.frame.width / finalImage.size.width
             scrollView.zoomScale = scrollView.minimumZoomScale
-
         }
-        
     }
     
     func tapToGoBack(sender: UITapGestureRecognizer) {
+        if (downloadTask != nil) {
+            downloadTask.cancel()
+        }
+        
         dismissViewControllerAnimated(true) {
         }
     }
