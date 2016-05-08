@@ -37,7 +37,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         tableView.tableFooterView = UIView()
         
         tableView.rowHeight = UITableViewAutomaticDimension
-//        tableView.estimatedRowHeight = 1000
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         
         self.refreshControl?.addTarget(self, action: #selector(TimeLineTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         

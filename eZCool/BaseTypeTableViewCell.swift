@@ -24,17 +24,21 @@ protocol  CellContentClickedCallback{
 class BaseTypeTableViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var time: UILabel!
-    @IBOutlet weak var repostText: UILabel!
+    @IBOutlet weak var mainText: UILabel!
     @IBOutlet weak var profileImage: UIImageView!
+    @IBOutlet weak var mainUIView: UIView!
+    
+    @IBOutlet weak var repostedText: UILabel!
 
+    
     @IBOutlet weak var repostButton: UIButton!
     @IBOutlet weak var commentButton: UIButton!
     @IBOutlet weak var attitudeButton: UIButton!
     
-    @IBOutlet weak var originalText: UILabel!
-    @IBOutlet weak var originalUIView: UIView!
+
     
-    @IBOutlet var repostTextHeightConstraint: NSLayoutConstraint!
+    @IBOutlet var repostedTextHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var repostedTopSpaceConstraint: NSLayoutConstraint!
     
     @IBOutlet var imageTopSpaceConstraint: [NSLayoutConstraint]!
     @IBOutlet var imageFullSizeConstraint: [NSLayoutConstraint]!
@@ -48,14 +52,16 @@ class BaseTypeTableViewCell: UITableViewCell {
     
     var callbackDelegate: CellContentClickedCallback!
     
-    var hideRepostText :Bool = true {
+    var hideRepostedText :Bool = true {
         willSet{
             if newValue {
-                repostTextHeightConstraint.active = true
-                originalUIView.backgroundColor = UIColor.whiteColor()
+                repostedTextHeightConstraint.active = true  //reposted height constraint is 0
+                repostedTopSpaceConstraint.constant = 0
+                self.backgroundColor = UIColor.whiteColor()
             }else{
-                repostTextHeightConstraint.active = false
-                originalUIView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+                repostedTextHeightConstraint.active = false
+                repostedTopSpaceConstraint.constant = 8
+                self.backgroundColor = UIColor.groupTableViewBackgroundColor()
             }
         }
     }
@@ -99,7 +105,7 @@ class BaseTypeTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        repostTextHeightConstraint.constant = 0
+        repostedTextHeightConstraint.constant = 0
         originalImageCollection = originalImageCollection.sort(){
             if $0.frame.origin.y > $1.frame.origin.y {
                 return false
@@ -154,16 +160,16 @@ class BaseTypeTableViewCell: UITableViewCell {
         
         self.contentView.layoutIfNeeded()
         
-        self.repostText.preferredMaxLayoutWidth = self.repostText.frame.width
-        self.originalText.preferredMaxLayoutWidth = self.originalText.frame.width
+        self.repostedText.preferredMaxLayoutWidth = self.repostedText.frame.width
+        self.mainText.preferredMaxLayoutWidth = self.mainText.frame.width
     }
     
     
     func setOriginalTextStyle(type: OriginalViewStyle, reposted: Bool) {
         if reposted {
-            hideRepostText = false
+            hideRepostedText = false
         }else{
-            hideRepostText = true
+            hideRepostedText = true
         }
         
         switch type {

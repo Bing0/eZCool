@@ -275,18 +275,18 @@ class DataProcessCenter :NSObject{
         
         if let repostedWBContent = wbContent.repostContent{
             //
-            cell.repostText.attributedText = makeAttributedString(wbContent.text ?? "")
+            cell.mainText.attributedText = makeAttributedString(wbContent.text ?? "")
             let repostedWBUser = repostedWBContent.belongToWBUser
             
             let userName = (repostedWBUser?.name != nil) ? "@\(repostedWBUser!.name!):"  : ""
             //
-            cell.originalText.attributedText = makeAttributedString("\(userName)\(repostedWBContent.text!)")
+            cell.repostedText.attributedText = makeAttributedString("\(userName)\(repostedWBContent.text!)")
             
             wbPics = repostedWBContent.pictures
             reposted = true
         }else{
             //
-            cell.originalText.attributedText = makeAttributedString(wbContent.text ?? "")
+            cell.mainText.attributedText = makeAttributedString(wbContent.text ?? "")
             wbPics = wbContent.pictures
         }
         
