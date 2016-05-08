@@ -23,7 +23,6 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     
     let segueData = SegueData()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,8 +56,6 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
 //        self.tableView.reloadData()
 //        refreshControl.endRefreshing()
     }
-    
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

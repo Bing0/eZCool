@@ -179,28 +179,76 @@ class DataProcessCenter :NSObject{
     func makeAttributedString(string: String) -> NSAttributedString {
         let attributedString:NSMutableAttributedString = NSMutableAttributedString(string:string)
         let textRange = NSRange(location: 0, length: string.characters.count)
+        let specialColorAttribute = [ NSForegroundColorAttributeName: UIColor.colorWithHex("EB7350", alpha: 1.0)]
         
-        //规则检查
-        var ranges:[NSRange] = []
-        
-        let kRegexPattern = "@[\\w-_]+|#[\\w]+#|\\[\\w+\\]|(https?)://(?:(\\S+?)(?::(\\S+?))?@)?([a-zA-Z0-9\\-.]+)(?::(\\d+))?((?:/[a-zA-Z0-9\\-._?,'+\\&%$=~*!():@\\\\]*)+)?"
-        
-        let reg = try? NSRegularExpression(pattern: kRegexPattern, options: [])
-        reg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
+        //at user
+        let atUserPattern = "@[\\w]+"
+        var atUserRanges:[NSRange] = []
+        let atUserReg = try? NSRegularExpression(pattern: atUserPattern, options: [])
+        atUserReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
             if let result = result
             {
-                ranges.append(result.range)
+                atUserRanges.append(result.range)
             }
         })
         
-        let specialColorAttribute = [ NSForegroundColorAttributeName: UIColor.colorWithHex("EB7350", alpha: 1.0) ]
-        
-        for range in ranges {
+        for range in atUserRanges {
             attributedString.addAttributes(specialColorAttribute, range: range)
-        }    
+        }
+        
+        //topic
+        let topicPattern = "#[\\w]+#"
+        var topicRanges:[NSRange] = []
+        let topicReg = try? NSRegularExpression(pattern: topicPattern, options: [])
+        topicReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
+            if let result = result
+            {
+                topicRanges.append(result.range)
+            }
+        })
+        
+        for range in topicRanges {
+            attributedString.addAttributes(specialColorAttribute, range: range)
+        }
+        
+        //url
+        let urlPattern = "(https?)://([a-zA-Z0-9\\-\\./]+)"
+        var urlRanges:[NSRange] = []
+        let urlReg = try? NSRegularExpression(pattern: urlPattern, options: [])
+        urlReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
+            if let result = result
+            {
+                urlRanges.append(result.range)
+            }
+        })
+        
+        for range in urlRanges {
+            attributedString.addAttributes(specialColorAttribute, range: range)
+            
+//            let aRange = string.startIndex.advancedBy(range.location) ..< string.startIndex.advancedBy(range.location + range.length)
+            
+//            print(string.substringWithRange(aRange))
+            
+        }
+        
+        //motion
+        let motionPattern = "\\[\\w+\\]"
+        var motionRanges:[NSRange] = []
+        let motionReg = try? NSRegularExpression(pattern: motionPattern, options: [])
+        motionReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
+            if let result = result
+            {
+                motionRanges.append(result.range)
+            }
+        })
+        
+        for range in motionRanges {
+            attributedString.addAttributes(specialColorAttribute, range: range)
+        }
+        
+        
         return attributedString
     }
-    
     
     func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
         let wbContent = weiboContent[indexPath.row]
@@ -266,20 +314,15 @@ class DataProcessCenter :NSObject{
         var wbPics = wbContent.pictures
         var cellWeibID :Int!
         
-        cell.name.text = wbUser.name
-        cell.time.text = wbContent.createdDate?.getRelativeTime()
-        
         cell.profileImage.image = nil
         
         cell.wbUserID = Int(wbUser.userID!)
-//        cell.weiboID = 0
         loadProfileImage(wbUser, forCell: cell)
         
         if let repostedWBContent = wbContent.repostContent{
             wbPics = repostedWBContent.pictures
             cellWeibID = Int(repostedWBContent.wbID!)
         }else{
-            cell.originalText.text = wbContent.text
             wbPics = wbContent.pictures
             cellWeibID = Int(wbContent.wbID!)
         }
