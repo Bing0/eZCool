@@ -19,6 +19,7 @@ enum OriginalViewStyle {
 
 protocol  CellContentClickedCallback{
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView)
+    func textClicked(weiboID: Int, index: Int)
 }
 
 class TimeLineTypeCell: UITableViewCell {
@@ -39,7 +40,9 @@ class TimeLineTypeCell: UITableViewCell {
     
     var wbUserID = 0
     //the weibo id that has photo, not the repost weibo id
-    var weiboID = 0
+    var weiboIDMain = 0
+    var weiboIDReposted = 0
+    var index = 0
     
     var callbackDelegate: CellContentClickedCallback!
     
@@ -124,8 +127,6 @@ class TimeLineTypeCell: UITableViewCell {
             }
         }
         
-        weiboID = 0
-        wbUserID = 0
         setOriginalTextStyle(.textOnly, reposted: false)
         
     }
@@ -150,12 +151,21 @@ class TimeLineTypeCell: UITableViewCell {
         let view = sender.view
         for i in 0 ..< 9 {
             if view == originalImageCollection[i] {
-                callbackDelegate.weiboImageClicked(weiboID, imageIndex: i, sourceImageView: originalImageCollection[i])
+                callbackDelegate.weiboImageClicked(weiboIDReposted == 0 ? weiboIDMain : weiboIDReposted, imageIndex: i, sourceImageView: originalImageCollection[i])
                 return
             }
         }
     }
     
+
+    func mainTextTapped(sender: UITapGestureRecognizer) {
+        callbackDelegate.textClicked(weiboIDMain, index: index)
+    }
+    
+    func repostedTextTapped(sender: UITapGestureRecognizer) {
+        callbackDelegate.textClicked(weiboIDReposted, index: index)
+    }
+
     func setOriginalTextStyle(type: OriginalViewStyle, reposted: Bool) {
         if reposted {
             hideRepostedText = false
@@ -192,6 +202,12 @@ class TimeLineTypeCell: UITableViewCell {
             let tap = UITapGestureRecognizer(target: self, action: #selector(weiboImageTapped(_:)))
             originalImageCollection[i].addGestureRecognizer(tap)
         }
+        let mainTextTap = UITapGestureRecognizer(target: self, action: #selector(mainTextTapped(_:)))
+        mainText.addGestureRecognizer(mainTextTap)
+        
+        let repostedTextTap = UITapGestureRecognizer(target: self, action: #selector(repostedTextTapped(_:)))
+        repostedText.addGestureRecognizer(repostedTextTap)
+
     }
     
     func removeTapGestureFromAllImages() {

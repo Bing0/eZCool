@@ -191,8 +191,27 @@
                     <view key="view" contentMode="scaleToFill" id="gU8-Vb-UkO">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AdN-DV-lGb">
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="rTc-7o-0G1" id="WL6-Yy-2hg"/>
+                                    <outlet property="delegate" destination="rTc-7o-0G1" id="bLm-Mw-QWU"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AdN-DV-lGb" firstAttribute="top" secondItem="OLZ-yS-1y1" secondAttribute="bottom" id="Wtv-VD-iTb"/>
+                            <constraint firstAttribute="trailing" secondItem="AdN-DV-lGb" secondAttribute="trailing" id="cE6-FF-tnZ"/>
+                            <constraint firstItem="AdN-DV-lGb" firstAttribute="bottom" secondItem="2Bo-ey-xql" secondAttribute="top" id="ruj-mh-5wG"/>
+                            <constraint firstItem="AdN-DV-lGb" firstAttribute="leading" secondItem="gU8-Vb-UkO" secondAttribute="leading" id="zfg-V9-0eq"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="AdN-DV-lGb" id="ofX-EB-d2g"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Ud-re-BGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

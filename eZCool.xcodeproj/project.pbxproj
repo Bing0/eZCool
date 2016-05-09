@@ -144,12 +144,12 @@
 			name = GIFSupport;
 			sourceTree = "<group>";
 		};
-		C2BBE3171CDC6394003C2D89 /* UI */ = {
+		C2BBE3171CDC6394003C2D89 /* Main Storyboard */ = {
 			isa = PBXGroup;
 			children = (
 				D7D047871CD43531008DCC7D /* Main.storyboard */,
 			);
-			name = UI;
+			name = "Main Storyboard";
 			sourceTree = "<group>";
 		};
 		C2BBE3181CDC63A7003C2D89 /* ImageBrower */ = {
@@ -212,7 +212,7 @@
 				C20025B91CE081E700587B64 /* ReuseCell */,
 				C2BBE3191CDC63FA003C2D89 /* JSONFormat */,
 				C2BBE3181CDC63A7003C2D89 /* ImageBrower */,
-				C2BBE3171CDC6394003C2D89 /* UI */,
+				C2BBE3171CDC6394003C2D89 /* Main Storyboard */,
 				D7D047C21CD439CC008DCC7D /* Support */,
 				D7D047C11CD439A0008DCC7D /* library */,
 			);

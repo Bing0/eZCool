@@ -14,6 +14,12 @@ class SegueData {
     var sourceImageView =  UIImageView()
 }
 
+class ClickedWeiboSegueData {
+    var dataProcessCenter: DataProcessCenter!
+    var index: Int!
+    var weiboID: Int!
+}
+
 class TimeLineTableViewController: UITableViewController, CellContentClickedCallback{
     
     let userDefault = UserDefaults()
@@ -22,6 +28,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     var prototypeCell :TimeLineTypeCell!
     
     let segueData = SegueData()
+    let clickedWeiboSegueData = ClickedWeiboSegueData()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,11 +110,17 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         }
     }
     
+    func textClicked(weiboID: Int, index: Int) {
+        clickedWeiboSegueData.dataProcessCenter = dataProcessCenter
+        clickedWeiboSegueData.index = index
+        clickedWeiboSegueData.weiboID = weiboID
+        performSegueWithIdentifier("showWeiboDetail", sender: segueData)
+    }
     
     // MARK: - Table view data source
     
-    func calculateHeight(heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return dataProcessCenter.estimateCellHeight(self.view.bounds.width, cell: prototypeCell, atIndex: indexPath)
+    func calculateHeight(heightForRowAtIndex index: Int) -> CGFloat {
+        return dataProcessCenter.estimateCellHeight(self.view.bounds.width, cell: prototypeCell, atIndex: index)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -124,14 +137,15 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         if indexPath.row == 0 {
             if let cell = tableView.dequeueReusableCellWithIdentifier("timelineTypeCell", forIndexPath: indexPath) as? TimeLineTypeCell {
                 // Configure the cell...
-                dataProcessCenter.configureWeiboContentCell(cell, cellForRowAtIndexPath: indexPath)
+                dataProcessCenter.configureWeiboContentCell(cell, index: indexPath.section)
                 cell.callbackDelegate = self
+                cell.index = indexPath.section
                 return cell
             }
         }else{
             if let cell = tableView.dequeueReusableCellWithIdentifier("bottomBarCell", forIndexPath: indexPath) as? BottomBarCell {
                 // Configure the cell...
-                dataProcessCenter.configureWeiboBottomBarCell(cell, cellForRowAtIndexPath: indexPath)
+                dataProcessCenter.configureWeiboBottomBarCell(cell, cellForRowAtIndex: indexPath.section)
                 cell.callbackDelegate = self
                 return cell
             }
@@ -144,13 +158,13 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         if indexPath.row == 1 {
             return 38
         }
-        let height = calculateHeight(heightForRowAtIndexPath: indexPath)
+        let height = calculateHeight(heightForRowAtIndex: indexPath.section)
         return height
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? TimeLineTypeCell {
-            dataProcessCenter.loadImageFor(cell, cellForRowAtIndexPath: indexPath)
+            dataProcessCenter.loadImageFor(cell, cellForRowAtIndex: indexPath.section)
         }
     }
     
@@ -204,6 +218,10 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
      // Pass the selected object to the new view controller.
         if let dest = segue.destinationViewController as? PageViewController {
             dest.segueData = segueData
+        }else if let dest = segue.destinationViewController as? WeiboDetailViewController {
+            dest.dataProcessCenter = clickedWeiboSegueData.dataProcessCenter
+            dest.weiboID = clickedWeiboSegueData.weiboID
+            dest.index = clickedWeiboSegueData.index
         }
      }
     

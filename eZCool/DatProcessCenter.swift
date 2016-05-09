@@ -225,25 +225,26 @@ class DataProcessCenter :NSObject{
         return attributedString
     }
     
-    func configureWeiboBottomBarCell(cell: BottomBarCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
-        let wbContent = weiboContent[indexPath.section]
+    func configureWeiboBottomBarCell(cell: BottomBarCell, cellForRowAtIndex index: Int) {
+        let wbContent = weiboContent[index]
         let wbUser = wbContent.belongToWBUser!
 
         cell.wbUserID = Int(wbUser.userID!)
-
+        cell.weiboID = Int(wbContent.wbID!)
+        
         cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
         cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
         cell.attitudeButton.setTitle(wbContent.attitudeCount != 0 ? " \(wbContent.attitudeCount!)" : "", forState: UIControlState.Normal)
 
     }
     
-    func configureWeiboContentCell(cell: TimeLineTypeCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
-        let wbContent = weiboContent[indexPath.section]
+    func configureWeiboContentCell(cell: TimeLineTypeCell, wbContent: WBContentModel) {
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
         
         cell.wbUserID = 0
-        cell.weiboID = 0
+        cell.weiboIDMain = 0
+        cell.weiboIDReposted = 0
         
         cell.name.text = wbUser.name
         cell.time.text = wbContent.createdDate?.getRelativeTime()
@@ -291,41 +292,70 @@ class DataProcessCenter :NSObject{
         }
     }
     
-    func loadImageFor(cell: TimeLineTypeCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
-        let wbContent = weiboContent[indexPath.section]
+    func configureWeiboContentCell(cell: TimeLineTypeCell, index: Int) {
+        let wbContent = weiboContent[index]
+        configureWeiboContentCell(cell, wbContent: wbContent)
+    }
+    
+    func configureWeiboContentCell(cell: TimeLineTypeCell, index: Int, weiboID: Int) {
+        let wbContent = weiboContent[index]
+        if wbContent.wbID == weiboID {
+            configureWeiboContentCell(cell, wbContent: wbContent)
+        }else if wbContent.repostContent?.wbID == weiboID {
+            configureWeiboContentCell(cell, wbContent: wbContent.repostContent!)
+        }
+    }
+    
+    func loadImageFor(cell: TimeLineTypeCell, wbContent: WBContentModel) {
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
-        var cellWeibID :Int!
+        var picWeibID :Int!
         
         cell.profileImage.image = nil
         
         cell.wbUserID = Int(wbUser.userID!)
         loadProfileImage(wbUser, forCell: cell)
         
+        cell.weiboIDMain = Int(wbContent.wbID!)
+        
         if let repostedWBContent = wbContent.repostContent{
             wbPics = repostedWBContent.pictures
-            cellWeibID = Int(repostedWBContent.wbID!)
+            cell.weiboIDReposted = Int(repostedWBContent.wbID!)
+            picWeibID = Int(repostedWBContent.wbID!)
         }else{
             wbPics = wbContent.pictures
-            cellWeibID = Int(wbContent.wbID!)
+            picWeibID = Int(wbContent.wbID!)
         }
-        cell.weiboID = cellWeibID
+        
         for picModel in (wbPics?.allObjects as? [WBPictureModel])! {
             cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
-            loadWeiboImage(picModel, weiboID: cellWeibID, forCell: cell)
+            loadWeiboImage(picModel, picWeiboID: picWeibID, weiboIDMain: Int(wbContent.wbID!), forCell: cell)
         }
     }
     
+    func loadImageFor(cell: TimeLineTypeCell, cellForRowAtIndex index: Int) {
+        let wbContent = weiboContent[index]
+        loadImageFor(cell, wbContent: wbContent)
+    }
     
-    func estimateCellHeight(framWidth: CGFloat,cell: TimeLineTypeCell, atIndex index: NSIndexPath) -> CGFloat {
+    func loadImageFor(cell: TimeLineTypeCell, cellForRowAtIndex index: Int, weiboID: Int) {
+        let wbContent = weiboContent[index]
+        if wbContent.wbID == weiboID {
+            loadImageFor(cell, wbContent: wbContent)
+        }else if wbContent.repostContent?.wbID == weiboID {
+            loadImageFor(cell, wbContent: wbContent.repostContent!)
+        }
+    }
+    
+    func estimateCellHeight(framWidth: CGFloat,cell: TimeLineTypeCell, atIndex index: Int) -> CGFloat {
         
-        let wbContent = weiboContent[index.row]
+        let wbContent = weiboContent[index]
         
         if let cellHeight = wbContent.cellHeight {
             return CGFloat.init(cellHeight)
         }else{
             
-            configureWeiboContentCell(cell, cellForRowAtIndexPath: index)
+            configureWeiboContentCell(cell, index: index)
             
             cell.setNeedsUpdateConstraints()
             cell.updateConstraintsIfNeeded()
@@ -341,7 +371,7 @@ class DataProcessCenter :NSObject{
             
             wbContent.cellHeight = size.height
             
-            print("Row: \(index.row) width: \(size.width) height: \(size.height)")
+            print("Row: \(index) width: \(size.width) height: \(size.height)")
             
             return size.height
         }
@@ -432,11 +462,11 @@ class DataProcessCenter :NSObject{
     }
     
     
-    func loadWeiboImage(picModel: WBPictureModel, weiboID: Int, forCell cell: TimeLineTypeCell) {
+    func loadWeiboImage(picModel: WBPictureModel, picWeiboID: Int, weiboIDMain comparition: Int, forCell cell: TimeLineTypeCell) {
         
         var updateWeiboImage :UIImage! {
             willSet{
-                if cell.weiboID == weiboID {
+                if cell.weiboIDMain == comparition {
                     dispatch_async(dispatch_get_main_queue()){
                         cell.originalImageCollection[Int(picModel.index!)].image = newValue
                     }
@@ -447,18 +477,14 @@ class DataProcessCenter :NSObject{
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)) {
             //cached
-            if let cachedWeiboImage = self.getCachedWeiboImgae(weiboID, imageIndex: Int(picModel.index!)) {
-                dispatch_async(dispatch_get_main_queue()){
-                    cell.originalImageCollection[Int(picModel.index!)].image = cachedWeiboImage
-                    // print("get weibo image from cache. size: \(cachedWeiboImage.size)")
-                }
+            if let cachedWeiboImage = self.getCachedWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!)) {
+                updateWeiboImage = cachedWeiboImage
                 return
             }
             //get from disk
             if let image = self.getWeiboImgaeFromDisk(picModel) {
                 //cache
-                self.cacheWeiboImgae(weiboID, imageIndex: Int(picModel.index!), image: image)
-                
+                self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
                 //has been downloaded
                 updateWeiboImage = image
                 return
@@ -466,7 +492,7 @@ class DataProcessCenter :NSObject{
             //need download
             if let image = self.downloadWeiboImgae(picModel) {
                 //cache
-                self.cacheWeiboImgae(weiboID, imageIndex: Int(picModel.index!), image: image)
+                self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
                 //has been downloaded
                 updateWeiboImage = image
             }
