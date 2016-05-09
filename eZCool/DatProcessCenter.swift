@@ -176,82 +176,69 @@ class DataProcessCenter :NSObject{
         return weiboContent.count
     }
 
+    func findRangeIn(string: String, withPattern pattern: String) -> [NSRange] {
+        let textRange = NSRange(location: 0, length: string.characters.count)
+        var ranges:[NSRange] = []
+        let reg = try? NSRegularExpression(pattern: pattern, options: [])
+        reg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
+            if let result = result
+            {
+                ranges.append(result.range)
+            }
+        })
+        
+        return ranges
+    }
+    
     func makeAttributedString(string: String) -> NSAttributedString {
         let attributedString:NSMutableAttributedString = NSMutableAttributedString(string:string)
-        let textRange = NSRange(location: 0, length: string.characters.count)
         let specialColorAttribute = [ NSForegroundColorAttributeName: UIColor.colorWithHex("EB7350", alpha: 1.0)]
         
         //at user
         let atUserPattern = "@[\\w]+"
-        var atUserRanges:[NSRange] = []
-        let atUserReg = try? NSRegularExpression(pattern: atUserPattern, options: [])
-        atUserReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
-            if let result = result
-            {
-                atUserRanges.append(result.range)
-            }
-        })
-        
+        let atUserRanges = findRangeIn(string, withPattern: atUserPattern)
         for range in atUserRanges {
             attributedString.addAttributes(specialColorAttribute, range: range)
         }
         
         //topic
         let topicPattern = "#[\\w]+#"
-        var topicRanges:[NSRange] = []
-        let topicReg = try? NSRegularExpression(pattern: topicPattern, options: [])
-        topicReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
-            if let result = result
-            {
-                topicRanges.append(result.range)
-            }
-        })
-        
+        let topicRanges = findRangeIn(string, withPattern: topicPattern)
         for range in topicRanges {
             attributedString.addAttributes(specialColorAttribute, range: range)
         }
         
         //url
         let urlPattern = "(https?)://([a-zA-Z0-9\\-\\./]+)"
-        var urlRanges:[NSRange] = []
-        let urlReg = try? NSRegularExpression(pattern: urlPattern, options: [])
-        urlReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
-            if let result = result
-            {
-                urlRanges.append(result.range)
-            }
-        })
-        
+        let urlRanges = findRangeIn(string, withPattern: urlPattern)
         for range in urlRanges {
             attributedString.addAttributes(specialColorAttribute, range: range)
-            
-//            let aRange = string.startIndex.advancedBy(range.location) ..< string.startIndex.advancedBy(range.location + range.length)
-            
-//            print(string.substringWithRange(aRange))
-            
         }
         
         //motion
         let motionPattern = "\\[\\w+\\]"
-        var motionRanges:[NSRange] = []
-        let motionReg = try? NSRegularExpression(pattern: motionPattern, options: [])
-        motionReg?.enumerateMatchesInString(string, options: [], range: textRange, usingBlock: {result, flags, ptr in
-            if let result = result
-            {
-                motionRanges.append(result.range)
-            }
-        })
-        
+        let motionRanges = findRangeIn(string, withPattern: motionPattern)
         for range in motionRanges {
             attributedString.addAttributes(specialColorAttribute, range: range)
         }
         
-        
         return attributedString
     }
     
-    func configureCell(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
-        let wbContent = weiboContent[indexPath.row]
+    func configureWeiboBottomBarCell(cell: BottomBarCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
+        let wbContent = weiboContent[indexPath.section]
+        let wbUser = wbContent.belongToWBUser!
+
+        cell.wbUserID = Int(wbUser.userID!)
+
+        cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
+        cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
+        cell.attitudeButton.setTitle(wbContent.attitudeCount != 0 ? " \(wbContent.attitudeCount!)" : "", forState: UIControlState.Normal)
+
+    }
+    
+    func configureWeiboContentCell(cell: TimeLineTypeCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
+        let wbContent = weiboContent[indexPath.section]
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
         
@@ -262,10 +249,6 @@ class DataProcessCenter :NSObject{
         cell.time.text = wbContent.createdDate?.getRelativeTime()
         
         cell.profileImage.image = nil
-        
-        cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
-        cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
-        cell.attitudeButton.setTitle(wbContent.attitudeCount != 0 ? " \(wbContent.attitudeCount!)" : "", forState: UIControlState.Normal)
         
         for imageView in cell.originalImageCollection {
             imageView.image = nil
@@ -308,8 +291,8 @@ class DataProcessCenter :NSObject{
         }
     }
     
-    func loadImageFor(cell: BaseTypeTableViewCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
-        let wbContent = weiboContent[indexPath.row]
+    func loadImageFor(cell: TimeLineTypeCell, cellForRowAtIndexPath indexPath: NSIndexPath) {
+        let wbContent = weiboContent[indexPath.section]
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
         var cellWeibID :Int!
@@ -334,7 +317,7 @@ class DataProcessCenter :NSObject{
     }
     
     
-    func estimateCellHeight(framWidth: CGFloat,cell: BaseTypeTableViewCell, atIndex index: NSIndexPath) -> CGFloat {
+    func estimateCellHeight(framWidth: CGFloat,cell: TimeLineTypeCell, atIndex index: NSIndexPath) -> CGFloat {
         
         let wbContent = weiboContent[index.row]
         
@@ -342,7 +325,7 @@ class DataProcessCenter :NSObject{
             return CGFloat.init(cellHeight)
         }else{
             
-            configureCell(cell, cellForRowAtIndexPath: index)
+            configureWeiboContentCell(cell, cellForRowAtIndexPath: index)
             
             cell.setNeedsUpdateConstraints()
             cell.updateConstraintsIfNeeded()
@@ -364,7 +347,7 @@ class DataProcessCenter :NSObject{
         }
     }
     
-    func loadProfileImage(wbUser: WBUserModel, forCell cell: BaseTypeTableViewCell) {
+    func loadProfileImage(wbUser: WBUserModel, forCell cell: TimeLineTypeCell) {
         if let profileImage = cachedUserProfileImage[Int(wbUser.userID!)] {
             if cell.wbUserID == Int(wbUser.userID!) {
                 // has been cached
@@ -449,7 +432,7 @@ class DataProcessCenter :NSObject{
     }
     
     
-    func loadWeiboImage(picModel: WBPictureModel, weiboID: Int, forCell cell: BaseTypeTableViewCell) {
+    func loadWeiboImage(picModel: WBPictureModel, weiboID: Int, forCell cell: TimeLineTypeCell) {
         
         var updateWeiboImage :UIImage! {
             willSet{

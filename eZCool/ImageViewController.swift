@@ -106,7 +106,11 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
     func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
         if let imageData = NSData(contentsOfURL: location) {
             dispatch_async(dispatch_get_main_queue()) {
-                self.finalImage = UIImage(data: imageData)
+                if self.picModel.picURLHigh!.lowercaseString.hasSuffix(".gif") {
+                     self.finalImage = UIImage.gifWithData(imageData)
+                }else{
+                     self.finalImage = UIImage(data: imageData)
+                }
                 self.picModel.pictureHigh = imageData
                 self.needDownload = false
             }
@@ -117,7 +121,7 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
         // println("download task did write data")
         
         let progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-        print("progress: \(progress)")
+       
         dispatch_async(dispatch_get_main_queue()) {
             self.progressView.progress = progress
         }
@@ -125,7 +129,12 @@ class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestureReco
     
     func getFinalImage(picModel: WBPictureModel) -> UIImage? {
         if let imagedata = picModel.pictureHigh {
-            return UIImage(data: imagedata)!
+            if picModel.picURLHigh!.lowercaseString.hasSuffix(".gif") {
+                return UIImage.gifWithData(imagedata)
+            }else{
+                return UIImage(data: imagedata)!
+            }
+            
         }
         return nil
     }

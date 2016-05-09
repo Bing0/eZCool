@@ -1,8 +1,8 @@
 //
-//  BaseTypeTableViewCell.swift
+//  WeiboContentTableViewCell.swift
 //  eZCool
 //
-//  Created by BinWu on 4/30/16.
+//  Created by POD on 5/9/16.
 //  Copyright © 2016 BinWu. All rights reserved.
 //
 
@@ -21,7 +21,7 @@ protocol  CellContentClickedCallback{
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView)
 }
 
-class BaseTypeTableViewCell: UITableViewCell {
+class TimeLineTypeCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var time: UILabel!
     @IBOutlet weak var mainText: UILabel!
@@ -30,13 +30,6 @@ class BaseTypeTableViewCell: UITableViewCell {
     
     @IBOutlet weak var repostedText: UILabel!
 
-    
-    @IBOutlet weak var repostButton: UIButton!
-    @IBOutlet weak var commentButton: UIButton!
-    @IBOutlet weak var attitudeButton: UIButton!
-    
-
-    
     @IBOutlet var repostedTextHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var repostedTopSpaceConstraint: NSLayoutConstraint!
     
@@ -47,8 +40,6 @@ class BaseTypeTableViewCell: UITableViewCell {
     var wbUserID = 0
     //the weibo id that has photo, not the repost weibo id
     var weiboID = 0
-    
-    var inDisplay = 0
     
     var callbackDelegate: CellContentClickedCallback!
     
@@ -89,7 +80,7 @@ class BaseTypeTableViewCell: UITableViewCell {
             }
         }
     }
-
+    
     var hideThirdLine :Bool = true {
         willSet{
             if newValue {
@@ -104,6 +95,7 @@ class BaseTypeTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        // Initialization code
         // Initialization code
         repostedTextHeightConstraint.constant = 0
         originalImageCollection = originalImageCollection.sort(){
@@ -135,19 +127,9 @@ class BaseTypeTableViewCell: UITableViewCell {
         weiboID = 0
         wbUserID = 0
         setOriginalTextStyle(.textOnly, reposted: false)
+        
     }
 
-    
-    func weiboImageTapped(sender: UITapGestureRecognizer) {
-        let view = sender.view
-        for i in 0 ..< 9 {
-            if view == originalImageCollection[i] {
-                callbackDelegate.weiboImageClicked(weiboID, imageIndex: i, sourceImageView: originalImageCollection[i])
-                return
-            }
-        }
-    }
-    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -164,6 +146,15 @@ class BaseTypeTableViewCell: UITableViewCell {
         self.mainText.preferredMaxLayoutWidth = self.mainText.frame.width
     }
     
+    func weiboImageTapped(sender: UITapGestureRecognizer) {
+        let view = sender.view
+        for i in 0 ..< 9 {
+            if view == originalImageCollection[i] {
+                callbackDelegate.weiboImageClicked(weiboID, imageIndex: i, sourceImageView: originalImageCollection[i])
+                return
+            }
+        }
+    }
     
     func setOriginalTextStyle(type: OriginalViewStyle, reposted: Bool) {
         if reposted {
@@ -198,7 +189,7 @@ class BaseTypeTableViewCell: UITableViewCell {
     
     func addTapGestureToImages(imageCounts: Int) {
         for i in 0 ..< imageCounts {
-            let tap = UITapGestureRecognizer(target: self, action: #selector(BaseTypeTableViewCell.weiboImageTapped(_:)))
+            let tap = UITapGestureRecognizer(target: self, action: #selector(weiboImageTapped(_:)))
             originalImageCollection[i].addGestureRecognizer(tap)
         }
     }
@@ -216,4 +207,6 @@ class BaseTypeTableViewCell: UITableViewCell {
             }
         }
     }
+
+    
 }

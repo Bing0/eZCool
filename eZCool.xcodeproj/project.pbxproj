@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20025B21CE07F6500587B64 /* TimeLineTypeCell.swift */; };
+		C20025B61CE080E000587B64 /* TimeLineTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20025B81CE080E000587B64 /* TimeLineTypeCell.xib */; };
 		C2BBE3131CDC448B003C2D89 /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */; };
 		C2BBE3151CDC62DB003C2D89 /* WeiboDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */; };
+		D702C3221CE0BAD00051375D /* BottomBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D702C3201CE0BAD00051375D /* BottomBarCell.swift */; };
+		D702C3241CE0BB0A0051375D /* BottomBarCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D702C3261CE0BB0A0051375D /* BottomBarCell.xib */; };
 		D7155D081CD67654009D8726 /* DatProcessCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D071CD67654009D8726 /* DatProcessCenter.swift */; };
 		D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */; };
 		D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D221CD6F182009D8726 /* WBUserModel.swift */; };
@@ -38,15 +42,18 @@
 		D7D047E71CD47CFA008DCC7D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047E61CD47CFA008DCC7D /* UserDefaults.swift */; };
 		D7D047E91CD47DE0008DCC7D /* TimeLineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */; };
 		D7D047EB1CD47F0E008DCC7D /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */; };
-		D7D047ED1CD48E26008DCC7D /* BaseTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047EC1CD48E26008DCC7D /* BaseTypeTableViewCell.swift */; };
 		D7D047EF1CD4937E008DCC7D /* ParseWBContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047EE1CD4937E008DCC7D /* ParseWBContent.swift */; };
 		D7D6103C1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */; };
 		D7D6103D1CD7519500FA81FD /* WBPictureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D6103B1CD7519500FA81FD /* WBPictureModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C20025B21CE07F6500587B64 /* TimeLineTypeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineTypeCell.swift; sourceTree = "<group>"; };
+		C20025B71CE080E000587B64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TimeLineTypeCell.xib; sourceTree = "<group>"; };
 		C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Gif.swift"; path = "eZCool/UIImage+Gif.swift"; sourceTree = "<group>"; };
 		C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeiboDetailViewController.swift; sourceTree = "<group>"; };
+		D702C3201CE0BAD00051375D /* BottomBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomBarCell.swift; sourceTree = "<group>"; };
+		D702C3251CE0BB0A0051375D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/BottomBarCell.xib; sourceTree = "<group>"; };
 		D7155D071CD67654009D8726 /* DatProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DatProcessCenter.swift; path = eZCool/DatProcessCenter.swift; sourceTree = "<group>"; };
 		D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBUserModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D7155D221CD6F182009D8726 /* WBUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBUserModel.swift; sourceTree = "<group>"; };
@@ -90,7 +97,6 @@
 		D7D047E61CD47CFA008DCC7D /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineTableViewController.swift; sourceTree = "<group>"; };
 		D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
-		D7D047EC1CD48E26008DCC7D /* BaseTypeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTypeTableViewCell.swift; sourceTree = "<group>"; };
 		D7D047EE1CD4937E008DCC7D /* ParseWBContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseWBContent.swift; sourceTree = "<group>"; };
 		D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBPictureModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D7D6103B1CD7519500FA81FD /* WBPictureModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBPictureModel.swift; sourceTree = "<group>"; };
@@ -119,6 +125,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C20025B91CE081E700587B64 /* ReuseCell */ = {
+			isa = PBXGroup;
+			children = (
+				C20025B21CE07F6500587B64 /* TimeLineTypeCell.swift */,
+				C20025B81CE080E000587B64 /* TimeLineTypeCell.xib */,
+				D702C3201CE0BAD00051375D /* BottomBarCell.swift */,
+				D702C3261CE0BB0A0051375D /* BottomBarCell.xib */,
+			);
+			name = ReuseCell;
+			sourceTree = "<group>";
+		};
 		C2BBE3161CDC62F4003C2D89 /* GIFSupport */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,8 +208,8 @@
 				D7D047E41CD46C3E008DCC7D /* MainViewController.swift */,
 				D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */,
 				C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */,
-				D7D047EC1CD48E26008DCC7D /* BaseTypeTableViewCell.swift */,
 				D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */,
+				C20025B91CE081E700587B64 /* ReuseCell */,
 				C2BBE3191CDC63FA003C2D89 /* JSONFormat */,
 				C2BBE3181CDC63A7003C2D89 /* ImageBrower */,
 				C2BBE3171CDC6394003C2D89 /* UI */,
@@ -316,6 +333,8 @@
 				D7D047911CD43531008DCC7D /* LaunchScreen.storyboard in Resources */,
 				D7D047891CD43531008DCC7D /* Main.storyboard in Resources */,
 				D718EFAD1CD5FD68009C2084 /* Assets.xcassets in Resources */,
+				C20025B61CE080E000587B64 /* TimeLineTypeCell.xib in Resources */,
+				D702C3241CE0BB0A0051375D /* BottomBarCell.xib in Resources */,
 				D7D047A71CD435AF008DCC7D /* WeiboSDK.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -329,7 +348,7 @@
 			files = (
 				D7D047E71CD47CFA008DCC7D /* UserDefaults.swift in Sources */,
 				D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */,
-				D7D047ED1CD48E26008DCC7D /* BaseTypeTableViewCell.swift in Sources */,
+				C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */,
 				D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */,
 				D7D6103C1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift in Sources */,
 				D7D6103D1CD7519500FA81FD /* WBPictureModel.swift in Sources */,
@@ -343,6 +362,7 @@
 				C2BBE3131CDC448B003C2D89 /* UIImage+Gif.swift in Sources */,
 				D7D0478C1CD43531008DCC7D /* eZCool.xcdatamodeld in Sources */,
 				D73770851CD989D8006E636A /* PageViewController.swift in Sources */,
+				D702C3221CE0BAD00051375D /* BottomBarCell.swift in Sources */,
 				D7D047EF1CD4937E008DCC7D /* ParseWBContent.swift in Sources */,
 				D7155D081CD67654009D8726 /* DatProcessCenter.swift in Sources */,
 				D7D047E51CD46C3E008DCC7D /* MainViewController.swift in Sources */,
@@ -352,6 +372,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		C20025B81CE080E000587B64 /* TimeLineTypeCell.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C20025B71CE080E000587B64 /* Base */,
+			);
+			name = TimeLineTypeCell.xib;
+			sourceTree = "<group>";
+		};
+		D702C3261CE0BB0A0051375D /* BottomBarCell.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D702C3251CE0BB0A0051375D /* Base */,
+			);
+			name = BottomBarCell.xib;
+			sourceTree = "<group>";
+		};
 		D7D047871CD43531008DCC7D /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

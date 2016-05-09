@@ -19,7 +19,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     let userDefault = UserDefaults()
     
     let dataProcessCenter = DataProcessCenter()
-    var prototypeCell :BaseTypeTableViewCell!
+    var prototypeCell :TimeLineTypeCell!
     
     let segueData = SegueData()
     
@@ -32,7 +32,10 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        prototypeCell = tableView.dequeueReusableCellWithIdentifier("baseTypeCell") as! BaseTypeTableViewCell
+        tableView.registerNib(UINib.init(nibName: "TimeLineTypeCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "timelineTypeCell")
+        tableView.registerNib(UINib.init(nibName: "BottomBarCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "bottomBarCell")
+        
+        prototypeCell = tableView.dequeueReusableCellWithIdentifier("timelineTypeCell") as! TimeLineTypeCell
 
         tableView.tableFooterView = UIView()
         
@@ -109,37 +112,50 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return dataProcessCenter.getWeiboCount()
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return dataProcessCenter.getWeiboCount()
+        return 2
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCellWithIdentifier("baseTypeCell", forIndexPath: indexPath) as? BaseTypeTableViewCell {
-            // Configure the cell...
-            dataProcessCenter.configureCell(cell, cellForRowAtIndexPath: indexPath)
-            cell.callbackDelegate = self
-            return cell
+        if indexPath.row == 0 {
+            if let cell = tableView.dequeueReusableCellWithIdentifier("timelineTypeCell", forIndexPath: indexPath) as? TimeLineTypeCell {
+                // Configure the cell...
+                dataProcessCenter.configureWeiboContentCell(cell, cellForRowAtIndexPath: indexPath)
+                cell.callbackDelegate = self
+                return cell
+            }
+        }else{
+            if let cell = tableView.dequeueReusableCellWithIdentifier("bottomBarCell", forIndexPath: indexPath) as? BottomBarCell {
+                // Configure the cell...
+                dataProcessCenter.configureWeiboBottomBarCell(cell, cellForRowAtIndexPath: indexPath)
+                cell.callbackDelegate = self
+                return cell
+            }
         }
-        return tableView.dequeueReusableCellWithIdentifier("baseTypeCell", forIndexPath: indexPath)
+        
+        return tableView.dequeueReusableCellWithIdentifier("timelineTypeCell", forIndexPath: indexPath)
     }
     
     override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.row == 1 {
+            return 38
+        }
         let height = calculateHeight(heightForRowAtIndexPath: indexPath)
         return height
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        if let cell = cell as? BaseTypeTableViewCell {
+        if let cell = cell as? TimeLineTypeCell {
             dataProcessCenter.loadImageFor(cell, cellForRowAtIndexPath: indexPath)
         }
     }
     
     override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        if let cell = cell as? BaseTypeTableViewCell {
+        if let cell = cell as? TimeLineTypeCell {
             cell.removeTapGestureFromAllImages()
         }
     }
