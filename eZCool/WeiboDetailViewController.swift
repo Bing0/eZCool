@@ -21,6 +21,9 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
 
         // Do any additional setup after loading the view.
         tableView.registerNib(UINib.init(nibName: "TimeLineTypeCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "timelineTypeCell")
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 33
+        tableView.tableFooterView = UIView()
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,6 +50,18 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }
         
         return tableView.dequeueReusableCellWithIdentifier("timelineTypeCell", forIndexPath: indexPath)
+    }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? TimeLineTypeCell {
+            dataProcessCenter.loadImageFor(cell, cellForRowAtIndex: index, weiboID: weiboID)
+        }
+    }
+    
+    func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? TimeLineTypeCell {
+            cell.removeTapGestureFromAllImages()
+        }
     }
     
     /*
