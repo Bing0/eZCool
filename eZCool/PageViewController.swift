@@ -9,7 +9,7 @@
 import UIKit
 
 class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
-    var segueData: SegueData!
+    var imageViewSegueData: ImageViewSegueData!
     
     var originalFrame :CGRect!
     
@@ -27,12 +27,12 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
         let view = UIView(frame: self.view.frame)
         view.backgroundColor = UIColor.blackColor()
         
-        originalFrame = segueData.sourceImageView.convertRect(segueData.sourceImageView.bounds, toView: self.view)
+        originalFrame = imageViewSegueData.sourceImageView.convertRect(imageViewSegueData.sourceImageView.bounds, toView: self.view)
         let animationImageView = UIImageView(frame: originalFrame)
         
-        animationImageView.image = segueData.sourceImageView.image
-        animationImageView.contentMode = segueData.sourceImageView.contentMode
-        animationImageView.clipsToBounds = segueData.sourceImageView.clipsToBounds
+        animationImageView.image = imageViewSegueData.sourceImageView.image
+        animationImageView.contentMode = imageViewSegueData.sourceImageView.contentMode
+        animationImageView.clipsToBounds = imageViewSegueData.sourceImageView.clipsToBounds
         
         view.addSubview(animationImageView)
         
@@ -47,9 +47,9 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
         UIView.animateWithDuration(0.5, animations: { animationImageView.frame = targetFrame}) {
             (_) in
             if let viewController = self.viewImageShowController() {
-                viewController.totalCount = self.segueData.picModels.count
-                viewController.currentIndex = self.segueData.imageIndex
-                viewController.picModel = self.segueData.picModels[viewController.currentIndex]
+                viewController.totalCount = self.imageViewSegueData.picModels.count
+                viewController.currentIndex = self.imageViewSegueData.imageIndex
+                viewController.picModel = self.imageViewSegueData.picModels[viewController.currentIndex]
                 self.setViewControllers([viewController], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
                 //TODO download pics
                 
@@ -80,9 +80,9 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
             let currentIndex = viewController.currentIndex
             if currentIndex > 0 {
                 if let viewController =  self.viewImageShowController(){
-                    viewController.totalCount = segueData.picModels.count
+                    viewController.totalCount = imageViewSegueData.picModels.count
                     viewController.currentIndex = currentIndex - 1
-                    viewController.picModel = segueData.picModels[viewController.currentIndex]
+                    viewController.picModel = imageViewSegueData.picModels[viewController.currentIndex]
                     return viewController
                 }
             }
@@ -93,11 +93,11 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         if let viewController = viewController as? ImageViewController {
             let currentIndex = viewController.currentIndex
-            if currentIndex < segueData.picModels.count - 1 {
+            if currentIndex < imageViewSegueData.picModels.count - 1 {
                 if let viewController =  self.viewImageShowController(){
-                    viewController.totalCount = segueData.picModels.count
+                    viewController.totalCount = imageViewSegueData.picModels.count
                     viewController.currentIndex = currentIndex + 1
-                    viewController.picModel = segueData.picModels[viewController.currentIndex]
+                    viewController.picModel = imageViewSegueData.picModels[viewController.currentIndex]
                     return viewController
                 }
             }

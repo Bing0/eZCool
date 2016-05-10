@@ -8,16 +8,10 @@
 
 import UIKit
 
-class SegueData {
+class ImageViewSegueData {
     var imageIndex = 0
     var picModels = [WBPictureModel]()
     var sourceImageView =  UIImageView()
-}
-
-class ClickedWeiboSegueData {
-    var dataProcessCenter: DataProcessCenter!
-    var index: Int!
-    var weiboID: Int!
 }
 
 class TimeLineTableViewController: UITableViewController, CellContentClickedCallback{
@@ -27,8 +21,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     let dataProcessCenter = DataProcessCenter()
     var prototypeCell :TimeLineTypeCell!
     
-    let segueData = SegueData()
-    let clickedWeiboSegueData = ClickedWeiboSegueData()
+    let imageViewSegueData = ImageViewSegueData()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,10 +92,10 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView) {
         if dataProcessCenter.hasCacheImageAt(weiboID, imgaeIndex: imageIndex) {
             if let picModels = dataProcessCenter.getWeiboOriginalImage(weiboID){
-                segueData.imageIndex = imageIndex
-                segueData.sourceImageView = sourceImageView
-                segueData.picModels = picModels
-                performSegueWithIdentifier("showWeiboImage", sender: segueData)
+                imageViewSegueData.imageIndex = imageIndex
+                imageViewSegueData.sourceImageView = sourceImageView
+                imageViewSegueData.picModels = picModels
+                performSegueWithIdentifier("showWeiboImage", sender: imageViewSegueData)
             }
             
         }else{
@@ -110,11 +103,17 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         }
     }
     
-    func textClicked(weiboID: Int, index: Int) {
-        clickedWeiboSegueData.dataProcessCenter = dataProcessCenter
-        clickedWeiboSegueData.index = index
-        clickedWeiboSegueData.weiboID = weiboID
-        performSegueWithIdentifier("showWeiboDetail", sender: segueData)
+    func cellClicked(weiboID: Int, index: Int) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("weiboDetail") as! WeiboDetailViewController
+        vc.index = index
+        vc.weiboID = weiboID
+        vc.dataProcessCenter = dataProcessCenter
+        self.showViewController(vc, sender: nil)
+    }
+    
+    func profileImageClicked(weiboID: Int, index: Int) {
+        print("profileImageClicked")
     }
     
     // MARK: - Table view data source
@@ -137,9 +136,11 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         if indexPath.row == 0 {
             if let cell = tableView.dequeueReusableCellWithIdentifier("timelineTypeCell", forIndexPath: indexPath) as? TimeLineTypeCell {
                 // Configure the cell...
-                dataProcessCenter.configureWeiboContentCell(cell, index: indexPath.section)
                 cell.callbackDelegate = self
                 cell.index = indexPath.section
+                cell.isShownWeiboDetail = false
+                
+                dataProcessCenter.configureWeiboContentCell(cell, index: indexPath.section)
                 return cell
             }
         }else{
@@ -217,14 +218,9 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
      // Get the new view controller using segue.destinationViewController.
      // Pass the selected object to the new view controller.
         if let dest = segue.destinationViewController as? PageViewController {
-            dest.segueData = segueData
-        }else if let dest = segue.destinationViewController as? WeiboDetailViewController {
-            dest.dataProcessCenter = clickedWeiboSegueData.dataProcessCenter
-            dest.weiboID = clickedWeiboSegueData.weiboID
-            dest.index = clickedWeiboSegueData.index
+            dest.imageViewSegueData = imageViewSegueData
         }
      }
-    
 }
 
 

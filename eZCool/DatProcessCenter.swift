@@ -235,7 +235,6 @@ class DataProcessCenter :NSObject{
         cell.repostButton.setTitle(wbContent.repostCount != 0 ? " \(wbContent.repostCount!)" : " Repost", forState: UIControlState.Normal)
         cell.commentButton.setTitle(wbContent.commentCount != 0 ? " \(wbContent.commentCount!)" : " Comments", forState: UIControlState.Normal)
         cell.attitudeButton.setTitle(wbContent.attitudeCount != 0 ? " \(wbContent.attitudeCount!)" : "", forState: UIControlState.Normal)
-
     }
     
     func configureWeiboContentCell(cell: TimeLineTypeCell, wbContent: WBContentModel) {
@@ -247,7 +246,11 @@ class DataProcessCenter :NSObject{
         cell.weiboIDReposted = 0
         
         cell.name.text = wbUser.name
-        cell.time.text = wbContent.createdDate?.getRelativeTime()
+        if cell.isShownWeiboDetail {
+            cell.time.text = wbContent.createdDate?.getAbsoluteTime()
+        }else{
+            cell.time.text = wbContent.createdDate?.getRelativeTime()
+        }
         
         cell.profileImage.image = nil
         
@@ -608,6 +611,12 @@ extension NSDate {
             return dateFormatterForShow.stringFromDate(self)
         }
     }
+    func getAbsoluteTime() -> String {
+        let dateFormatterForShow = NSDateFormatter()
+        dateFormatterForShow.dateFormat = "yyyy/MM/dd HH:mm::ss"
+        return dateFormatterForShow.stringFromDate(self)
+    }
+
 }
 
 extension UIColor{

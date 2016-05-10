@@ -47,7 +47,7 @@
         <!--Time Line Table View Controller-->
         <scene sceneID="u7D-lt-kfC">
             <objects>
-                <tableViewController id="nDH-Ea-dQi" customClass="TimeLineTableViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="nDH-Ea-dQi" customClass="TimeLineTableViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="8yD-dF-c8O">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -63,7 +63,6 @@
                     </refreshControl>
                     <connections>
                         <segue destination="kBw-7J-CAc" kind="presentation" identifier="showWeiboImage" animates="NO" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="1Mb-F9-Nhs"/>
-                        <segue destination="rTc-7o-0G1" kind="show" identifier="showWeiboDetail" id="dBu-3O-qVZ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N2P-QT-Ke7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -183,7 +182,7 @@
         <!--Weibo Detail View Controller-->
         <scene sceneID="to7-dO-j3V">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="rTc-7o-0G1" customClass="WeiboDetailViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="weiboDetail" automaticallyAdjustsScrollViewInsets="NO" id="rTc-7o-0G1" customClass="WeiboDetailViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="OLZ-yS-1y1"/>
                         <viewControllerLayoutGuide type="bottom" id="2Bo-ey-xql"/>
@@ -193,29 +192,108 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AdN-DV-lGb">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="542"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="floatViewCell" id="RbV-2A-mlV">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RbV-2A-mlV" id="kPg-uc-a5A">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="rTc-7o-0G1" id="WL6-Yy-2hg"/>
                                     <outlet property="delegate" destination="rTc-7o-0G1" id="bLm-Mw-QWU"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jY2-kK-Ox9">
+                                <rect key="frame" x="0.0" y="285" width="600" height="37"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rBF-rx-Sbf">
+                                        <rect key="frame" x="0.0" y="4" width="46" height="30"/>
+                                        <state key="normal" title="Button"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ujh-XH-Ng6">
+                                        <rect key="frame" x="54" y="4" width="46" height="30"/>
+                                        <state key="normal" title="Button"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mx2-3N-HZE">
+                                        <rect key="frame" x="554" y="4" width="46" height="30"/>
+                                        <state key="normal" title="Button"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="rBF-rx-Sbf" firstAttribute="centerY" secondItem="jY2-kK-Ox9" secondAttribute="centerY" id="BDp-MW-Rku"/>
+                                    <constraint firstAttribute="trailing" secondItem="mx2-3N-HZE" secondAttribute="trailing" id="D87-UZ-d8t"/>
+                                    <constraint firstItem="mx2-3N-HZE" firstAttribute="centerY" secondItem="jY2-kK-Ox9" secondAttribute="centerY" id="gdp-8Q-efI"/>
+                                    <constraint firstItem="ujh-XH-Ng6" firstAttribute="baseline" secondItem="rBF-rx-Sbf" secondAttribute="baseline" id="kLz-vs-HOe"/>
+                                    <constraint firstAttribute="height" constant="37" id="nkw-0b-Ky2"/>
+                                    <constraint firstItem="rBF-rx-Sbf" firstAttribute="leading" secondItem="jY2-kK-Ox9" secondAttribute="leading" id="yN7-0t-GGr"/>
+                                    <constraint firstItem="ujh-XH-Ng6" firstAttribute="leading" secondItem="rBF-rx-Sbf" secondAttribute="trailing" constant="8" id="z2s-R2-ZI5"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O1d-YA-z2m">
+                                <rect key="frame" x="0.0" y="562" width="200" height="38"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="drW-tO-xqj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" title="Repost" image="timeline_icon_retweet" backgroundImage="timeline_retweet_background">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FhN-ty-Hru">
+                                <rect key="frame" x="400" y="562" width="200" height="38"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" title="Likes" image="timeline_icon_unlike" backgroundImage="timeline_retweet_background">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U7S-qd-VCk">
+                                <rect key="frame" x="200" y="562" width="200" height="38"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" title="Comment" image="timeline_icon_comment" backgroundImage="timeline_retweet_background">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="AdN-DV-lGb" firstAttribute="top" secondItem="OLZ-yS-1y1" secondAttribute="bottom" id="Wtv-VD-iTb"/>
-                            <constraint firstAttribute="trailing" secondItem="AdN-DV-lGb" secondAttribute="trailing" id="cE6-FF-tnZ"/>
-                            <constraint firstItem="AdN-DV-lGb" firstAttribute="bottom" secondItem="2Bo-ey-xql" secondAttribute="top" id="ruj-mh-5wG"/>
-                            <constraint firstItem="AdN-DV-lGb" firstAttribute="leading" secondItem="gU8-Vb-UkO" secondAttribute="leading" id="zfg-V9-0eq"/>
+                            <constraint firstAttribute="trailing" secondItem="AdN-DV-lGb" secondAttribute="trailing" id="2iM-gq-WE2"/>
+                            <constraint firstItem="AdN-DV-lGb" firstAttribute="leading" secondItem="gU8-Vb-UkO" secondAttribute="leading" id="87D-gv-aiw"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="top" secondItem="AdN-DV-lGb" secondAttribute="bottom" id="BDk-YD-0eq"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="baseline" secondItem="FhN-ty-Hru" secondAttribute="baseline" id="DkN-XB-Tnc"/>
+                            <constraint firstItem="2Bo-ey-xql" firstAttribute="top" secondItem="O1d-YA-z2m" secondAttribute="bottom" id="W9J-Js-uWN"/>
+                            <constraint firstAttribute="trailing" secondItem="jY2-kK-Ox9" secondAttribute="trailing" id="bKa-jD-sg7"/>
+                            <constraint firstAttribute="trailing" secondItem="FhN-ty-Hru" secondAttribute="trailing" id="cBA-Xj-6ps"/>
+                            <constraint firstItem="AdN-DV-lGb" firstAttribute="top" secondItem="OLZ-yS-1y1" secondAttribute="bottom" id="cWe-dM-R5y"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="width" secondItem="U7S-qd-VCk" secondAttribute="width" id="ekG-iA-Nyq"/>
+                            <constraint firstItem="U7S-qd-VCk" firstAttribute="leading" secondItem="O1d-YA-z2m" secondAttribute="trailing" id="fNl-fC-jhb"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="height" secondItem="U7S-qd-VCk" secondAttribute="height" id="gp7-72-pGD"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="leading" secondItem="gU8-Vb-UkO" secondAttribute="leading" id="h4q-0h-rxf"/>
+                            <constraint firstItem="jY2-kK-Ox9" firstAttribute="leading" secondItem="gU8-Vb-UkO" secondAttribute="leading" id="iX3-gx-K05"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="height" secondItem="FhN-ty-Hru" secondAttribute="height" id="lDg-Fq-jfZ"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="baseline" secondItem="U7S-qd-VCk" secondAttribute="baseline" id="sgd-lU-0hG"/>
+                            <constraint firstItem="jY2-kK-Ox9" firstAttribute="top" secondItem="OLZ-yS-1y1" secondAttribute="bottom" constant="265" id="teV-l5-HN7"/>
+                            <constraint firstItem="O1d-YA-z2m" firstAttribute="width" secondItem="FhN-ty-Hru" secondAttribute="width" id="txd-8I-bw4"/>
+                            <constraint firstItem="FhN-ty-Hru" firstAttribute="leading" secondItem="U7S-qd-VCk" secondAttribute="trailing" id="uni-Zw-Bu8"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="floatingView" destination="jY2-kK-Ox9" id="yJL-Rf-3na"/>
+                        <outlet property="floatingViewTopPadConstraint" destination="teV-l5-HN7" id="Hfe-uc-e0V"/>
                         <outlet property="tableView" destination="AdN-DV-lGb" id="ofX-EB-d2g"/>
+                        <segue destination="kBw-7J-CAc" kind="presentation" identifier="showWeiboImageFromWeiboDetail" id="ZGy-si-e6d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Ud-re-BGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2479" y="-256"/>
+            <point key="canvasLocation" x="2487" y="-242"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="fDa-wu-RGI">
@@ -226,4 +304,13 @@
             <point key="canvasLocation" x="2487" y="-956"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="timeline_icon_comment" width="18" height="18"/>
+        <image name="timeline_icon_retweet" width="18" height="18"/>
+        <image name="timeline_icon_unlike" width="18" height="18"/>
+        <image name="timeline_retweet_background" width="32" height="19"/>
+    </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="ZGy-si-e6d"/>
+    </inferredMetricsTieBreakers>
 </document>
