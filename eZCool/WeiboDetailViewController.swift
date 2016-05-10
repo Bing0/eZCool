@@ -12,7 +12,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var floatingViewTopPadConstraint: NSLayoutConstraint!
-    var floatingView: UIView!
     
     let imageViewSegueData = ImageViewSegueData()
     
@@ -20,9 +19,16 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     var index: Int!
     var weiboID: Int!
     
+    var _weiboContentHeight: CGFloat!
     var weiboContentHeight: CGFloat! {
-        willSet{
-            floatingViewTopPadConstraint.constant = newValue
+        set{
+            if _weiboContentHeight == nil {
+                floatingViewTopPadConstraint.constant = newValue
+                _weiboContentHeight = newValue
+            }
+        }
+        get{
+            return _weiboContentHeight
         }
     }
     var weiboScrollOffset: CGFloat!{
@@ -30,7 +36,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             floatingViewTopPadConstraint.constant = max(0, weiboContentHeight - newValue)
         }
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +46,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.estimatedRowHeight = 33
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-
         tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
     }
     
@@ -112,7 +116,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         if indexPath.section == 1 {
             weiboContentHeight = cell.frame.origin.y + cell.frame.height - 37
         }
-        
     }
     
     func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -122,7 +125,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
-        print(tableView.contentOffset)
         weiboScrollOffset = tableView.contentOffset.y
     }
     

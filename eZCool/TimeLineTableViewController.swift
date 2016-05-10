@@ -109,7 +109,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         vc.index = index
         vc.weiboID = weiboID
         vc.dataProcessCenter = dataProcessCenter
-        self.showViewController(vc, sender: nil)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func profileImageClicked(weiboID: Int, index: Int) {

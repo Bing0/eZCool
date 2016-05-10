@@ -164,15 +164,21 @@ class TimeLineTypeCell: UITableViewCell {
 
     func cellTapped(sender: UITapGestureRecognizer) {
         if repostedText.bounds.contains(sender.locationInView(repostedText)) {
-            print("repost")
+//            print("reposted")
             callbackDelegate.cellClicked(weiboIDReposted, index: index)
         }else if profileImage.bounds.contains(sender.locationInView(profileImage)){
-            print("profile")
+//            print("profile")
             callbackDelegate.profileImageClicked(weiboIDMain, index: index)
         }else{
-            print("main")
-            if !isShownWeiboDetail {
-                callbackDelegate.cellClicked(weiboIDMain, index: index)
+           if (sender.locationInView(repostedText).y > 0) && (weiboIDReposted != 0) {
+                // reposdted
+//                print("reposted")
+                callbackDelegate.cellClicked(weiboIDReposted, index: index)
+            }else{
+//                print("main")
+                if !isShownWeiboDetail {
+                    callbackDelegate.cellClicked(weiboIDMain, index: index)
+                }
             }
         }
     }

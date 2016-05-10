@@ -30,7 +30,7 @@
         <scene sceneID="jAj-Ei-ZLt">
             <objects>
                 <tabBarController id="lLi-2P-eX5" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="Uwp-na-LoN">
+                    <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="Uwp-na-LoN">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -47,9 +47,9 @@
         <!--Time Line Table View Controller-->
         <scene sceneID="u7D-lt-kfC">
             <objects>
-                <tableViewController hidesBottomBarWhenPushed="YES" id="nDH-Ea-dQi" customClass="TimeLineTableViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="nDH-Ea-dQi" customClass="TimeLineTableViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="8yD-dF-c8O">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <connections>
@@ -97,7 +97,7 @@
                         <viewControllerLayoutGuide type="bottom" id="XS9-XN-O8X"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="5vZ-sr-0Jp">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -182,7 +182,7 @@
         <!--Weibo Detail View Controller-->
         <scene sceneID="to7-dO-j3V">
             <objects>
-                <viewController storyboardIdentifier="weiboDetail" automaticallyAdjustsScrollViewInsets="NO" id="rTc-7o-0G1" customClass="WeiboDetailViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="weiboDetail" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="rTc-7o-0G1" customClass="WeiboDetailViewController" customModule="eZCool" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="OLZ-yS-1y1"/>
                         <viewControllerLayoutGuide type="bottom" id="2Bo-ey-xql"/>
@@ -201,7 +201,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RbV-2A-mlV" id="kPg-uc-a5A">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
@@ -214,26 +214,26 @@
                                 <rect key="frame" x="0.0" y="285" width="600" height="37"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rBF-rx-Sbf">
-                                        <rect key="frame" x="0.0" y="4" width="46" height="30"/>
+                                        <rect key="frame" x="8" y="4" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ujh-XH-Ng6">
-                                        <rect key="frame" x="54" y="4" width="46" height="30"/>
+                                        <rect key="frame" x="62" y="4" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mx2-3N-HZE">
-                                        <rect key="frame" x="554" y="4" width="46" height="30"/>
+                                        <rect key="frame" x="546" y="4" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="rBF-rx-Sbf" firstAttribute="centerY" secondItem="jY2-kK-Ox9" secondAttribute="centerY" id="BDp-MW-Rku"/>
-                                    <constraint firstAttribute="trailing" secondItem="mx2-3N-HZE" secondAttribute="trailing" id="D87-UZ-d8t"/>
+                                    <constraint firstAttribute="trailing" secondItem="mx2-3N-HZE" secondAttribute="trailing" constant="8" id="D87-UZ-d8t"/>
                                     <constraint firstItem="mx2-3N-HZE" firstAttribute="centerY" secondItem="jY2-kK-Ox9" secondAttribute="centerY" id="gdp-8Q-efI"/>
                                     <constraint firstItem="ujh-XH-Ng6" firstAttribute="baseline" secondItem="rBF-rx-Sbf" secondAttribute="baseline" id="kLz-vs-HOe"/>
                                     <constraint firstAttribute="height" constant="37" id="nkw-0b-Ky2"/>
-                                    <constraint firstItem="rBF-rx-Sbf" firstAttribute="leading" secondItem="jY2-kK-Ox9" secondAttribute="leading" id="yN7-0t-GGr"/>
+                                    <constraint firstItem="rBF-rx-Sbf" firstAttribute="leading" secondItem="jY2-kK-Ox9" secondAttribute="leading" constant="8" id="yN7-0t-GGr"/>
                                     <constraint firstItem="ujh-XH-Ng6" firstAttribute="leading" secondItem="rBF-rx-Sbf" secondAttribute="trailing" constant="8" id="z2s-R2-ZI5"/>
                                 </constraints>
                             </view>
@@ -284,11 +284,11 @@
                             <constraint firstItem="FhN-ty-Hru" firstAttribute="leading" secondItem="U7S-qd-VCk" secondAttribute="trailing" id="uni-Zw-Bu8"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <connections>
-                        <outlet property="floatingView" destination="jY2-kK-Ox9" id="yJL-Rf-3na"/>
                         <outlet property="floatingViewTopPadConstraint" destination="teV-l5-HN7" id="Hfe-uc-e0V"/>
                         <outlet property="tableView" destination="AdN-DV-lGb" id="ofX-EB-d2g"/>
-                        <segue destination="kBw-7J-CAc" kind="presentation" identifier="showWeiboImageFromWeiboDetail" id="ZGy-si-e6d"/>
+                        <segue destination="kBw-7J-CAc" kind="presentation" identifier="showWeiboImageFromWeiboDetail" animates="NO" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="ZGy-si-e6d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Ud-re-BGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
