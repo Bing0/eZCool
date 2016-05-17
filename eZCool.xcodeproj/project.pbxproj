@@ -13,12 +13,13 @@
 		C2BBE3151CDC62DB003C2D89 /* WeiboDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */; };
 		D702C3221CE0BAD00051375D /* BottomBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D702C3201CE0BAD00051375D /* BottomBarCell.swift */; };
 		D702C3241CE0BB0A0051375D /* BottomBarCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D702C3261CE0BB0A0051375D /* BottomBarCell.xib */; };
-		D7155D081CD67654009D8726 /* DatProcessCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D071CD67654009D8726 /* DatProcessCenter.swift */; };
+		D7155D081CD67654009D8726 /* DataProcessCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D071CD67654009D8726 /* DataProcessCenter.swift */; };
 		D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */; };
 		D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D221CD6F182009D8726 /* WBUserModel.swift */; };
 		D718EFAD1CD5FD68009C2084 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D718EFAC1CD5FD68009C2084 /* Assets.xcassets */; };
 		D73770841CD989D8006E636A /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73770821CD989D8006E636A /* ImageViewController.swift */; };
 		D73770851CD989D8006E636A /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73770831CD989D8006E636A /* PageViewController.swift */; };
+		D77DA51B1CE869F4000D1153 /* RepostCommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77DA51A1CE869F4000D1153 /* RepostCommentTableViewCell.swift */; };
 		D798A6DE1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */; };
 		D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D798A6DD1CD720B900016D43 /* WBContentModel.swift */; };
 		D7D047841CD43531008DCC7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047831CD43531008DCC7D /* AppDelegate.swift */; };
@@ -54,12 +55,13 @@
 		C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeiboDetailViewController.swift; sourceTree = "<group>"; };
 		D702C3201CE0BAD00051375D /* BottomBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomBarCell.swift; sourceTree = "<group>"; };
 		D702C3251CE0BB0A0051375D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/BottomBarCell.xib; sourceTree = "<group>"; };
-		D7155D071CD67654009D8726 /* DatProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DatProcessCenter.swift; path = eZCool/DatProcessCenter.swift; sourceTree = "<group>"; };
+		D7155D071CD67654009D8726 /* DataProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataProcessCenter.swift; path = eZCool/DataProcessCenter.swift; sourceTree = "<group>"; };
 		D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBUserModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D7155D221CD6F182009D8726 /* WBUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBUserModel.swift; sourceTree = "<group>"; };
 		D718EFAC1CD5FD68009C2084 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D73770821CD989D8006E636A /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		D73770831CD989D8006E636A /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
+		D77DA51A1CE869F4000D1153 /* RepostCommentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepostCommentTableViewCell.swift; sourceTree = "<group>"; };
 		D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBContentModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D798A6DD1CD720B900016D43 /* WBContentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBContentModel.swift; sourceTree = "<group>"; };
 		D7D047801CD43531008DCC7D /* eZCool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eZCool.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,7 +174,7 @@
 		D7155D061CD6738A009D8726 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				D7155D071CD67654009D8726 /* DatProcessCenter.swift */,
+				D7155D071CD67654009D8726 /* DataProcessCenter.swift */,
 				D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */,
 				D798A6DD1CD720B900016D43 /* WBContentModel.swift */,
 				D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */,
@@ -209,6 +211,7 @@
 				D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */,
 				C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */,
 				D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */,
+				D77DA51A1CE869F4000D1153 /* RepostCommentTableViewCell.swift */,
 				C20025B91CE081E700587B64 /* ReuseCell */,
 				C2BBE3191CDC63FA003C2D89 /* JSONFormat */,
 				C2BBE3181CDC63A7003C2D89 /* ImageBrower */,
@@ -348,6 +351,7 @@
 			files = (
 				D7D047E71CD47CFA008DCC7D /* UserDefaults.swift in Sources */,
 				D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */,
+				D77DA51B1CE869F4000D1153 /* RepostCommentTableViewCell.swift in Sources */,
 				C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */,
 				D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */,
 				D7D6103C1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift in Sources */,
@@ -364,7 +368,7 @@
 				D73770851CD989D8006E636A /* PageViewController.swift in Sources */,
 				D702C3221CE0BAD00051375D /* BottomBarCell.swift in Sources */,
 				D7D047EF1CD4937E008DCC7D /* ParseWBContent.swift in Sources */,
-				D7155D081CD67654009D8726 /* DatProcessCenter.swift in Sources */,
+				D7155D081CD67654009D8726 /* DataProcessCenter.swift in Sources */,
 				D7D047E51CD46C3E008DCC7D /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

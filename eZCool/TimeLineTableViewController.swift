@@ -77,6 +77,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
             do {
                 if let jsonResult = try NSJSONSerialization.JSONObjectWithData(dataVal, options: []) as? NSDictionary {
                     dataProcessCenter.parseJSON(jsonResult)
+                    
                     self.tableView.reloadData()
                     self.refreshControl?.endRefreshing()
                 }

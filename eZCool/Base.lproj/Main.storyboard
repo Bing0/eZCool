@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rTB-A5-q4z">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rTB-A5-q4z">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Main View Controller-->
@@ -204,6 +206,62 @@
                                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="repostCommentCell" rowHeight="108" id="HCP-Bj-kJp" customClass="RepostCommentTableViewCell" customModule="eZCool" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="600" height="108"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HCP-Bj-kJp" id="OqA-uQ-zcO">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="107"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kjZ-lB-Urh">
+                                                    <rect key="frame" x="8" y="8" width="62" height="62"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="kjZ-lB-Urh" secondAttribute="height" multiplier="1:1" id="K0u-Ol-V6I"/>
+                                                        <constraint firstAttribute="width" constant="62" id="OYN-NM-VfK"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnu-yT-5Th">
+                                                    <rect key="frame" x="78" y="20" width="514" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="RepostText" text="Main Text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YCy-HU-bke">
+                                                    <rect key="frame" x="8" y="78" width="584" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q1L-6U-dti">
+                                                    <rect key="frame" x="78" y="49" width="514" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="q1L-6U-dti" firstAttribute="leading" secondItem="kjZ-lB-Urh" secondAttribute="trailing" constant="8" id="0Cd-AY-oIB"/>
+                                                <constraint firstItem="kjZ-lB-Urh" firstAttribute="leading" secondItem="OqA-uQ-zcO" secondAttribute="leadingMargin" id="4XT-0s-shF"/>
+                                                <constraint firstItem="YCy-HU-bke" firstAttribute="leading" secondItem="OqA-uQ-zcO" secondAttribute="leadingMargin" id="Aye-LJ-hqB"/>
+                                                <constraint firstItem="pnu-yT-5Th" firstAttribute="leading" secondItem="kjZ-lB-Urh" secondAttribute="trailing" constant="8" id="K48-po-fsj"/>
+                                                <constraint firstItem="kjZ-lB-Urh" firstAttribute="top" secondItem="OqA-uQ-zcO" secondAttribute="topMargin" id="N15-tr-MgD"/>
+                                                <constraint firstItem="q1L-6U-dti" firstAttribute="bottom" secondItem="kjZ-lB-Urh" secondAttribute="bottom" id="OkT-rN-P6e"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="YCy-HU-bke" secondAttribute="bottom" id="cTg-Sk-ZhX"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="q1L-6U-dti" secondAttribute="trailing" id="lnG-SL-bC6"/>
+                                                <constraint firstItem="kjZ-lB-Urh" firstAttribute="width" secondItem="kjZ-lB-Urh" secondAttribute="height" multiplier="1:1" id="mMQ-Pi-xgU"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="pnu-yT-5Th" secondAttribute="trailing" id="nRK-Kf-VDV"/>
+                                                <constraint firstItem="YCy-HU-bke" firstAttribute="top" secondItem="kjZ-lB-Urh" secondAttribute="bottom" constant="8" id="ovr-He-Csk"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="YCy-HU-bke" secondAttribute="trailing" id="vfH-my-G3J"/>
+                                                <constraint firstItem="q1L-6U-dti" firstAttribute="top" secondItem="pnu-yT-5Th" secondAttribute="bottom" constant="8" id="xuK-gI-20k"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="mainText" destination="YCy-HU-bke" id="Ujx-we-Z81"/>
+                                            <outlet property="name" destination="pnu-yT-5Th" id="f34-F0-f1S"/>
+                                            <outlet property="profileImage" destination="kjZ-lB-Urh" id="AmR-Jp-voK"/>
+                                            <outlet property="time" destination="q1L-6U-dti" id="9yi-Tc-aq8"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="rTc-7o-0G1" id="WL6-Yy-2hg"/>
@@ -214,16 +272,22 @@
                                 <rect key="frame" x="0.0" y="285" width="600" height="37"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rBF-rx-Sbf">
-                                        <rect key="frame" x="8" y="4" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                        <rect key="frame" x="8" y="4" width="56" height="30"/>
+                                        <state key="normal" title="Reposts">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ujh-XH-Ng6">
-                                        <rect key="frame" x="62" y="4" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                        <rect key="frame" x="72" y="4" width="88" height="30"/>
+                                        <state key="normal" title="Commments">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mx2-3N-HZE">
-                                        <rect key="frame" x="546" y="4" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                        <rect key="frame" x="556" y="4" width="36" height="30"/>
+                                        <state key="normal" title="Likes">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -286,7 +350,10 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <connections>
+                        <outlet property="commentButton" destination="ujh-XH-Ng6" id="pGm-RV-4VY"/>
                         <outlet property="floatingViewTopPadConstraint" destination="teV-l5-HN7" id="Hfe-uc-e0V"/>
+                        <outlet property="likesButton" destination="mx2-3N-HZE" id="dtq-FI-qRk"/>
+                        <outlet property="repostButton" destination="rBF-rx-Sbf" id="TY4-0X-gjX"/>
                         <outlet property="tableView" destination="AdN-DV-lGb" id="ofX-EB-d2g"/>
                         <segue destination="kBw-7J-CAc" kind="presentation" identifier="showWeiboImageFromWeiboDetail" animates="NO" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="ZGy-si-e6d"/>
                     </connections>

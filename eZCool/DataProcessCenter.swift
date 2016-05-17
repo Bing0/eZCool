@@ -56,10 +56,24 @@ class DataProcessCenter :NSObject{
         }
     }
     
+    func parseJSONRepostsIDs(jsonResult: NSDictionary) -> [String] {
+        print(jsonResult)
+        
+        if let weiboIDs = jsonResult["statuses"] as? [String]{
+           return weiboIDs
+        }
+        return [String]()
+    }
+    
     func parseOneWeiboRecord(wbContent: WBContent, isInTimeline: Bool) -> WBContentModel?{
         //search in core data first
-        if let wbContentMidel = isWeiboHasBeenStored(wbContent.id) {
-            return wbContentMidel
+        if let wbContentModel = isWeiboHasBeenStored(wbContent.id) {
+            
+            wbContentModel.repostCount = wbContent.reposts_count
+            wbContentModel.commentCount = wbContent.comments_count
+            wbContentModel.attitudeCount = wbContent.attitudes_count
+            
+            return wbContentModel
         }
         //create one
         let wbContentModelEntity = NSEntityDescription.entityForName("WBContentModel",inManagedObjectContext: managedObjectContext)
@@ -309,6 +323,17 @@ class DataProcessCenter :NSObject{
         }
     }
     
+    func updateWeiboCountsOf(comments: Int, reposts: Int, indexInTimeLineCell: Int, weiboID: Int) {
+        let wbContent = weiboContent[indexInTimeLineCell]
+        if wbContent.wbID == weiboID {
+            wbContent.commentCount = comments
+            wbContent.repostCount = reposts
+        }else if wbContent.repostContent?.wbID == weiboID {
+            wbContent.repostContent!.commentCount = comments
+            wbContent.repostContent!.repostCount = reposts
+        }
+    }
+    
     func loadImageFor(cell: TimeLineTypeCell, wbContent: WBContentModel) {
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
@@ -374,7 +399,7 @@ class DataProcessCenter :NSObject{
             
             wbContent.cellHeight = size.height
             
-            print("Row: \(index) width: \(size.width) height: \(size.height)")
+//            print("Row: \(index) width: \(size.width) height: \(size.height)")
             
             return size.height
         }

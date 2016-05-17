@@ -91,7 +91,7 @@ class ParseWBContent {
     
     func parseOneWBContent(json :Dictionary<String, AnyObject>) -> WBContent? {
         let wbContent = WBContent()
-//        print(json)
+        print(json)
         wbContent.created_at = json["created_at"] as! String
         wbContent.id = json["id"]  as! Int                 //微博ID
         wbContent.mid = Int(json["mid"] as! String)                       //微博MID
