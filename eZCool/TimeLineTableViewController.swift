@@ -66,27 +66,17 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     }
     
     func getTimeline(page: Int){
-        let urlPath: String = "https://api.weibo.com/2/statuses/home_timeline.json?access_token=\(userDefault.wbtoken!)&page=\(page)"
-        let url: NSURL = (NSURL(string: urlPath))!
-        let request1: NSURLRequest = NSURLRequest(URL: url)
-        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/home_timeline.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "page" : "\(page)"])
         
-        do{
-            let dataVal = try NSURLConnection.sendSynchronousRequest(request1, returningResponse: response)
-            // print(response)
-            do {
-                if let jsonResult = try NSJSONSerialization.JSONObjectWithData(dataVal, options: []) as? NSDictionary {
-                    dataProcessCenter.parseJSON(jsonResult)
-                    
-                    self.tableView.reloadData()
-                    self.refreshControl?.endRefreshing()
-                }
-            } catch let error as NSError {
-                print(error.localizedDescription)
+        
+        HttpTool().httpRequestWith(urlPath, callback: {
+            self.dataProcessCenter.parseJSON($0)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+                self.refreshControl?.endRefreshing()
             }
-        }catch let error as NSError
-        {
-            print(error.localizedDescription)
+        }) {
+            print($0)
         }
     }
     
