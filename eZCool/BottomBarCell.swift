@@ -13,10 +13,6 @@ class BottomBarCell: UITableViewCell {
     @IBOutlet weak var commentButton: UIButton!
     @IBOutlet weak var attitudeButton: UIButton!
     
-    var wbUserID = 0
-    //the weibo id that has photo, not the repost weibo id
-    var weiboID = 0
-    
     var callbackDelegate: CellContentClickedCallback!
     
     override func awakeFromNib() {

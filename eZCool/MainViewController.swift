@@ -12,6 +12,8 @@ struct StoreAuthorizeKeys {
     static let wbtoken = "WB Token"
     static let wbRefreshToken = "WB Refresh Token"
     static let wbCurrentUserID = "WB Current User ID Token"
+    static let sinceID = "since ID"
+    static let maxID = "max ID"
 }
 
 class MainViewController: UIViewController {

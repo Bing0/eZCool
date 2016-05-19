@@ -16,12 +16,15 @@ class ImageViewSegueData {
 
 class TimeLineTableViewController: UITableViewController, CellContentClickedCallback{
     
-    let userDefault = UserDefaults()
+    private let userDefault = UserDefaults()
     
-    let dataProcessCenter = DataProcessCenter()
-    var prototypeCell :TimeLineTypeCell!
+    private let cacheTool = CacheTool()
+
+    private var prototypeCell :TimeLineTypeCell!
     
-    let imageViewSegueData = ImageViewSegueData()
+    private let imageViewSegueData = ImageViewSegueData()
+    
+    private var newWeiboCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,12 +55,28 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     func handleRefresh(refreshControl: UIRefreshControl) {
         // Do some reloading of data and update the table view's data source
         // Fetch more objects from a web service, for example...
-        
-        // Simply adding an object to the data source for this example
-        self.getTimeline(1)
-        
-//        self.tableView.reloadData()
-//        refreshControl.endRefreshing()
+
+        do {
+            try WeiboAccessTool().getNewestTimeline(){
+                do {
+                    let jsonResult = try $0()
+                    self.newWeiboCount = parseJSON().parseTimelineJSON(jsonResult)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.tableView.reloadData()
+                        self.refreshControl?.endRefreshing()
+                        //TODO show new weibo count
+                        
+                    }
+                }catch{
+                    print(error)
+                    self.refreshControl?.endRefreshing()
+                }
+            }
+        }catch{
+            print(error)
+            refreshControl.endRefreshing()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -65,24 +84,9 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         // Dispose of any resources that can be recreated.
     }
     
-    func getTimeline(page: Int){
-        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/home_timeline.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "page" : "\(page)"])
-        
-        
-        HttpTool().httpRequestWith(urlPath, callback: {
-            self.dataProcessCenter.parseJSON($0)
-            dispatch_async(dispatch_get_main_queue()) {
-                self.tableView.reloadData()
-                self.refreshControl?.endRefreshing()
-            }
-        }) {
-            print($0)
-        }
-    }
-    
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView) {
-        if dataProcessCenter.hasCacheImageAt(weiboID, imgaeIndex: imageIndex) {
-            if let picModels = dataProcessCenter.getWeiboOriginalImage(weiboID){
+        if databaseProcessCenter.hasCacheImageAt(weiboID, imgaeIndex: imageIndex) {
+            if let picModels = databaseProcessCenter.getWeiboOriginalImage(weiboID){
                 imageViewSegueData.imageIndex = imageIndex
                 imageViewSegueData.sourceImageView = sourceImageView
                 imageViewSegueData.picModels = picModels
@@ -99,7 +103,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         let vc = storyboard.instantiateViewControllerWithIdentifier("weiboDetail") as! WeiboDetailViewController
         vc.index = index
         vc.weiboID = weiboID
-        vc.dataProcessCenter = dataProcessCenter
+        vc.dataProcessCenter = databaseProcessCenter
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -110,12 +114,18 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     // MARK: - Table view data source
     
     func calculateHeight(heightForRowAtIndex index: Int) -> CGFloat {
-        return dataProcessCenter.estimateCellHeight(self.view.bounds.width, cell: prototypeCell, atIndex: index)
+        do {
+            let wbContent = try cacheTool.getWeiboContent(withIndex: index)
+            return CellConfigureTool().estimateCellHeight(self.view.bounds.width, cell: prototypeCell, wbContent: wbContent)
+        }catch{
+            print(error)
+        }
+        return 0
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return dataProcessCenter.getWeiboCount()
+        return cacheTool.getWeiboCount()
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -131,14 +141,26 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
                 cell.index = indexPath.section
                 cell.isShownWeiboDetail = false
                 
-                dataProcessCenter.configureWeiboContentCell(cell, index: indexPath.section)
+                do {
+                    let wbContent = try cacheTool.getWeiboContent(withIndex: indexPath.section)
+                    CellConfigureTool().configureWeiboContentCell(cell, wbContent: wbContent)
+                }catch{
+                    print(error)
+                }
+                
                 return cell
             }
         }else{
             if let cell = tableView.dequeueReusableCellWithIdentifier("bottomBarCell", forIndexPath: indexPath) as? BottomBarCell {
                 // Configure the cell...
-                dataProcessCenter.configureWeiboBottomBarCell(cell, cellForRowAtIndex: indexPath.section)
                 cell.callbackDelegate = self
+                do {
+                    let wbContent = try cacheTool.getWeiboContent(withIndex: indexPath.section)
+                    CellConfigureTool().configureWeiboBottomBarCell(cell, wbContent: wbContent)
+                }catch{
+                    print(error)
+                }
+                
                 return cell
             }
         }
@@ -156,7 +178,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? TimeLineTypeCell {
-            dataProcessCenter.loadImageFor(cell, cellForRowAtIndex: indexPath.section)
+            databaseProcessCenter.loadImageFor(cell, cellForRowAtIndex: indexPath.section)
         }
     }
     

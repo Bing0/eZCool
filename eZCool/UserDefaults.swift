@@ -11,11 +11,13 @@ import Foundation
 class UserDefaults {
     let defaults = NSUserDefaults.standardUserDefaults()
     
-    var _wbtoken :String?
-    var _wbRefreshToken :String?
-    var _wbCurrentUserID :String?
+    private var _wbtoken: String?
+    private var _wbRefreshToken: String?
+    private var _wbCurrentUserID: String?
+    private var _sinceID: Int = 0
+    private var _maxID: Int = 0
     
-    var wbtoken :String? {
+    var wbtoken: String? {
         set {
             _wbtoken = newValue
             defaults.setValue(newValue, forKey: StoreAuthorizeKeys.wbtoken)
@@ -30,7 +32,7 @@ class UserDefaults {
             return _wbtoken
         }
     }
-    var wbRefreshToken :String?{
+    var wbRefreshToken: String?{
         set {
             _wbRefreshToken = newValue
             defaults.setValue(newValue, forKey: StoreAuthorizeKeys.wbRefreshToken)
@@ -45,7 +47,7 @@ class UserDefaults {
             return _wbRefreshToken
         }
     }
-    var wbCurrentUserID :String?{
+    var wbCurrentUserID: String?{
         set {
             _wbCurrentUserID = newValue
             defaults.setValue(newValue, forKey: StoreAuthorizeKeys.wbCurrentUserID)
@@ -60,6 +62,32 @@ class UserDefaults {
             return _wbCurrentUserID
         }
     }
-
     
+    var sinceID: Int{
+        set {
+            _sinceID = newValue
+            defaults.setValue(newValue, forKey: StoreAuthorizeKeys.sinceID)
+            defaults.synchronize()
+        }
+        get {
+            if let storedDefault = defaults.valueForKey(StoreAuthorizeKeys.sinceID) {
+                _sinceID = (storedDefault as! Int)
+            }
+            return _sinceID
+        }
+    }
+    
+    var maxID: Int{
+        set {
+            _maxID = newValue
+            defaults.setValue(newValue, forKey: StoreAuthorizeKeys.maxID)
+            defaults.synchronize()
+        }
+        get {
+            if let storedDefault = defaults.valueForKey(StoreAuthorizeKeys.maxID) {
+                _maxID = (storedDefault as! Int)
+            }
+            return _maxID
+        }
+    }
 }

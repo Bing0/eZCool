@@ -203,7 +203,41 @@ class ParseWBContent {
 
 
 
-
+class parseJSON {
+    
+    
+    func parseTimelineJSON(jsonResult: NSDictionary) -> Int{
+        //        print(jsonResult)
+        
+        print("has_unread: \(jsonResult["has_unread"])")
+        print("hasvisible: \(jsonResult["hasvisible"])")
+        print("interval: \(jsonResult["interval"])")
+        print("max_id: \(jsonResult["max_id"])")
+        print("next_cursor: \(jsonResult["next_cursor"])")
+        print("previous_cursor: \(jsonResult["previous_cursor"])")
+        print("since_id: \(jsonResult["since_id"])")
+        
+        var newWeiboNumbers = 0
+        
+        if let statuses = jsonResult["statuses"] as? [[String: AnyObject]]{
+            newWeiboNumbers = statuses.count
+            if newWeiboNumbers > 10 {
+                //delete old data
+                DatabaseProcessCenter().clearWeiboHistory()
+            }
+            
+            for statuse in statuses {
+                if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
+                    DatabaseProcessCenter().analyseOneWeiboRecord(wbContent, isInTimeline: true)
+                }
+            }
+            print("Parse finished")
+            DatabaseProcessCenter().saveData()
+        }
+        return newWeiboNumbers
+    }
+    
+}
 
 
 
