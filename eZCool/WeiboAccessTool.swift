@@ -68,7 +68,7 @@ class WeiboAccessTool {
                     case .Arrary(let jsonResult):
                         callback(getJSONResult: { return jsonResult })
                     default:
-                        callback(getJSONResult: { throw WeiboAccessError.NotNSDictionaryFormat } )
+                        callback(getJSONResult: { throw WeiboAccessError.NotNSArraryFormat } )
                     }
                 }catch{
                     callback(getJSONResult: { throw error } )

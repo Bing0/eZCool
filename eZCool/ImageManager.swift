@@ -14,6 +14,10 @@ class ImageManager {
     
     private var cachedWeiboImage = [Int:[Int: UIImage]]()
     
+    func clearImageCache() {
+        cachedUserProfileImage.removeAll()
+        cachedWeiboImage.removeAll()
+    }
     
     func loadMiddleQualityImageFor(cell: TimeLineTypeCell, wbContent: WBContentModel) {
         let wbUser = wbContent.belongToWBUser!

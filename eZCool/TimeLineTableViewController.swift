@@ -84,6 +84,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        imageManager.clearImageCache()
     }
     
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView) {
@@ -214,7 +215,8 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
                             let jsonResult = try $0()
                             
                             dispatch_async(dispatch_get_main_queue()) {
-                                self.newWeiboCount = parseJSON().parseLaterTimelineJSON(jsonResult)
+                                let number = parseJSON().parseLaterTimelineJSON(jsonResult)
+                                print("get \(number) weibo")
                                 self.tableView.reloadData()                                
                             }
                         }catch{

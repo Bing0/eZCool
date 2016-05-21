@@ -209,19 +209,19 @@ class parseJSON {
     func parseTimelineJSON(jsonResult: NSDictionary) -> Int{
         //        print(jsonResult)
         
-        print("has_unread: \(jsonResult["has_unread"])")
-        print("hasvisible: \(jsonResult["hasvisible"])")
-        print("interval: \(jsonResult["interval"])")
-        print("max_id: \(jsonResult["max_id"])")
-        print("next_cursor: \(jsonResult["next_cursor"])")
-        print("previous_cursor: \(jsonResult["previous_cursor"])")
-        print("since_id: \(jsonResult["since_id"])")
+//        print("has_unread: \(jsonResult["has_unread"])")
+//        print("hasvisible: \(jsonResult["hasvisible"])")
+//        print("interval: \(jsonResult["interval"])")
+//        print("max_id: \(jsonResult["max_id"])")
+//        print("next_cursor: \(jsonResult["next_cursor"])")
+//        print("previous_cursor: \(jsonResult["previous_cursor"])")
+//        print("since_id: \(jsonResult["since_id"])")
         
         var newWeiboNumbers = 0
         
         if let statuses = jsonResult["statuses"] as? [[String: AnyObject]]{
             newWeiboNumbers = statuses.count
-            if newWeiboNumbers > 15 {
+            if newWeiboNumbers > 10 {
                 //delete old data
                 DatabaseProcessCenter().clearWeiboHistory()
 //                DatabaseProcessCenter().saveData()
@@ -236,19 +236,22 @@ class parseJSON {
             print("Parse finished")
             DatabaseProcessCenter().saveData()
         }
+        if let errorResult = jsonResult["error"] {
+            print(errorResult)
+        }
         return newWeiboNumbers
     }
     
     func parseLaterTimelineJSON(jsonResult: NSDictionary) -> Int{
         //        print(jsonResult)
         
-        print("has_unread: \(jsonResult["has_unread"])")
-        print("hasvisible: \(jsonResult["hasvisible"])")
-        print("interval: \(jsonResult["interval"])")
-        print("max_id: \(jsonResult["max_id"])")
-        print("next_cursor: \(jsonResult["next_cursor"])")
-        print("previous_cursor: \(jsonResult["previous_cursor"])")
-        print("since_id: \(jsonResult["since_id"])")
+//        print("has_unread: \(jsonResult["has_unread"])")
+//        print("hasvisible: \(jsonResult["hasvisible"])")
+//        print("interval: \(jsonResult["interval"])")
+//        print("max_id: \(jsonResult["max_id"])")
+//        print("next_cursor: \(jsonResult["next_cursor"])")
+//        print("previous_cursor: \(jsonResult["previous_cursor"])")
+//        print("since_id: \(jsonResult["since_id"])")
         
         var newWeiboNumbers = 0
         
@@ -263,6 +266,10 @@ class parseJSON {
             }
             print("Parse finished")
             DatabaseProcessCenter().saveData()
+        }
+        
+        if let errorResult = jsonResult["error"] {
+            print(errorResult)
         }
         return newWeiboNumbers
     }
