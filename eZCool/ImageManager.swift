@@ -9,8 +9,13 @@
 import Foundation
 
 class ImageManager {
- 
-    func loadImageFor(cell: TimeLineTypeCell, wbContent: WBContentModel) {
+    
+    private var cachedUserProfileImage = [Int: UIImage]()
+    
+    private var cachedWeiboImage = [Int:[Int: UIImage]]()
+    
+    
+    func loadMiddleQualityImageFor(cell: TimeLineTypeCell, wbContent: WBContentModel) {
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures
         var picWeibID :Int!
@@ -37,21 +42,8 @@ class ImageManager {
         }
     }
     
-    func loadImageFor(cell: TimeLineTypeCell, cellForRowAtIndex index: Int) {
-        let wbContent = weiboContent[index]
-        loadImageFor(cell, wbContent: wbContent)
-    }
     
-    func loadImageFor(cell: TimeLineTypeCell, cellForRowAtIndex index: Int, weiboID: Int) {
-        let wbContent = weiboContent[index]
-        if wbContent.wbID == weiboID {
-            loadImageFor(cell, wbContent: wbContent)
-        }else if wbContent.repostContent?.wbID == weiboID {
-            loadImageFor(cell, wbContent: wbContent.repostContent!)
-        }
-    }
-    
-    
+    // profile image
     
     func loadProfileImage(wbUser: WBUserModel, forCell cell: TimeLineTypeCell) {
         if let profileImage = cachedUserProfileImage[Int(wbUser.userID!)] {
@@ -93,6 +85,8 @@ class ImageManager {
             }
         }
     }
+    
+    // weibo Image
     
     func getCachedWeiboImgae(weiboID: Int, imageIndex: Int) -> UIImage? {
         if let cachedWeiboImageCollection = self.cachedWeiboImage[weiboID] {
@@ -137,7 +131,6 @@ class ImageManager {
         return nil
     }
     
-    
     func loadWeiboImage(picModel: WBPictureModel, picWeiboID: Int, weiboIDMain comparition: Int, forCell cell: TimeLineTypeCell) {
         
         var updateWeiboImage :UIImage! {
@@ -150,21 +143,23 @@ class ImageManager {
             }
         }
         
+        //cached
+        if let cachedWeiboImage = self.getCachedWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!)) {
+            updateWeiboImage = cachedWeiboImage
+            return
+        }
+        
+        //get from disk
+        if let image = self.getWeiboImgaeFromDisk(picModel) {
+            //cache
+            self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
+            //has been downloaded
+            updateWeiboImage = image
+            return
+        }
+        
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)) {
-            //cached
-            if let cachedWeiboImage = self.getCachedWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!)) {
-                updateWeiboImage = cachedWeiboImage
-                return
-            }
-            //get from disk
-            if let image = self.getWeiboImgaeFromDisk(picModel) {
-                //cache
-                self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
-                //has been downloaded
-                updateWeiboImage = image
-                return
-            }
             //need download
             if let image = self.downloadWeiboImgae(picModel) {
                 //cache
@@ -176,24 +171,12 @@ class ImageManager {
     }
     
     
-    // run not in the main queue
     func getWeiboOriginalImage(weiboID: Int) -> [WBPictureModel]? {
-        let request  = NSFetchRequest(entityName: "WBContentModel")
-        request.predicate = NSPredicate(format: "wbID = %ld", weiboID)
-        var weibos: [WBContentModel]!
-        do{
-            weibos = try managedObjectContext.executeFetchRequest(request) as! [WBContentModel]
-        }catch{
-            let nserror = error as NSError
-            print("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
+        guard let weiboContent = DatabaseProcessCenter().getWeiboContentWith(weiboID: weiboID) else {
+            return nil
         }
-        //to do sort the weiboContent
         
-        let weibo = weibos[0]
-        
-        if var pics = weibo.pictures?.allObjects as? [WBPictureModel] {
-            //            var images = [UIImage]()
+        if var pics = weiboContent.pictures?.allObjects as? [WBPictureModel] {
             pics = pics.sort(){
                 if Int($0.index!) < Int($1.index!){
                     return true
@@ -205,15 +188,18 @@ class ImageManager {
         return nil
     }
     
-    func hasCacheImageAt(weiboID: Int, imgaeIndex: Int) -> Bool {
-        if let cachedWeiboImageCollection = cachedWeiboImage[weiboID] {
-            if let _ = cachedWeiboImageCollection[imgaeIndex] {
-                //has been cached
-                return true
-            }
-        }
-        return false
-    }
+    
+    
+    
+    //    func loadImageFor(cell: TimeLineTypeCell, cellForRowAtIndex index: Int, weiboID: Int) {
+    //        let wbContent = weiboContent[index]
+    //        if wbContent.wbID == weiboID {
+    //            loadImageFor(cell, wbContent: wbContent)
+    //        }else if wbContent.repostContent?.wbID == weiboID {
+    //            loadImageFor(cell, wbContent: wbContent.repostContent!)
+    //        }
+    //    }
+    //
     
     func cutToSquareImage(image: UIImage) -> UIImage {
         let contextImage: UIImage = UIImage(CGImage: image.CGImage!)
@@ -243,5 +229,5 @@ class ImageManager {
         let cuttedImage = UIImage(CGImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
         return cuttedImage
     }
-
+    
 }

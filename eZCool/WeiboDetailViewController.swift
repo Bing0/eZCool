@@ -18,10 +18,11 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var likesButton: UIButton!
     
     let userDefault = UserDefaults()
-    let imageViewSegueData = ImageViewSegueData()
     var repostWeibos = [WBContentModel]()
     
-    var dataProcessCenter: DataProcessCenter!
+    var cacheTool: CacheTool!
+    var imageManager: ImageManager!
+    
     var index: Int!
     var weiboID: Int!
     
@@ -54,11 +55,8 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
         
-//        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-//        dispatch_async(dispatch_get_global_queue(qos, 0)) {
-//            self.getCountOfRepostsComments()
-//            self.getRepostsTimeline()
-//        }
+        getCountOfRepostsComments()
+        getRepostsTimeline()
     }
     
     override func didReceiveMemoryWarning() {
@@ -67,22 +65,23 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func getCountOfRepostsComments(){
-        let urlPath: String = "https://api.weibo.com/2/statuses/count.json?access_token=\(userDefault.wbtoken!)&ids=\(weiboID)"
-        let url: NSURL = (NSURL(string: urlPath))!
-        let request1: NSURLRequest = NSURLRequest(URL: url)
-        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
-        
-        do{
-            let dataVal = try NSURLConnection.sendSynchronousRequest(request1, returningResponse: response)
-            // print(response)
-            do {
-                if let jsonResults = try NSJSONSerialization.JSONObjectWithData(dataVal, options: []) as? [[String: AnyObject]] {
+        do {
+            try WeiboAccessTool().getRepostsCommentsCountsOf(weiboID){
+                do {
+                    let jsonResults = try $0()
                     for jsonResult in jsonResults {
                         if let id = jsonResult["id"] as? Int{
-                            if id == weiboID{
+                            if id == self.weiboID{
                                 let comments = jsonResult["comments"] as! Int
                                 let reposts = jsonResult["reposts"] as! Int
-                                self.dataProcessCenter.updateWeiboCountsOf(comments, reposts: reposts, indexInTimeLineCell: index, weiboID: weiboID)
+                                do {
+                                    if let wbContent = try self.cacheTool.getWeiboContent(withIndex: self.index, andWeiboID: self.weiboID) {
+                                        wbContent.commentCount = comments
+                                        wbContent.repostCount = reposts
+                                    }
+                                }catch{
+                                    print(error)
+                                }
                                 dispatch_async(dispatch_get_main_queue(), {
                                     self.repostButton.setTitle("Reposts \(reposts)", forState: UIControlState.Normal)
                                     self.commentButton.setTitle("Comments \(comments)", forState: UIControlState.Normal)
@@ -91,34 +90,27 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                             }
                         }
                     }
+                }catch{
+                    print(error)
                 }
-            } catch let error as NSError {
-                print(error.localizedDescription)
             }
-        }catch let error as NSError
-        {
-            print(error.localizedDescription)
+        }catch{
+            print(error)
         }
     }
     
     func getRepostsTimeline(){
-        let urlPath: String = "https://api.weibo.com/2/statuses/repost_timeline/ids.json?access_token=\(userDefault.wbtoken!)&id=\(weiboID)"
-        let url: NSURL = (NSURL(string: urlPath))!
-        let request1: NSURLRequest = NSURLRequest(URL: url)
-        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
-        
-        do{
-            let dataVal = try NSURLConnection.sendSynchronousRequest(request1, returningResponse: response)
-            // print(response)
-            do {
-                if let jsonResult = try NSJSONSerialization.JSONObjectWithData(dataVal, options: []) as? NSDictionary {
-                    let weiboIDs = dataProcessCenter.parseJSONRepostsIDs(jsonResult)
-                    for weiboID in weiboIDs {
-                        self.getWeiboByID(weiboID)
-                    }
-                    dataProcessCenter.saveData()
+        do {
+            try WeiboAccessTool().getRepostsTimelineWith(weiboID){
+                do {
+                    let jsonResult = try $0()
+//                    let weiboIDs = DatabaseProcessCenter().parseJSONRepostsIDs(jsonResult)
+//                    for weiboID in weiboIDs {
+//                        self.getWeiboByID(weiboID)
+//                    }
+                    DatabaseProcessCenter().saveData()
                     
-                    if let repostWeibo = dataProcessCenter.isWeiboHasBeenStored(weiboID){
+                    if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
                         if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
                             self.repostWeibos = repostWeibos.sort(){
                                 if $0.createdDate!.compare($1.createdDate!).rawValue < 0 {
@@ -132,51 +124,48 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                     dispatch_async(dispatch_get_main_queue(), {
                         self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
                     })
+                    
+                }catch{
+                    print(error)
                 }
-            } catch let error as NSError {
-                print(error.localizedDescription)
             }
-        }catch let error as NSError
-        {
-            print(error.localizedDescription)
+        }catch{
+            print(error)
         }
     }
     
-    func getWeiboByID(weiboID: String){
-        let urlPath: String = "https://api.weibo.com/2/statuses/show.json?access_token=\(userDefault.wbtoken!)&id=\(weiboID)"
-        let url: NSURL = (NSURL(string: urlPath))!
-        let request1: NSURLRequest = NSURLRequest(URL: url)
-        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
-        
-        do{
-            let dataVal = try NSURLConnection.sendSynchronousRequest(request1, returningResponse: response)
-            // print(response)
-            do {
-                if let statuse = try NSJSONSerialization.JSONObjectWithData(dataVal, options: []) as? [String: AnyObject] {
-                    if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
-                        dataProcessCenter.parseOneWeiboRecord(wbContent, isInTimeline: false)
-                    }
-                }
-            } catch let error as NSError {
-                print(error.localizedDescription)
-            }
-        }catch let error as NSError
-        {
-            print(error.localizedDescription)
-        }
-    }
+//    func getWeiboByID(weiboID: String){
+//        let urlPath: String = "https://api.weibo.com/2/statuses/show.json?access_token=\(userDefault.wbtoken!)&id=\(weiboID)"
+//        let url: NSURL = (NSURL(string: urlPath))!
+//        let request1: NSURLRequest = NSURLRequest(URL: url)
+//        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
+//        
+//        do{
+//            let dataVal = try NSURLConnection.sendSynchronousRequest(request1, returningResponse: response)
+//            // print(response)
+//            do {
+//                if let statuse = try NSJSONSerialization.JSONObjectWithData(dataVal, options: []) as? [String: AnyObject] {
+//                    if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
+//                        dataProcessCenter.parseOneWeiboRecord(wbContent, isInTimeline: false)
+//                    }
+//                }
+//            } catch let error as NSError {
+//                print(error.localizedDescription)
+//            }
+//        }catch let error as NSError
+//        {
+//            print(error.localizedDescription)
+//        }
+//    }
     
     
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView) {
-        if dataProcessCenter.hasCacheImageAt(weiboID, imgaeIndex: imageIndex) {
-            if let picModels = dataProcessCenter.getWeiboOriginalImage(weiboID){
-                imageViewSegueData.imageIndex = imageIndex
-                imageViewSegueData.sourceImageView = sourceImageView
-                imageViewSegueData.picModels = picModels
-                performSegueWithIdentifier("showWeiboImageFromWeiboDetail", sender: imageViewSegueData)
-            }
-        }else{
-            print("Please wait until image downloaded")
+        if let picModels = imageManager.getWeiboOriginalImage(weiboID){
+            let imageViewSegueData = ImageViewSegueData()
+            imageViewSegueData.imageIndex = imageIndex
+            imageViewSegueData.sourceImageView = sourceImageView
+            imageViewSegueData.picModels = picModels
+            performSegueWithIdentifier("showWeiboImageFromWeiboDetail", sender: imageViewSegueData)
         }
     }
     
@@ -185,7 +174,9 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         let vc = storyboard.instantiateViewControllerWithIdentifier("weiboDetail") as! WeiboDetailViewController
         vc.index = index
         vc.weiboID = weiboID
-        vc.dataProcessCenter = dataProcessCenter
+        vc.cacheTool = cacheTool
+        vc.imageManager = imageManager
+
         self.showViewController(vc, sender: nil)
     }
     
@@ -214,7 +205,13 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                 cell.callbackDelegate = self
                 cell.index = index
                 cell.isShownWeiboDetail = true
-                dataProcessCenter.configureWeiboContentCell(cell, index: index, weiboID: weiboID)
+                do {
+                    if let wbContent = try cacheTool.getWeiboContent(withIndex: index, andWeiboID: weiboID) {
+                        CellConfigureTool().configureWeiboContentCell(cell, wbContent: wbContent)
+                    }
+                }catch{
+                    print(error)
+                }
                 return cell
             }
         }else if indexPath.section == 1 {
@@ -234,7 +231,13 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? TimeLineTypeCell {
-            dataProcessCenter.loadImageFor(cell, cellForRowAtIndex: index, weiboID: weiboID)
+            do {
+                if let wbContent = try cacheTool.getWeiboContent(withIndex: index, andWeiboID: weiboID) {
+                    imageManager.loadMiddleQualityImageFor(cell, wbContent: wbContent)
+                }
+            }catch{
+                print(error)
+            }
         }
         if indexPath.section == 1 {
             weiboContentHeight = cell.frame.origin.y + cell.frame.height - 37
@@ -258,6 +261,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         if let dest = segue.destinationViewController as? PageViewController {
+            let imageViewSegueData = sender as! ImageViewSegueData
             dest.imageViewSegueData = imageViewSegueData
         }
     }

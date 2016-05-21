@@ -8,31 +8,39 @@
 
 import Foundation
 
-enum httpTooLError: ErrorType {
+enum HttpTooLError: ErrorType {
     case WrongURL
     case DataError
-    case OutOfRange
+}
+
+enum RetunType {
+    case Dictionary(NSDictionary)
+    case Arrary([[String: AnyObject]])
 }
 
 class HttpTool {
     
-    func httpRequestWith(urlPath: String, callback: (getJSONResult: () throws -> NSDictionary) -> Void) throws {
+    func httpRequestWith(urlPath: String, callback: (getResult: () throws -> RetunType) -> Void) throws {
         
         guard let url = (NSURL(string: urlPath)) else{
-            throw httpTooLError.WrongURL
+            throw HttpTooLError.WrongURL
         }
         let request: NSURLRequest = NSURLRequest(URL: url)
         
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue()) { (response, data, error) in
             guard let data = data else {
-                callback() { throw httpTooLError.DataError }
+                callback() { throw HttpTooLError.DataError }
                 return
             }
             do {
-                let jsonResult = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! NSDictionary
-                callback(getJSONResult: {return jsonResult})
+                if let jsonResult = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSDictionary {
+                    callback(getResult: {return RetunType.Dictionary(jsonResult)})
+                }else if let jsonResult = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String: AnyObject]] {
+                    callback(getResult: {return RetunType.Arrary(jsonResult)})
+                }
+                
             } catch {
-                callback(getJSONResult: {throw error})
+                callback(getResult: {throw error})
             }
             
         }

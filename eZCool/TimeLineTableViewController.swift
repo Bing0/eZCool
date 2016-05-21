@@ -16,15 +16,21 @@ class ImageViewSegueData {
 
 class TimeLineTableViewController: UITableViewController, CellContentClickedCallback{
     
-    private let userDefault = UserDefaults()
-    
     private let cacheTool = CacheTool()
 
+    private let imageManager = ImageManager()
+    
     private var prototypeCell :TimeLineTypeCell!
     
-    private let imageViewSegueData = ImageViewSegueData()
+    let threshold: CGFloat = 1000.0 // threshold from bottom of tableView
     
-    private var newWeiboCount = 0
+    var isLoadingMore = false // flag
+    
+    private var newWeiboCount = 0 {
+        willSet{
+            print("new weibo \(newValue)")
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,10 +52,6 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         
         self.refreshControl?.addTarget(self, action: #selector(TimeLineTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        
-//        dispatch_async(dispatch_get_main_queue()) {
-//            self.getTimeline(1)
-//        }
     }
 
     func handleRefresh(refreshControl: UIRefreshControl) {
@@ -60,9 +62,9 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
             try WeiboAccessTool().getNewestTimeline(){
                 do {
                     let jsonResult = try $0()
-                    self.newWeiboCount = parseJSON().parseTimelineJSON(jsonResult)
                     
                     dispatch_async(dispatch_get_main_queue()) {
+                        self.newWeiboCount = parseJSON().parseTimelineJSON(jsonResult)
                         self.tableView.reloadData()
                         self.refreshControl?.endRefreshing()
                         //TODO show new weibo count
@@ -85,16 +87,12 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     }
     
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView) {
-        if databaseProcessCenter.hasCacheImageAt(weiboID, imgaeIndex: imageIndex) {
-            if let picModels = databaseProcessCenter.getWeiboOriginalImage(weiboID){
-                imageViewSegueData.imageIndex = imageIndex
-                imageViewSegueData.sourceImageView = sourceImageView
-                imageViewSegueData.picModels = picModels
-                performSegueWithIdentifier("showWeiboImage", sender: imageViewSegueData)
-            }
-            
-        }else{
-            print("Please wait until image downloaded")
+        if let picModels = imageManager.getWeiboOriginalImage(weiboID){
+            let imageViewSegueData = ImageViewSegueData()
+            imageViewSegueData.imageIndex = imageIndex
+            imageViewSegueData.sourceImageView = sourceImageView
+            imageViewSegueData.picModels = picModels
+            performSegueWithIdentifier("showWeiboImage", sender: imageViewSegueData)
         }
     }
     
@@ -103,7 +101,9 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         let vc = storyboard.instantiateViewControllerWithIdentifier("weiboDetail") as! WeiboDetailViewController
         vc.index = index
         vc.weiboID = weiboID
-        vc.dataProcessCenter = databaseProcessCenter
+        vc.cacheTool = cacheTool
+        vc.imageManager = imageManager
+        
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -178,13 +178,55 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? TimeLineTypeCell {
-            databaseProcessCenter.loadImageFor(cell, cellForRowAtIndex: indexPath.section)
+            do {
+                let wbContent = try cacheTool.getWeiboContent(withIndex: indexPath.section)
+                imageManager.loadMiddleQualityImageFor(cell, wbContent: wbContent)
+            }catch{
+                print(error)
+            }
         }
     }
     
     override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? TimeLineTypeCell {
             cell.removeTapGestureFromAllImages()
+        }
+    }
+    
+    
+
+    
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        let contentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+        
+        if !isLoadingMore && (maximumOffset - contentOffset <= threshold) {
+            // Get more data - API call
+            self.isLoadingMore = true
+            
+            // Update UI
+            dispatch_async(dispatch_get_main_queue()) {
+                
+                do {
+                    try WeiboAccessTool().getLaterTimeline(){
+                        do {
+                            let jsonResult = try $0()
+                            
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.newWeiboCount = parseJSON().parseLaterTimelineJSON(jsonResult)
+                                self.tableView.reloadData()                                
+                            }
+                        }catch{
+                            print(error)
+                        }
+                    }
+                }catch{
+                    print(error)
+                }
+                
+                self.isLoadingMore = false
+            }
         }
     }
     
@@ -231,6 +273,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
      // Get the new view controller using segue.destinationViewController.
      // Pass the selected object to the new view controller.
         if let dest = segue.destinationViewController as? PageViewController {
+            let imageViewSegueData = sender as! ImageViewSegueData
             dest.imageViewSegueData = imageViewSegueData
         }
      }

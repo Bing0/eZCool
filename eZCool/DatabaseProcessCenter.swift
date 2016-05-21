@@ -19,19 +19,32 @@ struct Constant {
 class DatabaseProcessCenter :NSObject{
     
     private let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-    
     private let dateFormatterFromJSON = NSDateFormatter()
-    
-    private var cachedUserProfileImage = [Int: UIImage]()
-    
-    private var cachedWeiboImage = [Int:[Int: UIImage]]()
-    
     
     override init() {
         dateFormatterFromJSON.dateFormat = "EEE MMM dd HH:mm:ss Z yyyy"
         dateFormatterFromJSON.locale = NSLocale(localeIdentifier: "en_US")
     }
     
+    
+    func printuser() {
+        let request  = NSFetchRequest(entityName: "WBUserModel")
+        
+        var wbUserModels = [WBUserModel]()
+        
+        do{
+            wbUserModels = try managedObjectContext.executeFetchRequest(request) as! [WBUserModel]
+        }catch{
+            let nserror = error as NSError
+            print("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        
+        for wbUserModel in wbUserModels {
+            print("user: \(wbUserModel.name!), counts:\(wbUserModel.wbContents!.count)")
+        }
+
+    }
     func clearWeiboHistory() {
         let request  = NSFetchRequest(entityName: "WBContentModel")
         
@@ -45,9 +58,23 @@ class DatabaseProcessCenter :NSObject{
             abort()
         }
         
+        var i = 0
+        
         for wbContentModel in wbContentModels {
+            let wbUser = wbContentModel.belongToWBUser
+//            wbUser?.removeWbContentsObject(wbContentModel)
+            print("before user: \(wbUser!.name!), counts:\(wbUser!.wbContents!.count)")
+            i += 1
             managedObjectContext.deleteObject(wbContentModel)
+//            managedObjectContext.processPendingChanges()
+            saveData()
+            print("after user: \(wbUser!.name!), counts:\(wbUser!.wbContents!.count)")
         }
+        
+//        managedObjectContext.processPendingChanges()
+        print("\(i) deleted \n")
+        printuser()
+        
     }
     
     func analyseOneWeiboRecord(wbContent: WBContent, isInTimeline: Bool) -> WBContentModel?{
@@ -179,19 +206,24 @@ class DatabaseProcessCenter :NSObject{
     }
 
     
-        
-    func updateWeiboCountsOf(comments: Int, reposts: Int, indexInTimeLineCell: Int, weiboID: Int) {
-        let wbContent = weiboContent[indexInTimeLineCell]
-        if wbContent.wbID == weiboID {
-            wbContent.commentCount = comments
-            wbContent.repostCount = reposts
-        }else if wbContent.repostContent?.wbID == weiboID {
-            wbContent.repostContent!.commentCount = comments
-            wbContent.repostContent!.repostCount = reposts
+    func getWeiboContentWith(weiboID id: Int) -> WBContentModel? {
+        let request  = NSFetchRequest(entityName: "WBContentModel")
+        request.predicate = NSPredicate(format: "wbID = %ld", id)
+        var weibos: [WBContentModel]!
+        do{
+            weibos = try managedObjectContext.executeFetchRequest(request) as! [WBContentModel]
+        }catch{
+            let nserror = error as NSError
+            print("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
         }
+        
+        if weibos.count > 0 {
+            return weibos[0]
+        }
+        return nil
     }
     
-        
     func parseJSONRepostsIDs(jsonResult: NSDictionary) -> [String] {
         print(jsonResult)
         
@@ -200,9 +232,6 @@ class DatabaseProcessCenter :NSObject{
         }
         return [String]()
     }
-    
-
-    
     
     func saveData(){
         if managedObjectContext.hasChanges {
