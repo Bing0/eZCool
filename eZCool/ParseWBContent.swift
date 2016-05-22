@@ -207,16 +207,6 @@ class parseJSON {
     
     
     func parseHomeTimelineJSON(jsonResult: NSDictionary) -> Int{
-        //        print(jsonResult)
-        
-//        print("has_unread: \(jsonResult["has_unread"])")
-//        print("hasvisible: \(jsonResult["hasvisible"])")
-//        print("interval: \(jsonResult["interval"])")
-//        print("max_id: \(jsonResult["max_id"])")
-//        print("next_cursor: \(jsonResult["next_cursor"])")
-//        print("previous_cursor: \(jsonResult["previous_cursor"])")
-//        print("since_id: \(jsonResult["since_id"])")
-        
         var newWeiboNumbers = 0
         
         if let statuses = jsonResult["statuses"] as? [[String: AnyObject]]{
@@ -224,8 +214,9 @@ class parseJSON {
             if newWeiboNumbers > 10 {
                 //delete old data
                 DatabaseProcessCenter().clearWeiboHistory()
+            }else{
+                DatabaseProcessCenter().clearWeiboOlderThan1Day()
             }
-        
             print("Going to Parse")
             for statuse in statuses {
                 if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
@@ -233,7 +224,6 @@ class parseJSON {
                 }
             }
             print("Parse finished")
-//            DatabaseProcessCenter().saveData()
         }
         if let errorResult = jsonResult["error"] {
             print(errorResult)
@@ -242,16 +232,6 @@ class parseJSON {
     }
     
     func parseHomeLaterTimelineJSON(jsonResult: NSDictionary) -> Int{
-        //        print(jsonResult)
-        
-//        print("has_unread: \(jsonResult["has_unread"])")
-//        print("hasvisible: \(jsonResult["hasvisible"])")
-//        print("interval: \(jsonResult["interval"])")
-//        print("max_id: \(jsonResult["max_id"])")
-//        print("next_cursor: \(jsonResult["next_cursor"])")
-//        print("previous_cursor: \(jsonResult["previous_cursor"])")
-//        print("since_id: \(jsonResult["since_id"])")
-        
         var newWeiboNumbers = 0
         
         if let statuses = jsonResult["statuses"] as? [[String: AnyObject]]{
@@ -264,7 +244,6 @@ class parseJSON {
                 }
             }
             print("Parse finished")
-            DatabaseProcessCenter().saveData()
         }
         
         if let errorResult = jsonResult["error"] {
@@ -293,7 +272,6 @@ class parseJSON {
                 }
             }
             print("Parse finished")
-            DatabaseProcessCenter().saveData()
         }
         if let errorResult = jsonResult["error"] {
             print(errorResult)
@@ -320,7 +298,6 @@ class parseJSON {
                 print(statuse)
             }
             print("Parse finished")
-            DatabaseProcessCenter().saveData()
         }
         if let errorResult = jsonResult["error"] {
             print(errorResult)

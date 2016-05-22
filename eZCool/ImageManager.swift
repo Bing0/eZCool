@@ -6,7 +6,7 @@
 //  Copyright © 2016 BinWu. All rights reserved.
 //
 
-import Foundation
+import CoreData
 
 class ImageManager {
     
@@ -114,9 +114,10 @@ class ImageManager {
     }
     
     func getWeiboImgaeFromDisk(picModel: WBPictureModel) -> UIImage? {
-//        if let picture = picModel.pictureHigh {
-//            return  UIImage(data: picture)!
-//        }
+        
+        //        if let picture = picModel.pictureHigh {
+        //            return  UIImage(data: picture)!
+        //        }
         if let picture = picModel.pictureMedium {
             return  UIImage(data: picture)!
         }
@@ -133,12 +134,16 @@ class ImageManager {
         return nil
     }
     
+    //This method is call in main thread, but data fetch should be done in a none main thread. Be careful with Core Data handling.
+    
     func loadWeiboImage(picModel: WBPictureModel, picWeiboID: Int, weiboIDMain comparition: Int, forCell cell: TimeLineTypeCell) {
         
         var updateWeiboImage :UIImage! {
             willSet{
                 if cell.weiboIDMain == comparition {
-                    cell.originalImageCollection[Int(picModel.index!)].image = newValue
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell.originalImageCollection[Int(picModel.index!)].image = newValue
+                    }
                 }
             }
         }
@@ -149,31 +154,43 @@ class ImageManager {
             return
         }
         
-        //get from disk
-        if let image = self.getWeiboImgaeFromDisk(picModel) {
-            //cache
-            self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
-            //has been downloaded
-            updateWeiboImage = image
-            return
-        }
-   
-        let urlString = picModel.picURLMedium!
+        let picModelID = picModel.objectID
         
-        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-        dispatch_async(dispatch_get_global_queue(qos, 0)) {
-            //need download
+        let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).coreDataStack.managedObjectContext
+        let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        privateMOC.parentContext = managedObjectContext
+        
+        privateMOC.performBlock() {
+            let picModel = privateMOC.objectWithID(picModelID) as! WBPictureModel
             
-            if let imageData = self.downloadWeiboImage(urlString) {
+            //get from disk
+            if let image = self.getWeiboImgaeFromDisk(picModel) {
+                //cache
+                self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
                 
-                dispatch_async(dispatch_get_main_queue()) {
-                    //store the image
-                    picModel.pictureMedium = imageData
-                    let image = UIImage(data: imageData)!
-                    //cache
-                    self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
+                do {
+                    try privateMOC.save()
                     //has been downloaded
                     updateWeiboImage = image
+                } catch {
+                    fatalError("Failure to save context: \(error)")
+                }
+                return
+            }
+            
+            //need download
+            if let imageData = self.downloadWeiboImage(picModel.picURLMedium!) {
+                //store the image
+                picModel.pictureMedium = imageData
+                let image = UIImage(data: imageData)!
+                //cache
+                self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
+                do {
+                    try privateMOC.save()
+                    //has been downloaded
+                    updateWeiboImage = image
+                } catch {
+                    fatalError("Failure to save context: \(error)")
                 }
             }
         }

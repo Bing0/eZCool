@@ -16,6 +16,8 @@ class ImageViewSegueData {
 
 class TimeLineTableViewController: UITableViewController, CellContentClickedCallback{
     
+    // MARK: - Variable
+    
     private let cacheTool = CacheTool()
 
     private let imageManager = ImageManager()
@@ -31,6 +33,8 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
             print("new weibo \(newValue)")
         }
     }
+    
+    // MARK: - Functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -182,6 +186,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         if let cell = cell as? TimeLineTypeCell {
             do {
                 let wbContent = try cacheTool.getWeiboContent(withIndex: indexPath.section)
+                //Careful.  Call this method in main thread, but image fetch is in a none main thrad
                 imageManager.loadMiddleQualityImageFor(cell, wbContent: wbContent)
             }catch{
                 print(error)
@@ -204,29 +209,25 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
             // Get more data - API call
             self.isLoadingMore = true
             
-            // Update UI
-            dispatch_async(dispatch_get_main_queue()) {
-                
-                do {
-                    try WeiboAccessTool().getLaterTimeline(){
-                        do {
-                            let jsonResult = try $0()
-                            
-                            dispatch_async(dispatch_get_main_queue()) {
-                                let number = parseJSON().parseHomeLaterTimelineJSON(jsonResult)
-                                print("get \(number) weibo")
-                                self.tableView.reloadData()
-                                self.isLoadingMore = false
-                            }
-                        }catch{
-                            print(error)
+            do {
+                try WeiboAccessTool().getLaterTimeline(){
+                    do {
+                        let jsonResult = try $0()
+                        
+                        let number = parseJSON().parseHomeLaterTimelineJSON(jsonResult)
+                        print("get \(number) weibo")
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.tableView.reloadData()
                             self.isLoadingMore = false
                         }
+                    }catch{
+                        print(error)
+                        self.isLoadingMore = false
                     }
-                }catch{
-                    print(error)
-                    self.isLoadingMore = false
                 }
+            }catch{
+                print(error)
+                self.isLoadingMore = false
             }
         }
     }

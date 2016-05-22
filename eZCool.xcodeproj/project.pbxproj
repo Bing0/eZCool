@@ -16,6 +16,7 @@
 		D7155D081CD67654009D8726 /* DatabaseProcessCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D071CD67654009D8726 /* DatabaseProcessCenter.swift */; };
 		D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */; };
 		D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D221CD6F182009D8726 /* WBUserModel.swift */; };
+		D716E65E1CF1F0D20077DC8C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D716E65D1CF1F0D20077DC8C /* CoreDataStack.swift */; };
 		D718EFAD1CD5FD68009C2084 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D718EFAC1CD5FD68009C2084 /* Assets.xcassets */; };
 		D73770841CD989D8006E636A /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73770821CD989D8006E636A /* ImageViewController.swift */; };
 		D73770851CD989D8006E636A /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73770831CD989D8006E636A /* PageViewController.swift */; };
@@ -64,6 +65,7 @@
 		D7155D071CD67654009D8726 /* DatabaseProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseProcessCenter.swift; sourceTree = "<group>"; };
 		D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBUserModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D7155D221CD6F182009D8726 /* WBUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBUserModel.swift; sourceTree = "<group>"; };
+		D716E65D1CF1F0D20077DC8C /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		D718EFAC1CD5FD68009C2084 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D73770821CD989D8006E636A /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		D73770831CD989D8006E636A /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				D7D047831CD43531008DCC7D /* AppDelegate.swift */,
+				D716E65D1CF1F0D20077DC8C /* CoreDataStack.swift */,
 				D7D047E61CD47CFA008DCC7D /* UserDefaults.swift */,
 				D718EFAC1CD5FD68009C2084 /* Assets.xcassets */,
 				D7D0478F1CD43531008DCC7D /* LaunchScreen.storyboard */,
@@ -382,6 +385,7 @@
 				C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */,
 				D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */,
 				D758D6741CECABB20077D492 /* HttpTool.swift in Sources */,
+				D716E65E1CF1F0D20077DC8C /* CoreDataStack.swift in Sources */,
 				D758D6791CECB4F10077D492 /* WeiboAccessTool.swift in Sources */,
 				D7D6103C1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift in Sources */,
 				D758D67D1CEE0B160077D492 /* CellConfigureTool.swift in Sources */,

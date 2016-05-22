@@ -18,35 +18,57 @@ struct Constant {
 
 class DatabaseProcessCenter :NSObject{
     
-    private let _managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    // MARK: - NSManagedObjectContext
     
-    private var managedObjectContext: NSManagedObjectContext {
-        get {
-//            print(NSThread.isMainThread())
+    private let _managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).coreDataStack.managedObjectContext
+    private let _privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+    
+    private var managedObjectContext: NSManagedObjectContext? {
+        if NSThread.isMainThread() {
             return _managedObjectContext
+        }else{
+            print("Error use managedObjectContext in none main thread")
+            return nil
         }
     }
     
+    private var privateMOC: NSManagedObjectContext? {
+        if NSThread.isMainThread() {
+            print("Error use privateMOC in main thread")
+            return nil
+        }else{
+            return _privateMOC
+        }
+    }
+
+    
+    // MARK: - dateFormatter
+    
     private let dateFormatterFromJSON = NSDateFormatter()
+    
+    
+    // MARK: - init
     
     override init() {
         dateFormatterFromJSON.dateFormat = "EEE MMM dd HH:mm:ss Z yyyy"
         dateFormatterFromJSON.locale = NSLocale(localeIdentifier: "en_US")
+        _privateMOC.parentContext = _managedObjectContext
     }
     
+    // MARK: - None main thread used functions
     
     func printuser() {
-        let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        privateMOC.parentContext = managedObjectContext
+        guard let MOC = privateMOC else{
+            return
+        }
         
-        privateMOC.performBlockAndWait {
-            
+        MOC.performBlockAndWait {
             let request  = NSFetchRequest(entityName: "WBUserModel")
             
             var wbUserModels = [WBUserModel]()
             
             do{
-                wbUserModels = try privateMOC.executeFetchRequest(request) as! [WBUserModel]
+                wbUserModels = try MOC.executeFetchRequest(request) as! [WBUserModel]
             }catch{
                 let nserror = error as NSError
                 print("Unresolved error \(nserror), \(nserror.userInfo)")
@@ -57,27 +79,26 @@ class DatabaseProcessCenter :NSObject{
                 print("user: \(wbUserModel.name!), counts:\(wbUserModel.wbContents!.count)")
             }
             do {
-                try privateMOC.save()
+                try MOC.save()
             } catch {
                 fatalError("Failure to save context: \(error)")
             }
         }
     }
     
-    //not in main thread
     func clearWeiboHistory() {
-        
-        let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        privateMOC.parentContext = managedObjectContext
-        
-        privateMOC.performBlockAndWait {
+        guard let MOC = privateMOC else{
+            return
+        }
+
+        MOC.performBlockAndWait {
             
             let request  = NSFetchRequest(entityName: "WBContentModel")
             
             var wbContentModels = [WBContentModel]()
             
             do{
-                wbContentModels = try privateMOC.executeFetchRequest(request) as! [WBContentModel]
+                wbContentModels = try MOC.executeFetchRequest(request) as! [WBContentModel]
             }catch{
                 let nserror = error as NSError
                 print("Unresolved error \(nserror), \(nserror.userInfo)")
@@ -88,33 +109,70 @@ class DatabaseProcessCenter :NSObject{
             
             for wbContentModel in wbContentModels {
                 i += 1
-                privateMOC.deleteObject(wbContentModel)
+                MOC.deleteObject(wbContentModel)
             }
             print("\(i) deleted \n")
             
             do {
-                try privateMOC.save()
+                try MOC.save()
             } catch {
                 fatalError("Failure to save context: \(error)")
             }
         }
-        
         printuser()
-        
     }
     
-    func analyseOneWeiboRecord(wbContent: WBContent, isInTimeline: Bool) -> WBContentModel?{
-        let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        privateMOC.parentContext = managedObjectContext
+    func clearWeiboOlderThan1Day() {
+        guard let MOC = privateMOC else{
+            return
+        }
         
-        var wbContentModel: WBContentModel? = nil
-        
-        privateMOC.performBlockAndWait {
+        MOC.performBlockAndWait {
             
-            wbContentModel = self.analyseOneWeiboRecordInPivateThread(wbContent, isInTimeline: isInTimeline, privateMOC: privateMOC)
+            let request  = NSFetchRequest(entityName: "WBContentModel")
+            
+//            request.predicate = NSPredicate(format: "userID = %ld", weiboUser.id)
+            
+            var wbContentModels = [WBContentModel]()
+            
+            do{
+                wbContentModels = try MOC.executeFetchRequest(request) as! [WBContentModel]
+            }catch{
+                let nserror = error as NSError
+                print("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            
+            var i = 0
+            
+            for wbContentModel in wbContentModels {
+                i += 1
+                MOC.deleteObject(wbContentModel)
+            }
+            print("\(i) deleted \n")
             
             do {
-                try privateMOC.save()
+                try MOC.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+        }
+        printuser()
+    }
+    
+    
+    func analyseOneWeiboRecord(wbContent: WBContent, isInTimeline: Bool) -> WBContentModel?{
+        guard let MOC = privateMOC else{
+            return nil
+        }
+        var wbContentModel: WBContentModel? = nil
+        
+        MOC.performBlockAndWait {
+            
+            wbContentModel = self.analyseOneWeiboRecordInPivateThread(wbContent, isInTimeline: isInTimeline)
+            
+            do {
+                try MOC.save()
             } catch {
                 fatalError("Failure to save context: \(error)")
             }
@@ -124,9 +182,12 @@ class DatabaseProcessCenter :NSObject{
         return wbContentModel
     }
     
-    func analyseOneWeiboRecordInPivateThread(wbContent: WBContent, isInTimeline: Bool, privateMOC: NSManagedObjectContext) -> WBContentModel?{
+    func analyseOneWeiboRecordInPivateThread(wbContent: WBContent, isInTimeline: Bool) -> WBContentModel?{
+        guard let MOC = privateMOC else{
+            return nil
+        }
         //search in core data first
-        if let wbContentModel = isWeiboHasBeenCreatedInPivateThread(wbContent.id, privateMOC: privateMOC) {
+        if let wbContentModel = isWeiboHasBeenCreatedInPivateThread(wbContent.id) {
             
             wbContentModel.repostCount = wbContent.reposts_count
             wbContentModel.commentCount = wbContent.comments_count
@@ -135,8 +196,8 @@ class DatabaseProcessCenter :NSObject{
             return wbContentModel
         }
         //create one
-        let wbContentModelEntity = NSEntityDescription.entityForName("WBContentModel",inManagedObjectContext: privateMOC)
-        let wbContentModel = WBContentModel(entity: wbContentModelEntity!, insertIntoManagedObjectContext: privateMOC)
+        let wbContentModelEntity = NSEntityDescription.entityForName("WBContentModel",inManagedObjectContext: MOC)
+        let wbContentModel = WBContentModel(entity: wbContentModelEntity!, insertIntoManagedObjectContext: MOC)
         
         wbContentModel.wbID = wbContent.id
         wbContentModel.createdDate = dateFormatterFromJSON.dateFromString( wbContent.created_at)
@@ -148,15 +209,15 @@ class DatabaseProcessCenter :NSObject{
         if isInTimeline { wbContentModel.isInTimeline = true}
         
         if let retweetedWBContent = wbContent.retweeted_status {
-            if let reposted = analyseOneWeiboRecordInPivateThread(retweetedWBContent, isInTimeline: false, privateMOC: privateMOC) {
+            if let reposted = analyseOneWeiboRecordInPivateThread(retweetedWBContent, isInTimeline: false) {
                 wbContentModel.repostContent =  reposted
                 reposted.addBeRepostedObject(wbContentModel)
             }
         }
         
         for i in 0 ..< wbContent.pic_urls.count {
-            let picEntity = NSEntityDescription.entityForName("WBPictureModel",inManagedObjectContext: privateMOC)
-            let picModel = WBPictureModel(entity: picEntity!, insertIntoManagedObjectContext: privateMOC)
+            let picEntity = NSEntityDescription.entityForName("WBPictureModel",inManagedObjectContext: MOC)
+            let picModel = WBPictureModel(entity: picEntity!, insertIntoManagedObjectContext: MOC)
             
             var url = wbContent.pic_urls[i]
             picModel.picURLLow = url
@@ -169,20 +230,23 @@ class DatabaseProcessCenter :NSObject{
             wbContentModel.addPicturesObject(picModel)
         }
         
-        if let wbUserModel = getWBUserCreateIfNoneInPivateThread(wbContent.user, privateMOC: privateMOC) {
+        if let wbUserModel = getWBUserCreateIfNoneInPivateThread(wbContent.user) {
             wbContentModel.belongToWBUser =  wbUserModel
             wbUserModel.addWbContentsObject(wbContentModel)
         }
         return wbContentModel
     }
     
-    func isWeiboHasBeenCreatedInPivateThread(weiboID: Int, privateMOC: NSManagedObjectContext) -> WBContentModel? {
+    func isWeiboHasBeenCreatedInPivateThread(weiboID: Int) -> WBContentModel? {
+        guard let MOC = privateMOC else{
+            return nil
+        }
         let request  = NSFetchRequest(entityName: "WBContentModel")
         request.predicate = NSPredicate(format: "wbID = %ld", weiboID)
         var wbContentModel = [WBContentModel]()
         
         do{
-            wbContentModel = try privateMOC.executeFetchRequest(request) as! [WBContentModel]
+            wbContentModel = try MOC.executeFetchRequest(request) as! [WBContentModel]
         }catch{
             let nserror = error as NSError
             print("Unresolved error \(nserror), \(nserror.userInfo)")
@@ -195,16 +259,16 @@ class DatabaseProcessCenter :NSObject{
     }
 
     func isWeiboHasBeenCreated(weiboID: Int) -> WBContentModel? {
-        let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        privateMOC.parentContext = managedObjectContext
+        guard let MOC = privateMOC else{
+            return nil
+        }
+        
         var wbContentModel: WBContentModel? = nil
         
-        privateMOC.performBlockAndWait {
-            
-            wbContentModel = self.isWeiboHasBeenCreatedInPivateThread(weiboID, privateMOC: privateMOC)
-            
+        MOC.performBlockAndWait {
+            wbContentModel = self.isWeiboHasBeenCreatedInPivateThread(weiboID)
             do {
-                try privateMOC.save()
+                try MOC.save()
             } catch {
                 fatalError("Failure to save context: \(error)")
             }
@@ -212,14 +276,17 @@ class DatabaseProcessCenter :NSObject{
         return wbContentModel
     }
 
-    func getWBUserCreateIfNoneInPivateThread(wbUser: WBUser?, privateMOC: NSManagedObjectContext) -> WBUserModel? {
+    func getWBUserCreateIfNoneInPivateThread(wbUser: WBUser?) -> WBUserModel? {
+        guard let MOC = privateMOC else{
+            return nil
+        }
         if let weiboUser = wbUser {
             let request  = NSFetchRequest(entityName: "WBUserModel")
             request.predicate = NSPredicate(format: "userID = %ld", weiboUser.id)
             var wbUserModel = [WBUserModel]()
             
             do{
-                wbUserModel = try privateMOC.executeFetchRequest(request) as! [WBUserModel]
+                wbUserModel = try MOC.executeFetchRequest(request) as! [WBUserModel]
             }catch{
                 let nserror = error as NSError
                 print("Unresolved error \(nserror), \(nserror.userInfo)")
@@ -230,16 +297,20 @@ class DatabaseProcessCenter :NSObject{
                 
                 return wbUserModel[0]
             }else{
-                return createWBUserInPivateThread(weiboUser, privateMOC: privateMOC)
+                return createWBUserInPivateThread(weiboUser)
             }
         }
         return nil
     }
     
-    func createWBUserInPivateThread(wbUser: WBUser, privateMOC: NSManagedObjectContext) -> WBUserModel{
+    func createWBUserInPivateThread(wbUser: WBUser) -> WBUserModel?{
+        guard let MOC = privateMOC else{
+            return nil
+        }
+        
         //create one
-        let wbUserModelEntity = NSEntityDescription.entityForName("WBUserModel",inManagedObjectContext: privateMOC)
-        let wbUserModel = WBUserModel(entity: wbUserModelEntity!, insertIntoManagedObjectContext: privateMOC)
+        let wbUserModelEntity = NSEntityDescription.entityForName("WBUserModel",inManagedObjectContext: MOC)
+        let wbUserModel = WBUserModel(entity: wbUserModelEntity!, insertIntoManagedObjectContext: MOC)
         
         wbUserModel.userID = wbUser.id
         wbUserModel.profileURL = wbUser.profile_url
@@ -254,7 +325,13 @@ class DatabaseProcessCenter :NSObject{
         return wbUserModel
     }
     
+    // MARK: - Main thread used functions
+    
     func getTimelineWeiboContentInDisk() -> [WBContentModel] {
+        guard let managedObjectContext = managedObjectContext else{
+            return [WBContentModel]()
+        }
+        
         let request  = NSFetchRequest(entityName: "WBContentModel")
         request.predicate = NSPredicate(format: "isInTimeline = %d", 1)
         request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: false)]
@@ -272,6 +349,10 @@ class DatabaseProcessCenter :NSObject{
 
     
     func getWeiboContentWith(weiboID id: Int) -> WBContentModel? {
+        guard let managedObjectContext = managedObjectContext else{
+            return nil
+        }
+        
         let request  = NSFetchRequest(entityName: "WBContentModel")
         request.predicate = NSPredicate(format: "wbID = %ld", id)
         var weibos: [WBContentModel]!
@@ -289,29 +370,31 @@ class DatabaseProcessCenter :NSObject{
         return nil
     }
     
-    func parseJSONRepostsIDs(jsonResult: NSDictionary) -> [String] {
-        print(jsonResult)
-        
-        if let weiboIDs = jsonResult["statuses"] as? [String]{
-            return weiboIDs
-        }
-        return [String]()
-    }
+//    func parseJSONRepostsIDs(jsonResult: NSDictionary) -> [String] {
+//        print(jsonResult)
+//        
+//        if let weiboIDs = jsonResult["statuses"] as? [String]{
+//            return weiboIDs
+//        }
+//        return [String]()
+//    }
     
-    func saveData(){
-        if managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
-            }
-        }
-    }
+//    func saveData(){
+//        if managedObjectContext.hasChanges {
+//            do {
+//                try managedObjectContext.save()
+//            } catch {
+//                // Replace this implementation with code to handle the error appropriately.
+//                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                let nserror = error as NSError
+//                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+//                abort()
+//            }
+//        }
+//    }
 }
+
+// MARK: - extension
 
 extension NSDate {
     func getRelativeTime() -> String {
