@@ -63,8 +63,9 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
                 do {
                     let jsonResult = try $0()
                     
+                    self.newWeiboCount = parseJSON().parseHomeTimelineJSON(jsonResult)
+                    
                     dispatch_async(dispatch_get_main_queue()) {
-                        self.newWeiboCount = parseJSON().parseTimelineJSON(jsonResult)
                         self.tableView.reloadData()
                         self.refreshControl?.endRefreshing()
                         //TODO show new weibo count
@@ -215,7 +216,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
                             let jsonResult = try $0()
                             
                             dispatch_async(dispatch_get_main_queue()) {
-                                let number = parseJSON().parseLaterTimelineJSON(jsonResult)
+                                let number = parseJSON().parseHomeLaterTimelineJSON(jsonResult)
                                 print("get \(number) weibo")
                                 self.tableView.reloadData()                                
                             }

@@ -206,7 +206,7 @@ class ParseWBContent {
 class parseJSON {
     
     
-    func parseTimelineJSON(jsonResult: NSDictionary) -> Int{
+    func parseHomeTimelineJSON(jsonResult: NSDictionary) -> Int{
         //        print(jsonResult)
         
 //        print("has_unread: \(jsonResult["has_unread"])")
@@ -224,7 +224,6 @@ class parseJSON {
             if newWeiboNumbers > 10 {
                 //delete old data
                 DatabaseProcessCenter().clearWeiboHistory()
-//                DatabaseProcessCenter().saveData()
             }
         
             print("Going to Parse")
@@ -234,7 +233,7 @@ class parseJSON {
                 }
             }
             print("Parse finished")
-            DatabaseProcessCenter().saveData()
+//            DatabaseProcessCenter().saveData()
         }
         if let errorResult = jsonResult["error"] {
             print(errorResult)
@@ -242,7 +241,7 @@ class parseJSON {
         return newWeiboNumbers
     }
     
-    func parseLaterTimelineJSON(jsonResult: NSDictionary) -> Int{
+    func parseHomeLaterTimelineJSON(jsonResult: NSDictionary) -> Int{
         //        print(jsonResult)
         
 //        print("has_unread: \(jsonResult["has_unread"])")
@@ -275,6 +274,60 @@ class parseJSON {
     }
     
     
+    func parseRepostTimelineJSON(jsonResult: NSDictionary){
+        //        print(jsonResult)
+        
+        //        print("has_unread: \(jsonResult["has_unread"])")
+        //        print("hasvisible: \(jsonResult["hasvisible"])")
+        //        print("interval: \(jsonResult["interval"])")
+        //        print("max_id: \(jsonResult["max_id"])")
+        //        print("next_cursor: \(jsonResult["next_cursor"])")
+        //        print("previous_cursor: \(jsonResult["previous_cursor"])")
+        //        print("since_id: \(jsonResult["since_id"])")
+        
+        if let statuses = jsonResult["reposts"] as? [[String: AnyObject]]{
+            print("Going to Parse")
+            for statuse in statuses {
+                if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
+                    DatabaseProcessCenter().analyseOneWeiboRecord(wbContent, isInTimeline: false)
+                }
+            }
+            print("Parse finished")
+            DatabaseProcessCenter().saveData()
+        }
+        if let errorResult = jsonResult["error"] {
+            print(errorResult)
+        }
+    }
+    
+    func parseCommentsTimelineJSON(jsonResult: NSDictionary){
+        //        print(jsonResult)
+        
+        //        print("has_unread: \(jsonResult["has_unread"])")
+        //        print("hasvisible: \(jsonResult["hasvisible"])")
+        //        print("interval: \(jsonResult["interval"])")
+        //        print("max_id: \(jsonResult["max_id"])")
+        //        print("next_cursor: \(jsonResult["next_cursor"])")
+        //        print("previous_cursor: \(jsonResult["previous_cursor"])")
+        //        print("since_id: \(jsonResult["since_id"])")
+        
+        if let statuses = jsonResult["comments"] as? [[String: AnyObject]]{
+            print("Going to Parse")
+            for statuse in statuses {
+//                if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
+//                    DatabaseProcessCenter().analyseOneWeiboRecord(wbContent, isInTimeline: false)
+//                }
+                print(statuse)
+            }
+            print("Parse finished")
+            DatabaseProcessCenter().saveData()
+        }
+        if let errorResult = jsonResult["error"] {
+            print(errorResult)
+        }
+    }
+    
+
 }
 
 

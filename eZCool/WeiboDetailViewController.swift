@@ -56,7 +56,9 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
         
         getCountOfRepostsComments()
-        getRepostsTimeline()
+        commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
+//        getRepostsTimeline()
+        getCommentsTimeline()
     }
     
     override func didReceiveMemoryWarning() {
@@ -104,11 +106,8 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             try WeiboAccessTool().getRepostsTimelineWith(weiboID){
                 do {
                     let jsonResult = try $0()
-//                    let weiboIDs = DatabaseProcessCenter().parseJSONRepostsIDs(jsonResult)
-//                    for weiboID in weiboIDs {
-//                        self.getWeiboByID(weiboID)
-//                    }
-                    DatabaseProcessCenter().saveData()
+                   
+                    parseJSON().parseRepostTimelineJSON(jsonResult)
                     
                     if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
                         if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
@@ -121,7 +120,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                         }
                     }
                     
-                    dispatch_async(dispatch_get_main_queue(), {
+                     dispatch_async(dispatch_get_main_queue(), {
                         self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
                     })
                     
@@ -134,30 +133,38 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-//    func getWeiboByID(weiboID: String){
-//        let urlPath: String = "https://api.weibo.com/2/statuses/show.json?access_token=\(userDefault.wbtoken!)&id=\(weiboID)"
-//        let url: NSURL = (NSURL(string: urlPath))!
-//        let request1: NSURLRequest = NSURLRequest(URL: url)
-//        let response: AutoreleasingUnsafeMutablePointer<NSURLResponse?>=nil
-//        
-//        do{
-//            let dataVal = try NSURLConnection.sendSynchronousRequest(request1, returningResponse: response)
-//            // print(response)
-//            do {
-//                if let statuse = try NSJSONSerialization.JSONObjectWithData(dataVal, options: []) as? [String: AnyObject] {
-//                    if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
-//                        dataProcessCenter.parseOneWeiboRecord(wbContent, isInTimeline: false)
-//                    }
-//                }
-//            } catch let error as NSError {
-//                print(error.localizedDescription)
-//            }
-//        }catch let error as NSError
-//        {
-//            print(error.localizedDescription)
-//        }
-//    }
     
+    func getCommentsTimeline() {
+        do {
+            try WeiboAccessTool().getCommentsTimelineOf(weiboID){
+                do {
+                    let jsonResult = try $0()
+                    dispatch_async(dispatch_get_main_queue(), {
+                        parseJSON().parseCommentsTimelineJSON(jsonResult)
+                        
+//                        if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
+//                            if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
+//                                self.repostWeibos = repostWeibos.sort(){
+//                                    if $0.createdDate!.compare($1.createdDate!).rawValue < 0 {
+//                                        return  true
+//                                    }
+//                                    return false
+//                                }
+//                            }
+//                        }
+//                        
+//                        
+//                        self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
+                    })
+                    
+                }catch{
+                    print(error)
+                }
+            }
+        }catch{
+            print(error)
+        }
+    }
     
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView) {
         if let picModels = imageManager.getWeiboOriginalImage(weiboID){
