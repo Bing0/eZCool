@@ -36,22 +36,32 @@ class DatabaseProcessCenter :NSObject{
     
     
     func printuser() {
-        let request  = NSFetchRequest(entityName: "WBUserModel")
+        let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        privateMOC.parentContext = managedObjectContext
         
-        var wbUserModels = [WBUserModel]()
-        
-        do{
-            wbUserModels = try managedObjectContext.executeFetchRequest(request) as! [WBUserModel]
-        }catch{
-            let nserror = error as NSError
-            print("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
+        privateMOC.performBlockAndWait {
+            
+            let request  = NSFetchRequest(entityName: "WBUserModel")
+            
+            var wbUserModels = [WBUserModel]()
+            
+            do{
+                wbUserModels = try privateMOC.executeFetchRequest(request) as! [WBUserModel]
+            }catch{
+                let nserror = error as NSError
+                print("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            
+            for wbUserModel in wbUserModels {
+                print("user: \(wbUserModel.name!), counts:\(wbUserModel.wbContents!.count)")
+            }
+            do {
+                try privateMOC.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
         }
-        
-        for wbUserModel in wbUserModels {
-            print("user: \(wbUserModel.name!), counts:\(wbUserModel.wbContents!.count)")
-        }
-
     }
     
     //not in main thread

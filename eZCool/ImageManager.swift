@@ -69,14 +69,15 @@ class ImageManager {
             }
         }else{
             //need download
+            let urlString = wbUser.avatarHDURL!
             let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
             dispatch_async(dispatch_get_global_queue(qos, 0)) {
-                if let imageData = NSData(contentsOfURL: NSURL(string: wbUser.avatarHDURL!)!){
-                    //store the image
-                    wbUser.avatarHD = imageData
-                    let image = self.cutToSquareImage(UIImage(data: imageData)!)
-                    self.cachedUserProfileImage[Int(wbUser.userID!)] = image
+                if let imageData = NSData(contentsOfURL: NSURL(string: urlString)!){
                     dispatch_async(dispatch_get_main_queue()){
+                        //store the image
+                        wbUser.avatarHD = imageData
+                        let image = self.cutToSquareImage(UIImage(data: imageData)!)
+                        self.cachedUserProfileImage[Int(wbUser.userID!)] = image
                         //try to display the image
                         if cell.wbUserID == Int(wbUser.userID!) {
                             cell.profileImage.image = image
@@ -113,9 +114,9 @@ class ImageManager {
     }
     
     func getWeiboImgaeFromDisk(picModel: WBPictureModel) -> UIImage? {
-        if let picture = picModel.pictureHigh {
-            return  UIImage(data: picture)!
-        }
+//        if let picture = picModel.pictureHigh {
+//            return  UIImage(data: picture)!
+//        }
         if let picture = picModel.pictureMedium {
             return  UIImage(data: picture)!
         }
@@ -125,12 +126,9 @@ class ImageManager {
         return nil
     }
     
-    func downloadWeiboImgae(picModel: WBPictureModel) -> UIImage? {
-        if let imageData = NSData(contentsOfURL: NSURL(string: picModel.picURLMedium!)!){
-            //store the image
-            picModel.pictureMedium = imageData
-            
-            return UIImage(data: imageData)!
+    func downloadWeiboImage(urlString: String) -> NSData? {
+        if let imageData = NSData(contentsOfURL: NSURL(string: urlString)!){
+            return imageData
         }
         return nil
     }
@@ -140,9 +138,7 @@ class ImageManager {
         var updateWeiboImage :UIImage! {
             willSet{
                 if cell.weiboIDMain == comparition {
-                    dispatch_async(dispatch_get_main_queue()){
-                        cell.originalImageCollection[Int(picModel.index!)].image = newValue
-                    }
+                    cell.originalImageCollection[Int(picModel.index!)].image = newValue
                 }
             }
         }
@@ -161,15 +157,24 @@ class ImageManager {
             updateWeiboImage = image
             return
         }
+   
+        let urlString = picModel.picURLMedium!
         
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)) {
             //need download
-            if let image = self.downloadWeiboImgae(picModel) {
-                //cache
-                self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
-                //has been downloaded
-                updateWeiboImage = image
+            
+            if let imageData = self.downloadWeiboImage(urlString) {
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    //store the image
+                    picModel.pictureMedium = imageData
+                    let image = UIImage(data: imageData)!
+                    //cache
+                    self.cacheWeiboImgae(picWeiboID, imageIndex: Int(picModel.index!), image: image)
+                    //has been downloaded
+                    updateWeiboImage = image
+                }
             }
         }
     }

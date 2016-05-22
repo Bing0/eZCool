@@ -76,15 +76,16 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                             if id == self.weiboID{
                                 let comments = jsonResult["comments"] as! Int
                                 let reposts = jsonResult["reposts"] as! Int
-                                do {
-                                    if let wbContent = try self.cacheTool.getWeiboContent(withIndex: self.index, andWeiboID: self.weiboID) {
-                                        wbContent.commentCount = comments
-                                        wbContent.repostCount = reposts
-                                    }
-                                }catch{
-                                    print(error)
-                                }
                                 dispatch_async(dispatch_get_main_queue(), {
+                                    do {
+                                        if let wbContent = try self.cacheTool.getWeiboContent(withIndex: self.index, andWeiboID: self.weiboID) {
+                                            wbContent.commentCount = comments
+                                            wbContent.repostCount = reposts
+                                        }
+                                    }catch{
+                                        print(error)
+                                    }
+                                    
                                     self.repostButton.setTitle("Reposts \(reposts)", forState: UIControlState.Normal)
                                     self.commentButton.setTitle("Comments \(comments)", forState: UIControlState.Normal)
                                 })
@@ -139,23 +140,23 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             try WeiboAccessTool().getCommentsTimelineOf(weiboID){
                 do {
                     let jsonResult = try $0()
-                    dispatch_async(dispatch_get_main_queue(), {
-                        parseJSON().parseCommentsTimelineJSON(jsonResult)
-                        
-//                        if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
-//                            if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
-//                                self.repostWeibos = repostWeibos.sort(){
-//                                    if $0.createdDate!.compare($1.createdDate!).rawValue < 0 {
-//                                        return  true
-//                                    }
-//                                    return false
+                    
+//                    parseJSON().parseCommentsTimelineJSON(jsonResult)
+                    
+//                    if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
+//                        if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
+//                            self.repostWeibos = repostWeibos.sort(){
+//                                if $0.createdDate!.compare($1.createdDate!).rawValue < 0 {
+//                                    return  true
 //                                }
+//                                return false
 //                            }
 //                        }
-//                        
-//                        
+//                    }
+//                    
+//                    dispatch_async(dispatch_get_main_queue(), {
 //                        self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
-                    })
+//                    })
                     
                 }catch{
                     print(error)
