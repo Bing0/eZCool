@@ -131,7 +131,9 @@ class DatabaseProcessCenter :NSObject{
             
             let request  = NSFetchRequest(entityName: "WBContentModel")
             
-//            request.predicate = NSPredicate(format: "userID = %ld", weiboUser.id)
+            let date = NSDate().dateByAddingTimeInterval(-3600*24)
+            
+            request.predicate = NSPredicate(format: "createdDate <= %@", date)
             
             var wbContentModels = [WBContentModel]()
             
@@ -161,25 +163,18 @@ class DatabaseProcessCenter :NSObject{
     }
     
     
-    func analyseOneWeiboRecord(wbContent: WBContent, isInTimeline: Bool) -> WBContentModel?{
+    func analyseOneWeiboRecord(wbContent: WBContent, isInTimeline: Bool){
         guard let MOC = privateMOC else{
-            return nil
+            return
         }
-        var wbContentModel: WBContentModel? = nil
-        
         MOC.performBlockAndWait {
-            
-            wbContentModel = self.analyseOneWeiboRecordInPivateThread(wbContent, isInTimeline: isInTimeline)
-            
+            self.analyseOneWeiboRecordInPivateThread(wbContent, isInTimeline: isInTimeline)
             do {
                 try MOC.save()
             } catch {
                 fatalError("Failure to save context: \(error)")
             }
-            
         }
-        
-        return wbContentModel
     }
     
     func analyseOneWeiboRecordInPivateThread(wbContent: WBContent, isInTimeline: Bool) -> WBContentModel?{
@@ -324,6 +319,80 @@ class DatabaseProcessCenter :NSObject{
         
         return wbUserModel
     }
+    
+    func analyseOneWeiboCommentRecord(wbCommentContent: WBCommentContent){
+        guard let MOC = privateMOC else{
+            return
+        }
+        MOC.performBlockAndWait {
+            
+            self.analyseOneWeiboCommentRecordInPivateThread(wbCommentContent)
+            
+            do {
+                try MOC.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+            
+        }
+    }
+    
+    func analyseOneWeiboCommentRecordInPivateThread(wbCommentContent: WBCommentContent) ->WBCommentContentModel? {
+        guard let MOC = privateMOC else{
+            return nil
+        }
+        return nil
+        //search in core data first
+//        if let wbContentModel = isWeiboHasBeenCreatedInPivateThread(wbContent.id) {
+//            
+//            wbContentModel.repostCount = wbContent.reposts_count
+//            wbContentModel.commentCount = wbContent.comments_count
+//            wbContentModel.attitudeCount = wbContent.attitudes_count
+//            
+//            return wbContentModel
+//        }
+//        //create one
+//        let wbContentModelEntity = NSEntityDescription.entityForName("WBContentModel",inManagedObjectContext: MOC)
+//        let wbContentModel = WBContentModel(entity: wbContentModelEntity!, insertIntoManagedObjectContext: MOC)
+//        
+//        wbContentModel.wbID = wbContent.id
+//        wbContentModel.createdDate = dateFormatterFromJSON.dateFromString( wbContent.created_at)
+//        wbContentModel.text = wbContent.text
+//        wbContentModel.source = wbContent.source
+//        wbContentModel.repostCount = wbContent.reposts_count
+//        wbContentModel.commentCount = wbContent.comments_count
+//        wbContentModel.attitudeCount = wbContent.attitudes_count
+//        if isInTimeline { wbContentModel.isInTimeline = true}
+//        
+//        if let retweetedWBContent = wbContent.retweeted_status {
+//            if let reposted = analyseOneWeiboRecordInPivateThread(retweetedWBContent, isInTimeline: false) {
+//                wbContentModel.repostContent =  reposted
+//                reposted.addBeRepostedObject(wbContentModel)
+//            }
+//        }
+//        
+//        for i in 0 ..< wbContent.pic_urls.count {
+//            let picEntity = NSEntityDescription.entityForName("WBPictureModel",inManagedObjectContext: MOC)
+//            let picModel = WBPictureModel(entity: picEntity!, insertIntoManagedObjectContext: MOC)
+//            
+//            var url = wbContent.pic_urls[i]
+//            picModel.picURLLow = url
+//            url.replaceRange(url.rangeOfString(Constant.LowPicQuality)!, with: Constant.MidPicQuality)
+//            picModel.picURLMedium = url
+//            url.replaceRange(url.rangeOfString(Constant.MidPicQuality)!, with: Constant.HigPicQuality)
+//            picModel.picURLHigh = url
+//            picModel.index = i
+//            picModel.belongToWBContent = wbContentModel
+//            wbContentModel.addPicturesObject(picModel)
+//        }
+//        
+//        if let wbUserModel = getWBUserCreateIfNoneInPivateThread(wbContent.user) {
+//            wbContentModel.belongToWBUser =  wbUserModel
+//            wbUserModel.addWbContentsObject(wbContentModel)
+//        }
+//        return wbContentModel
+    }
+    
     
     // MARK: - Main thread used functions
     

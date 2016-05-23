@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15F34" minimumToolsVersion="Automatic">
+    <entity name="WBCommentContentModel" representedClassName=".WBCommentContentModel" syncable="YES">
+        <attribute name="createdDate" attributeType="Date" syncable="YES"/>
+        <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wbCommentID" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="belongToWBContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBContentModel" inverseName="hasComment" inverseEntity="WBContentModel" syncable="YES"/>
+        <relationship name="belongToWBUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBUserModel" inverseName="everCommet" inverseEntity="WBUserModel" syncable="YES"/>
+        <relationship name="beRepliedTo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WBCommentContentModel" inverseName="replyTo" inverseEntity="WBCommentContentModel" syncable="YES"/>
+        <relationship name="replyTo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBCommentContentModel" inverseName="beRepliedTo" inverseEntity="WBCommentContentModel" syncable="YES"/>
+    </entity>
     <entity name="WBContentModel" representedClassName=".WBContentModel" syncable="YES">
         <attribute name="attitudeCount" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="cellHeight" optional="YES" attributeType="Double" syncable="YES"/>
@@ -12,6 +22,7 @@
         <attribute name="wbID" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <relationship name="belongToWBUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBUserModel" inverseName="wbContents" inverseEntity="WBUserModel" syncable="YES"/>
         <relationship name="beReposted" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WBContentModel" inverseName="repostContent" inverseEntity="WBContentModel" syncable="YES"/>
+        <relationship name="hasComment" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WBCommentContentModel" inverseName="belongToWBContent" inverseEntity="WBCommentContentModel" syncable="YES"/>
         <relationship name="pictures" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WBPictureModel" inverseName="belongToWBContent" inverseEntity="WBPictureModel" syncable="YES"/>
         <relationship name="repostContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WBContentModel" inverseName="beReposted" inverseEntity="WBContentModel" syncable="YES"/>
     </entity>
@@ -37,11 +48,13 @@
         <attribute name="screenName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="verifiedReason" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="everCommet" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WBCommentContentModel" inverseName="belongToWBUser" inverseEntity="WBCommentContentModel" syncable="YES"/>
         <relationship name="wbContents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WBContentModel" inverseName="belongToWBUser" inverseEntity="WBContentModel" syncable="YES"/>
     </entity>
     <elements>
-        <element name="WBContentModel" positionX="-477" positionY="-549" width="128" height="238"/>
-        <element name="WBPictureModel" positionX="-225" positionY="-468" width="128" height="165"/>
-        <element name="WBUserModel" positionX="-693" positionY="-481" width="128" height="223"/>
+        <element name="WBCommentContentModel" positionX="-495" positionY="-199" width="128" height="163"/>
+        <element name="WBContentModel" positionX="-477" positionY="-549" width="128" height="253"/>
+        <element name="WBPictureModel" positionX="-279" positionY="-450" width="128" height="165"/>
+        <element name="WBUserModel" positionX="-693" positionY="-481" width="128" height="238"/>
     </elements>
 </model>

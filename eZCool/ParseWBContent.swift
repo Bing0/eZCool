@@ -37,6 +37,18 @@ class WBContent {
     var ad: [AnyObject]?              //微博流内的推广微博ID
 }
 
+class WBCommentContent {
+    var created_at: String!             //微博创建时间
+    var id: Int!                        //微博ID
+    var mid: Int!                       //微博MID
+    var idstr: String!                  //字符串型的微博ID
+    var text: String!                   //微博信息内容
+    var source:	String!                 //微博来源
+    var status: WBContent?      //被转发的原微博信息字段，当该微博为转发微博时返回
+    var reply_comment: WBCommentContent?      //被转发的原微博信息字段，当该微博为转发微博时返回
+    var user: WBUser?                   //微博作者的用户信息字段
+}
+
 class WBGeo {
     var longitude: String!      //经度坐标
     var latitude: String!       //维度坐标
@@ -138,6 +150,27 @@ class ParseWBContent {
             }
         }        
         return wbContent
+    }
+    
+    func parseOneWeiboCommentContent(json :Dictionary<String, AnyObject>) -> WBCommentContent? {
+        let wbCommentContent = WBCommentContent()
+        //        print(json)
+        wbCommentContent.created_at = json["created_at"] as! String
+        wbCommentContent.id = json["id"]  as! Int                 //微博ID
+        wbCommentContent.mid = Int(json["mid"] as! String)                       //微博MID
+        wbCommentContent.idstr = json["idstr"] as! String                 //字符串型的微博ID
+        wbCommentContent.text = json["text"] as! String                   //微博信息内容
+        wbCommentContent.source = json["source"] as? 	String                 //微博来源
+        if let user = json["user"] as? [String: AnyObject]{
+            wbCommentContent.user = parseUser(user)                //微博作者的用户信息字段
+        }
+        if let retweeted_status = json["reply_comment"] as? [String: AnyObject]{
+            wbCommentContent.reply_comment = parseOneWeiboCommentContent(retweeted_status)      //被转发的原微博信息字段，当该微博为转发微博时返回
+        }
+        if let retweeted_status = json["status"] as? [String: AnyObject]{
+            wbCommentContent.status = parseOneWBContent(retweeted_status)      //被转发的原微博信息字段，当该微博为转发微博时返回
+        }
+        return wbCommentContent
     }
     
     func parseGeo(json :Dictionary<String, AnyObject>) -> WBGeo {
@@ -280,21 +313,12 @@ class parseJSON {
     
     func parseCommentsTimelineJSON(jsonResult: NSDictionary){
         //        print(jsonResult)
-        
-        //        print("has_unread: \(jsonResult["has_unread"])")
-        //        print("hasvisible: \(jsonResult["hasvisible"])")
-        //        print("interval: \(jsonResult["interval"])")
-        //        print("max_id: \(jsonResult["max_id"])")
-        //        print("next_cursor: \(jsonResult["next_cursor"])")
-        //        print("previous_cursor: \(jsonResult["previous_cursor"])")
-        //        print("since_id: \(jsonResult["since_id"])")
-        
         if let statuses = jsonResult["comments"] as? [[String: AnyObject]]{
             print("Going to Parse")
             for statuse in statuses {
-//                if let wbContent = ParseWBContent().parseOneWBContent(statuse) {
-//                    DatabaseProcessCenter().analyseOneWeiboRecord(wbContent, isInTimeline: false)
-//                }
+                if let wbCommentContent = ParseWBContent().parseOneWeiboCommentContent(statuse) {
+                    DatabaseProcessCenter().analyseOneWeiboCommentRecord(wbCommentContent)
+                }
                 print(statuse)
             }
             print("Parse finished")
@@ -303,8 +327,6 @@ class parseJSON {
             print(errorResult)
         }
     }
-    
-
 }
 
 

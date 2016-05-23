@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		343E59591CF31F7000BCA229 /* WBContentModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343E59551CF31F7000BCA229 /* WBContentModel+CoreDataProperties.swift */; };
+		343E595A1CF31F7000BCA229 /* WBContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343E59561CF31F7000BCA229 /* WBContentModel.swift */; };
+		343E595B1CF31F7000BCA229 /* WBCommentContentModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343E59571CF31F7000BCA229 /* WBCommentContentModel+CoreDataProperties.swift */; };
+		343E595C1CF31F7000BCA229 /* WBCommentContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343E59581CF31F7000BCA229 /* WBCommentContentModel.swift */; };
+		343E595F1CF31FA600BCA229 /* WBUserModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343E595D1CF31FA600BCA229 /* WBUserModel+CoreDataProperties.swift */; };
+		343E59601CF31FA600BCA229 /* WBUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343E595E1CF31FA600BCA229 /* WBUserModel.swift */; };
 		C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20025B21CE07F6500587B64 /* TimeLineTypeCell.swift */; };
 		C20025B61CE080E000587B64 /* TimeLineTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20025B81CE080E000587B64 /* TimeLineTypeCell.xib */; };
 		C2BBE3131CDC448B003C2D89 /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */; };
@@ -14,8 +20,6 @@
 		D702C3221CE0BAD00051375D /* BottomBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D702C3201CE0BAD00051375D /* BottomBarCell.swift */; };
 		D702C3241CE0BB0A0051375D /* BottomBarCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D702C3261CE0BB0A0051375D /* BottomBarCell.xib */; };
 		D7155D081CD67654009D8726 /* DatabaseProcessCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D071CD67654009D8726 /* DatabaseProcessCenter.swift */; };
-		D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */; };
-		D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7155D221CD6F182009D8726 /* WBUserModel.swift */; };
 		D716E65E1CF1F0D20077DC8C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D716E65D1CF1F0D20077DC8C /* CoreDataStack.swift */; };
 		D718EFAD1CD5FD68009C2084 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D718EFAC1CD5FD68009C2084 /* Assets.xcassets */; };
 		D73770841CD989D8006E636A /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73770821CD989D8006E636A /* ImageViewController.swift */; };
@@ -27,8 +31,6 @@
 		D758D67D1CEE0B160077D492 /* CellConfigureTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D758D67C1CEE0B160077D492 /* CellConfigureTool.swift */; };
 		D758D67F1CEE10B40077D492 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D758D67E1CEE10B40077D492 /* ImageManager.swift */; };
 		D77DA51B1CE869F4000D1153 /* RepostCommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77DA51A1CE869F4000D1153 /* RepostCommentTableViewCell.swift */; };
-		D798A6DE1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */; };
-		D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D798A6DD1CD720B900016D43 /* WBContentModel.swift */; };
 		D7D047841CD43531008DCC7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D047831CD43531008DCC7D /* AppDelegate.swift */; };
 		D7D047891CD43531008DCC7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7D047871CD43531008DCC7D /* Main.storyboard */; };
 		D7D0478C1CD43531008DCC7D /* eZCool.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D7D0478A1CD43531008DCC7D /* eZCool.xcdatamodeld */; };
@@ -56,6 +58,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		343E59551CF31F7000BCA229 /* WBContentModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBContentModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		343E59561CF31F7000BCA229 /* WBContentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBContentModel.swift; sourceTree = "<group>"; };
+		343E59571CF31F7000BCA229 /* WBCommentContentModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBCommentContentModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		343E59581CF31F7000BCA229 /* WBCommentContentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBCommentContentModel.swift; sourceTree = "<group>"; };
+		343E595D1CF31FA600BCA229 /* WBUserModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBUserModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		343E595E1CF31FA600BCA229 /* WBUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBUserModel.swift; sourceTree = "<group>"; };
 		C20025B21CE07F6500587B64 /* TimeLineTypeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineTypeCell.swift; sourceTree = "<group>"; };
 		C20025B71CE080E000587B64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TimeLineTypeCell.xib; sourceTree = "<group>"; };
 		C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Gif.swift"; path = "eZCool/UIImage+Gif.swift"; sourceTree = "<group>"; };
@@ -63,8 +71,6 @@
 		D702C3201CE0BAD00051375D /* BottomBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomBarCell.swift; sourceTree = "<group>"; };
 		D702C3251CE0BB0A0051375D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/BottomBarCell.xib; sourceTree = "<group>"; };
 		D7155D071CD67654009D8726 /* DatabaseProcessCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseProcessCenter.swift; sourceTree = "<group>"; };
-		D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBUserModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		D7155D221CD6F182009D8726 /* WBUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBUserModel.swift; sourceTree = "<group>"; };
 		D716E65D1CF1F0D20077DC8C /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		D718EFAC1CD5FD68009C2084 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D73770821CD989D8006E636A /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
@@ -76,8 +82,6 @@
 		D758D67C1CEE0B160077D492 /* CellConfigureTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellConfigureTool.swift; sourceTree = "<group>"; };
 		D758D67E1CEE10B40077D492 /* ImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		D77DA51A1CE869F4000D1153 /* RepostCommentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepostCommentTableViewCell.swift; sourceTree = "<group>"; };
-		D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WBContentModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		D798A6DD1CD720B900016D43 /* WBContentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBContentModel.swift; sourceTree = "<group>"; };
 		D7D047801CD43531008DCC7D /* eZCool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eZCool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7D047831CD43531008DCC7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7D047881CD43531008DCC7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -188,12 +192,14 @@
 		D7155D061CD6738A009D8726 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				D798A6DC1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift */,
-				D798A6DD1CD720B900016D43 /* WBContentModel.swift */,
+				343E59551CF31F7000BCA229 /* WBContentModel+CoreDataProperties.swift */,
+				343E59561CF31F7000BCA229 /* WBContentModel.swift */,
+				343E59571CF31F7000BCA229 /* WBCommentContentModel+CoreDataProperties.swift */,
+				343E59581CF31F7000BCA229 /* WBCommentContentModel.swift */,
 				D7D6103A1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift */,
 				D7D6103B1CD7519500FA81FD /* WBPictureModel.swift */,
-				D7155D211CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift */,
-				D7155D221CD6F182009D8726 /* WBUserModel.swift */,
+				343E595D1CF31FA600BCA229 /* WBUserModel+CoreDataProperties.swift */,
+				343E595E1CF31FA600BCA229 /* WBUserModel.swift */,
 			);
 			name = DataModel;
 			sourceTree = "<group>";
@@ -379,28 +385,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7D047E71CD47CFA008DCC7D /* UserDefaults.swift in Sources */,
-				D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */,
+				343E595F1CF31FA600BCA229 /* WBUserModel+CoreDataProperties.swift in Sources */,
 				D77DA51B1CE869F4000D1153 /* RepostCommentTableViewCell.swift in Sources */,
 				D758D67F1CEE10B40077D492 /* ImageManager.swift in Sources */,
 				C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */,
-				D798A6DF1CD720B900016D43 /* WBContentModel.swift in Sources */,
 				D758D6741CECABB20077D492 /* HttpTool.swift in Sources */,
 				D716E65E1CF1F0D20077DC8C /* CoreDataStack.swift in Sources */,
 				D758D6791CECB4F10077D492 /* WeiboAccessTool.swift in Sources */,
+				343E595A1CF31F7000BCA229 /* WBContentModel.swift in Sources */,
 				D7D6103C1CD7519500FA81FD /* WBPictureModel+CoreDataProperties.swift in Sources */,
 				D758D67D1CEE0B160077D492 /* CellConfigureTool.swift in Sources */,
+				343E59601CF31FA600BCA229 /* WBUserModel.swift in Sources */,
+				343E59591CF31F7000BCA229 /* WBContentModel+CoreDataProperties.swift in Sources */,
 				D758D67B1CEE09B00077D492 /* CacheTool.swift in Sources */,
 				D7D6103D1CD7519500FA81FD /* WBPictureModel.swift in Sources */,
-				D798A6DE1CD720B900016D43 /* WBContentModel+CoreDataProperties.swift in Sources */,
-				D7155D241CD6F182009D8726 /* WBUserModel.swift in Sources */,
 				D7D047EB1CD47F0E008DCC7D /* UserProfileViewController.swift in Sources */,
 				D7D047E91CD47DE0008DCC7D /* TimeLineTableViewController.swift in Sources */,
 				C2BBE3151CDC62DB003C2D89 /* WeiboDetailViewController.swift in Sources */,
+				343E595B1CF31F7000BCA229 /* WBCommentContentModel+CoreDataProperties.swift in Sources */,
 				D73770841CD989D8006E636A /* ImageViewController.swift in Sources */,
 				D7D047841CD43531008DCC7D /* AppDelegate.swift in Sources */,
 				C2BBE3131CDC448B003C2D89 /* UIImage+Gif.swift in Sources */,
 				D7D0478C1CD43531008DCC7D /* eZCool.xcdatamodeld in Sources */,
 				D73770851CD989D8006E636A /* PageViewController.swift in Sources */,
+				343E595C1CF31F7000BCA229 /* WBCommentContentModel.swift in Sources */,
 				D702C3221CE0BAD00051375D /* BottomBarCell.swift in Sources */,
 				D758D6771CECB0B20077D492 /* URLMake.swift in Sources */,
 				D7D047EF1CD4937E008DCC7D /* ParseWBContent.swift in Sources */,
@@ -538,6 +546,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = eZCool/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -548,6 +557,7 @@
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = Bingo.eZCool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "eZCool/eZCool-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -559,6 +569,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = eZCool/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -569,6 +580,7 @@
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = Bingo.eZCool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "eZCool/eZCool-Bridging-Header.h";
 			};
 			name = Release;
