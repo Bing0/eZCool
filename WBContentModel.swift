@@ -2,7 +2,7 @@
 //  WBContentModel.swift
 //  eZCool
 //
-//  Created by Bin on 5/23/16.
+//  Created by BinWu on 5/2/16.
 //  Copyright © 2016 BinWu. All rights reserved.
 //
 
