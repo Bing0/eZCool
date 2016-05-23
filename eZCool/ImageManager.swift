@@ -14,15 +14,18 @@ class ImageManager {
     
     private var cachedWeiboImage = [Int:[Int: UIImage]]()
     
+    
+    //CAUTION: All these method are called in main thread.
+    
     func clearImageCache() {
         cachedUserProfileImage.removeAll()
         cachedWeiboImage.removeAll()
     }
     
     func loadMiddleQualityImageFor(cell: RepostCommentTableViewCell, wbCommentContent: WBCommentContent) {
-        let wbUser = WBUser()
-        var wbPics = wbContent.pictures
-        var picWeibID :Int!
+        guard let wbUser = DatabaseProcessCenter().getWBUserCreateIfNone(wbCommentContent.user) else {
+            return
+        }
         
         cell.profileImage.image = nil
         
@@ -30,21 +33,7 @@ class ImageManager {
         
         loadProfileImage(wbUser, forCell: cell)
         
-        cell.weiboIDMain = Int(wbContent.wbID!)
-        
-        if let repostedWBContent = wbContent.repostContent{
-            wbPics = repostedWBContent.pictures
-            cell.weiboIDReposted = Int(repostedWBContent.wbID!)
-            picWeibID = Int(repostedWBContent.wbID!)
-        }else{
-            wbPics = wbContent.pictures
-            picWeibID = Int(wbContent.wbID!)
-        }
-        
-        for picModel in (wbPics?.allObjects as? [WBPictureModel])! {
-            cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
-            loadWeiboImage(picModel, picWeiboID: picWeibID, weiboIDMain: Int(wbContent.wbID!), forCell: cell)
-        }
+        //TODO: - load comment pics
     }
     
     func loadMiddleQualityImageFor(cell: TimeLineTypeCell, wbContent: WBContentModel) {
@@ -78,6 +67,48 @@ class ImageManager {
     // profile image
     
     func loadProfileImage(wbUser: WBUserModel, forCell cell: TimeLineTypeCell) {
+        if let profileImage = cachedUserProfileImage[Int(wbUser.userID!)] {
+            if cell.wbUserID == Int(wbUser.userID!) {
+                // has been cached
+                cell.profileImage.image = profileImage
+                // print("get profile image from cache")
+                return
+            }
+        }
+        if let avatarHD = wbUser.avatarHD {
+            //has been download
+            if cell.wbUserID == Int(wbUser.userID!) {
+                let image = cutToSquareImage(UIImage(data: avatarHD)!)
+                cell.profileImage.image = image
+                cachedUserProfileImage[Int(wbUser.userID!)] = image
+            }else{
+                print("~~~wrong profile image!!!!!!!!!!")
+            }
+        }else{
+            //need download
+            let urlString = wbUser.avatarHDURL!
+            let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+            dispatch_async(dispatch_get_global_queue(qos, 0)) {
+                if let imageData = NSData(contentsOfURL: NSURL(string: urlString)!){
+                    dispatch_async(dispatch_get_main_queue()){
+                        //store the image
+                        wbUser.avatarHD = imageData
+                        let image = self.cutToSquareImage(UIImage(data: imageData)!)
+                        self.cachedUserProfileImage[Int(wbUser.userID!)] = image
+                        //try to display the image
+                        if cell.wbUserID == Int(wbUser.userID!) {
+                            cell.profileImage.image = image
+                            print("downloaded profile image for usr: \(wbUser.userID!)")
+                        }else{
+                            print("~~~wrong profile image~~~")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func loadProfileImage(wbUser: WBUserModel, forCell cell: RepostCommentTableViewCell) {
         if let profileImage = cachedUserProfileImage[Int(wbUser.userID!)] {
             if cell.wbUserID == Int(wbUser.userID!) {
                 // has been cached

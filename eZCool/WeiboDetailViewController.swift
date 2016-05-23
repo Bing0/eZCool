@@ -57,6 +57,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+        tableView.showsVerticalScrollIndicator = false
         
         getCountOfRepostsComments()
         commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)

@@ -348,6 +348,55 @@ class DatabaseProcessCenter :NSObject{
         return nil
     }
     
+    func getWBUserCreateIfNone(wbUser: WBUser?) -> WBUserModel? {
+        guard let managedObjectContext = managedObjectContext else{
+            return nil
+        }
+        if let weiboUser = wbUser {
+            let request  = NSFetchRequest(entityName: "WBUserModel")
+            request.predicate = NSPredicate(format: "userID = %ld", weiboUser.id)
+            var wbUserModel = [WBUserModel]()
+            
+            do{
+                wbUserModel = try managedObjectContext.executeFetchRequest(request) as! [WBUserModel]
+            }catch{
+                let nserror = error as NSError
+                print("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            if wbUserModel.count > 0 {
+                //TODO check user information last update time
+                
+                return wbUserModel[0]
+            }else{
+                return createWBUser(weiboUser)
+            }
+        }
+        return nil
+    }
+    
+    func createWBUser(wbUser: WBUser) -> WBUserModel?{
+        guard let managedObjectContext = managedObjectContext else{
+            return nil
+        }
+        
+        //create one
+        let wbUserModelEntity = NSEntityDescription.entityForName("WBUserModel",inManagedObjectContext: managedObjectContext)
+        let wbUserModel = WBUserModel(entity: wbUserModelEntity!, insertIntoManagedObjectContext: managedObjectContext)
+        
+        wbUserModel.userID = wbUser.id
+        wbUserModel.profileURL = wbUser.profile_url
+        wbUserModel.createdDate = dateFormatterFromJSON.dateFromString( wbUser.created_at)
+        wbUserModel.avatarHDURL = wbUser.avatar_hd
+        wbUserModel.isVerified = wbUser.verified
+        wbUserModel.name = wbUser.name
+        wbUserModel.screenName = wbUser.screen_name
+        wbUserModel.verifiedReason = wbUser.verified_reason
+        wbUserModel.lastUpdateDate = NSDate()
+        
+        return wbUserModel
+    }
+    
     func getWeiboContentWith(weiboID id: Int) -> WBContentModel? {
         guard let managedObjectContext = managedObjectContext else{
             return nil
