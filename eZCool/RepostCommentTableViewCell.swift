@@ -15,6 +15,9 @@ class RepostCommentTableViewCell: UITableViewCell {
     @IBOutlet weak var mainText: UILabel!
     @IBOutlet weak var profileImage: UIImageView!
     
+    var weiboID: Int!
+    var wbUserID: Int!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

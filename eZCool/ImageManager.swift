@@ -19,6 +19,34 @@ class ImageManager {
         cachedWeiboImage.removeAll()
     }
     
+    func loadMiddleQualityImageFor(cell: RepostCommentTableViewCell, wbCommentContent: WBCommentContent) {
+        let wbUser = WBUser()
+        var wbPics = wbContent.pictures
+        var picWeibID :Int!
+        
+        cell.profileImage.image = nil
+        
+        cell.wbUserID = Int(wbUser.userID!)
+        
+        loadProfileImage(wbUser, forCell: cell)
+        
+        cell.weiboIDMain = Int(wbContent.wbID!)
+        
+        if let repostedWBContent = wbContent.repostContent{
+            wbPics = repostedWBContent.pictures
+            cell.weiboIDReposted = Int(repostedWBContent.wbID!)
+            picWeibID = Int(repostedWBContent.wbID!)
+        }else{
+            wbPics = wbContent.pictures
+            picWeibID = Int(wbContent.wbID!)
+        }
+        
+        for picModel in (wbPics?.allObjects as? [WBPictureModel])! {
+            cell.originalImageCollection[Int(picModel.index!)].image = UIImage(named: "timeline_icon_photo")
+            loadWeiboImage(picModel, picWeiboID: picWeibID, weiboIDMain: Int(wbContent.wbID!), forCell: cell)
+        }
+    }
+    
     func loadMiddleQualityImageFor(cell: TimeLineTypeCell, wbContent: WBContentModel) {
         let wbUser = wbContent.belongToWBUser!
         var wbPics = wbContent.pictures

@@ -9,7 +9,7 @@
 import UIKit
 
 class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CellContentClickedCallback {
-
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var floatingViewTopPadConstraint: NSLayoutConstraint!
     
@@ -19,9 +19,12 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     let userDefault = UserDefaults()
     var repostWeibos = [WBContentModel]()
+    var wbComments = [WBCommentContent]()
     
     var cacheTool: CacheTool!
     var imageManager: ImageManager!
+    
+    var showComments = true
     
     var index: Int!
     var weiboID: Int!
@@ -46,7 +49,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         tableView.registerNib(UINib.init(nibName: "TimeLineTypeCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "timelineTypeCell")
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -57,7 +60,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
         getCountOfRepostsComments()
         commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
-//        getRepostsTimeline()
         getCommentsTimeline()
     }
     
@@ -107,21 +109,21 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             try WeiboAccessTool().getRepostsTimelineWith(weiboID){
                 do {
                     let jsonResult = try $0()
-                   
+                    
                     parseJSON().parseRepostTimelineJSON(jsonResult)
                     
-                    if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
-                        if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
-                            self.repostWeibos = repostWeibos.sort(){
-                                if $0.createdDate!.compare($1.createdDate!).rawValue < 0 {
-                                    return  true
+                    dispatch_async(dispatch_get_main_queue(), {
+                        if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
+                            if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
+                                self.repostWeibos = repostWeibos.sort(){
+                                    if $0.createdDate!.compare($1.createdDate!).rawValue < 0 {
+                                        return  true
+                                    }
+                                    return false
                                 }
-                                return false
                             }
                         }
-                    }
-                    
-                     dispatch_async(dispatch_get_main_queue(), {
+                        
                         self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
                     })
                     
@@ -141,22 +143,11 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                 do {
                     let jsonResult = try $0()
                     
-//                    parseJSON().parseCommentsTimelineJSON(jsonResult)
+                    self.wbComments = parseJSON().parseCommentsTimelineJSON(jsonResult)
                     
-//                    if let repostWeibo = DatabaseProcessCenter().isWeiboHasBeenCreated(self.weiboID){
-//                        if let repostWeibos = repostWeibo.beReposted?.allObjects as? [WBContentModel] {
-//                            self.repostWeibos = repostWeibos.sort(){
-//                                if $0.createdDate!.compare($1.createdDate!).rawValue < 0 {
-//                                    return  true
-//                                }
-//                                return false
-//                            }
-//                        }
-//                    }
-//                    
-//                    dispatch_async(dispatch_get_main_queue(), {
-//                        self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
-//                    })
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
+                    })
                     
                 }catch{
                     print(error)
@@ -184,7 +175,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         vc.weiboID = weiboID
         vc.cacheTool = cacheTool
         vc.imageManager = imageManager
-
+        
         self.showViewController(vc, sender: nil)
     }
     
@@ -202,7 +193,12 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         if section < 2 {
             return 1
         }else{
-           return repostWeibos.count
+            if showComments {
+                return wbComments.count
+            }else{
+                
+                return repostWeibos.count
+            }
         }
     }
     
@@ -224,12 +220,21 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCellWithIdentifier("floatViewCell", forIndexPath: indexPath)
-                // Configure the cell...
+            // Configure the cell...
             return cell
         }else if indexPath.section == 2 {
             if let cell = tableView.dequeueReusableCellWithIdentifier("repostCommentCell", forIndexPath: indexPath) as? RepostCommentTableViewCell {
-                cell.name.text = repostWeibos[indexPath.row].belongToWBUser!.name
-                cell.mainText.text = repostWeibos[indexPath.row].text
+                if showComments {
+                    cell.name.text = wbComments[indexPath.row].user!.name
+                    cell.mainText.text = wbComments[indexPath.row].text
+                    cell.weiboID = wbComments[indexPath.row].id
+                    cell.wbUserID = wbComments[indexPath.row].user!.id
+                }else{
+                    cell.name.text = repostWeibos[indexPath.row].belongToWBUser!.name
+                    cell.mainText.text = repostWeibos[indexPath.row].text
+                    cell.weiboID = Int(repostWeibos[indexPath.row].wbID!)
+                    cell.wbUserID = Int(repostWeibos[indexPath.row].belongToWBUser!.userID!)
+                }
                 return cell
             }
         }
@@ -247,6 +252,13 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                 print(error)
             }
         }
+        
+        if let cell = cell as? RepostCommentTableViewCell {
+            if showComments {
+                imageManager.loadMiddleQualityImageFor(cell, wbCommentContent: wbComments[indexPath.row])
+            }
+        }
+
         if indexPath.section == 1 {
             weiboContentHeight = cell.frame.origin.y + cell.frame.height - 37
         }
@@ -262,8 +274,32 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         weiboScrollOffset = tableView.contentOffset.y
     }
     
+    @IBAction func repostButtonClicked(sender: UIButton) {
+        if showComments {
+            showComments = false
+            commentButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+            repostButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
+            getRepostsTimeline()
+        }
+        
+    }
+    
+    @IBAction func commentButtonClicked(sender: UIButton) {
+        if !showComments {
+            showComments = true
+            commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
+            repostButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+            
+            getCommentsTimeline()
+        }
+        
+    }
+    
+    @IBAction func likesButtonClicked(sender: UIButton) {
+    }
+    
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
@@ -273,5 +309,5 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             dest.imageViewSegueData = imageViewSegueData
         }
     }
-
+    
 }
