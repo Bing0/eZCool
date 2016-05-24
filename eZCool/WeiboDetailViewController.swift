@@ -29,6 +29,9 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     var index: Int!
     var weiboID: Int!
     
+    let threshold: CGFloat = 1000.0 // threshold from bottom of tableView
+    var isLoadingMore = false // flag
+    
     var _weiboContentHeight: CGFloat!
     var weiboContentHeight: CGFloat! {
         set{
@@ -145,6 +148,34 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
                     let jsonResult = try $0()
                     
                     self.wbComments = parseJSON().parseCommentsTimelineJSON(jsonResult)
+                    print(self.wbComments.count)
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
+                    })
+                    
+                }catch{
+                    print(error)
+                }
+            }
+        }catch{
+            print(error)
+        }
+    }
+    
+    func getCommentsLaterTimeline() {
+        guard let maxWeiboID = wbComments.last?.id else {
+            return
+        }
+        do {
+            try WeiboAccessTool().getCommentsTimelineOf(weiboID, maxWeiboID: maxWeiboID){
+                do {
+                    let jsonResult = try $0()
+                    
+                    let wbComments = parseJSON().parseCommentsTimelineJSON(jsonResult)
+                    print(wbComments.count)
+                    
+                    self.wbComments += wbComments
                     
                     dispatch_async(dispatch_get_main_queue(), {
                         self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
@@ -273,6 +304,48 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         weiboScrollOffset = tableView.contentOffset.y
+        
+        let contentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+        
+        if !isLoadingMore && (maximumOffset - contentOffset <= threshold) {
+            
+            guard let maxWeiboID = wbComments.last?.id else {
+                return
+            }
+            
+            isLoadingMore = true
+            
+            do {
+                try WeiboAccessTool().getCommentsTimelineOf(weiboID, maxWeiboID: maxWeiboID){
+                    do {
+                        let jsonResult = try $0()
+                        
+                        let wbComments = parseJSON().parseCommentsTimelineJSON(jsonResult)
+                        print(wbComments.count)
+                        
+                        if wbComments.count <= 1 {
+                            return
+                        }
+                        
+                        self.wbComments += wbComments
+                        
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
+                            self.isLoadingMore = false
+                        })
+                        
+                    }catch{
+                        print(error)
+                        self.isLoadingMore = false
+                    }
+                }
+            }catch{
+                print(error)
+                isLoadingMore = false
+            }
+        }
+        
     }
     
     @IBAction func repostButtonClicked(sender: UIButton) {

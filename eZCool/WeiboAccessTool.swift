@@ -121,6 +121,26 @@ class WeiboAccessTool {
         }
     }
     
+    func getCommentsTimelineOf(weiboID: Int, maxWeiboID: Int, callback: (getJSONResult: () throws -> NSDictionary) -> Void) throws {
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/comments/show.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "id" : "\(weiboID)", "max_id" : "\(maxWeiboID)"])
+        do {
+            try HttpTool().httpRequestWith(urlPath) {
+                do{
+                    switch try $0() {
+                    case .Dictionary(let jsonResult):
+                        callback(getJSONResult: { return jsonResult })
+                    default:
+                        callback(getJSONResult: { throw WeiboAccessError.NotNSDictionaryFormat } )
+                    }
+                }catch{
+                    callback(getJSONResult: { throw error } )
+                }
+            }
+        }catch{
+            throw error
+        }
+    }
+    
     
     //    func getWeiboByID(weiboID: String){
     //        let urlPath: String = "https://api.weibo.com/2/statuses/show.json?access_token=\(userDefault.wbtoken!)&id=\(weiboID)"

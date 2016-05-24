@@ -19,13 +19,12 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     // MARK: - Variable
     
     private let cacheTool = CacheTool()
-
+    
     private let imageManager = ImageManager()
     
     private var prototypeCell :TimeLineTypeCell!
     
     let threshold: CGFloat = 1000.0 // threshold from bottom of tableView
-    
     var isLoadingMore = false // flag
     
     private var newWeiboCount = 0 {
@@ -49,7 +48,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         tableView.registerNib(UINib.init(nibName: "BottomBarCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "bottomBarCell")
         
         prototypeCell = tableView.dequeueReusableCellWithIdentifier("timelineTypeCell") as! TimeLineTypeCell
-
+        
         tableView.tableFooterView = UIView()
         
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -57,11 +56,11 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         
         self.refreshControl?.addTarget(self, action: #selector(TimeLineTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
     }
-
+    
     func handleRefresh(refreshControl: UIRefreshControl) {
         // Do some reloading of data and update the table view's data source
         // Fetch more objects from a web service, for example...
-
+        self.isLoadingMore = false
         do {
             try WeiboAccessTool().getNewestTimeline(){
                 do {
@@ -207,7 +206,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         
         if !isLoadingMore && (maximumOffset - contentOffset <= threshold) {
             // Get more data - API call
-            self.isLoadingMore = true
+            isLoadingMore = true
             
             do {
                 try WeiboAccessTool().getLaterTimeline(){
@@ -215,7 +214,11 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
                         let jsonResult = try $0()
                         
                         let number = parseJSON().parseHomeLaterTimelineJSON(jsonResult)
-                        print("get \(number) weibo")
+                        
+                        if number <= 1 {
+                            return
+                        }
+                        
                         dispatch_async(dispatch_get_main_queue()) {
                             self.tableView.reloadData()
                             self.isLoadingMore = false
@@ -227,7 +230,7 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
                 }
             }catch{
                 print(error)
-                self.isLoadingMore = false
+                isLoadingMore = false
             }
         }
     }
@@ -268,17 +271,17 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
      */
     
     
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
         if let dest = segue.destinationViewController as? PageViewController {
             let imageViewSegueData = sender as! ImageViewSegueData
             dest.imageViewSegueData = imageViewSegueData
         }
-     }
+    }
 }
 
 

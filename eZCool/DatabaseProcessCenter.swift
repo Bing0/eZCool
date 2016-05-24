@@ -111,7 +111,7 @@ class DatabaseProcessCenter :NSObject{
                 i += 1
                 MOC.deleteObject(wbContentModel)
             }
-            print("\(i) deleted \n")
+            print("\(i) history deleted \n")
             
             do {
                 try MOC.save()
@@ -119,7 +119,7 @@ class DatabaseProcessCenter :NSObject{
                 fatalError("Failure to save context: \(error)")
             }
         }
-        printuser()
+//        printuser()
     }
     
     func clearWeiboOlderThan1Day() {
@@ -147,11 +147,20 @@ class DatabaseProcessCenter :NSObject{
             
             var i = 0
             
-            for wbContentModel in wbContentModels {
+            enuma: for wbContentModel in wbContentModels {
+                if let beReposteds = wbContentModel.beReposted?.allObjects as? [WBContentModel] {
+                    for beReposted in beReposteds {
+                        let createTime = beReposted.createdDate
+                        if createTime!.compare(date) == NSComparisonResult.OrderedDescending {
+                            continue enuma
+                        }
+                    }
+                }
+                
                 i += 1
                 MOC.deleteObject(wbContentModel)
             }
-            print("\(i) deleted \n")
+            print("\(i) old deleted \n")
             
             do {
                 try MOC.save()
@@ -159,7 +168,7 @@ class DatabaseProcessCenter :NSObject{
                 fatalError("Failure to save context: \(error)")
             }
         }
-        printuser()
+//        printuser()
     }
     
     
