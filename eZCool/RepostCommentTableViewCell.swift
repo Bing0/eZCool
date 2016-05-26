@@ -23,6 +23,14 @@ class RepostCommentTableViewCell: UITableViewCell {
         // Initialization code
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.contentView.layoutIfNeeded()
+
+        self.mainText.preferredMaxLayoutWidth = self.mainText.frame.width
+    }
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

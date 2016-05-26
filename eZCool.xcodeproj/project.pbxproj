@@ -234,12 +234,12 @@
 		D7D047821CD43531008DCC7D /* eZCool */ = {
 			isa = PBXGroup;
 			children = (
-				D758D6751CECB09B0077D492 /* Tools */,
 				D7D047E41CD46C3E008DCC7D /* MainViewController.swift */,
 				D7D047E81CD47DE0008DCC7D /* TimeLineTableViewController.swift */,
 				C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */,
 				D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */,
 				D77DA51A1CE869F4000D1153 /* RepostCommentTableViewCell.swift */,
+				D758D6751CECB09B0077D492 /* Tools */,
 				C20025B91CE081E700587B64 /* ReuseCell */,
 				C2BBE3191CDC63FA003C2D89 /* JSONFormat */,
 				C2BBE3181CDC63A7003C2D89 /* ImageBrower */,
@@ -335,7 +335,7 @@
 				TargetAttributes = {
 					D7D0477F1CD43531008DCC7D = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = JG7P2QYPN7;
+						DevelopmentTeam = KU7YA4FSNW;
 					};
 				};
 			};
@@ -538,6 +538,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = eZCool/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -548,6 +549,7 @@
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = Bingo.eZCool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "eZCool/eZCool-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -559,6 +561,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = eZCool/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -569,6 +572,7 @@
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = Bingo.eZCool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "eZCool/eZCool-Bridging-Header.h";
 			};
 			name = Release;

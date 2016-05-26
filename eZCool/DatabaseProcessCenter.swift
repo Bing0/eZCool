@@ -137,6 +137,8 @@ class DatabaseProcessCenter :NSObject{
             
             var wbContentModels = [WBContentModel]()
             
+            
+            
             do{
                 wbContentModels = try MOC.executeFetchRequest(request) as! [WBContentModel]
             }catch{
@@ -145,22 +147,30 @@ class DatabaseProcessCenter :NSObject{
                 abort()
             }
             
-            var i = 0
-            
-            enuma: for wbContentModel in wbContentModels {
-                if let beReposteds = wbContentModel.beReposted?.allObjects as? [WBContentModel] {
-                    for beReposted in beReposteds {
-                        let createTime = beReposted.createdDate
-                        if createTime!.compare(date) == NSComparisonResult.OrderedDescending {
-                            continue enuma
+            if wbContentModels.count < 50 {
+                return
+            }else{
+                wbContentModels.removeRange(0 ..< 50)
+                
+                var i = 0
+                
+                enuma: for wbContentModel in wbContentModels {
+                    if let beReposteds = wbContentModel.beReposted?.allObjects as? [WBContentModel] {
+                        for beReposted in beReposteds {
+                            let createTime = beReposted.createdDate
+                            if createTime!.compare(date) == NSComparisonResult.OrderedDescending {
+                                continue enuma
+                            }
                         }
                     }
+                    
+                    i += 1
+                    MOC.deleteObject(wbContentModel)
                 }
-                
-                i += 1
-                MOC.deleteObject(wbContentModel)
+                print("\(i) old deleted \n")
+
             }
-            print("\(i) old deleted \n")
+            
             
             do {
                 try MOC.save()

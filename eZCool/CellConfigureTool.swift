@@ -124,6 +124,39 @@ class CellConfigureTool {
         }
     }
     
+    func configureWeiboContentCell(cell: RepostCommentTableViewCell, wbContent: WBContentModel) {
+        let wbUser = wbContent.belongToWBUser!
+       
+        cell.wbUserID = 0
+        
+        cell.name.text = wbUser.name
+        cell.time.text = wbContent.createdDate?.getAbsoluteTime()
+        
+        cell.profileImage.image = nil
+        
+        cell.mainText.attributedText = makeAttributedString(wbContent.text ?? "")
+    }
+    
+    func configureWeiboContentCell(cell: RepostCommentTableViewCell, wbComentContent: WBCommentContent) {
+        let wbUser = wbComentContent.user!
+        
+        cell.wbUserID = 0
+        
+        cell.name.text = wbUser.name
+        
+        let dateFormatterFromJSON = NSDateFormatter()
+    
+        dateFormatterFromJSON.dateFormat = "EEE MMM dd HH:mm:ss Z yyyy"
+        dateFormatterFromJSON.locale = NSLocale(localeIdentifier: "en_US")
+
+        cell.time.text = dateFormatterFromJSON.dateFromString(wbComentContent.created_at)!.getAbsoluteTime()
+        
+        cell.profileImage.image = nil
+        
+        cell.mainText.attributedText = makeAttributedString(wbComentContent.text ?? "")
+    }
+    
+    
 //    func configureWeiboContentCell(cell: TimeLineTypeCell, index: Int) {
 //        let wbContent = weiboContent[index]
 //        configureWeiboContentCell(cell, wbContent: wbContent)
@@ -166,4 +199,49 @@ class CellConfigureTool {
             return size.height
         }
     }
+    
+    func estimateCellHeight(framWidth: CGFloat,cell: RepostCommentTableViewCell, wbContent: WBContentModel) -> CGFloat {
+        
+        configureWeiboContentCell(cell, wbContent: wbContent)
+        
+        cell.setNeedsUpdateConstraints()
+        cell.updateConstraintsIfNeeded()
+        
+        cell.bounds = CGRectMake(0, 0,framWidth, cell.bounds.height)
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
+        
+        var fittingSize = UILayoutFittingCompressedSize
+        fittingSize.width = cell.bounds.width
+        
+        let size = cell.contentView.systemLayoutSizeFittingSize(fittingSize, withHorizontalFittingPriority: 1000, verticalFittingPriority: 250)
+        
+        print("width: \(size.width) height: \(size.height)")
+        
+        return size.height
+        
+    }
+    
+    func estimateCellHeight(framWidth: CGFloat,cell: RepostCommentTableViewCell, wbComentContent: WBCommentContent) -> CGFloat {
+        
+        configureWeiboContentCell(cell, wbComentContent: wbComentContent)
+        
+        cell.setNeedsUpdateConstraints()
+        cell.updateConstraintsIfNeeded()
+        
+        cell.bounds = CGRectMake(0, 0,framWidth, cell.bounds.height)
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
+        
+        var fittingSize = UILayoutFittingCompressedSize
+        fittingSize.width = cell.bounds.width
+        
+        let size = cell.contentView.systemLayoutSizeFittingSize(fittingSize, withHorizontalFittingPriority: 1000, verticalFittingPriority: 250)
+        
+        print("width: \(size.width) height: \(size.height) content: \(wbComentContent.text)")
+        
+        return size.height
+        
+    }
+    
 }

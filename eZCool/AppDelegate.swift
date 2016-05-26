@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WeiboSDKDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         WeiboSDK.enableDebugMode(true)
-        WeiboSDK.registerApp("1246717478")
+        WeiboSDK.registerApp("2999950688")
         return true
     }
 

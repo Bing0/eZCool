@@ -56,7 +56,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         // Do any additional setup after loading the view.
         tableView.registerNib(UINib.init(nibName: "TimeLineTypeCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "timelineTypeCell")
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 33
+//        tableView.estimatedRowHeight = 33
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
@@ -215,6 +215,32 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         print("profileImageClicked")
     }
     
+    // MARK: - Table view data source
+    
+    func calculateHeight(heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            do {
+                if let wbContent = try cacheTool.getWeiboContent(withIndex: index, andWeiboID: weiboID) {
+                    let prototypeCell = tableView.dequeueReusableCellWithIdentifier("timelineTypeCell") as! TimeLineTypeCell
+                    return CellConfigureTool().estimateCellHeight(self.view.bounds.width, cell: prototypeCell, wbContent: wbContent)
+                }
+            }catch{
+                print(error)
+            }
+        }else if indexPath.section == 2 {
+            if showComments {
+                let prototypeCell = tableView.dequeueReusableCellWithIdentifier("repostCommentCell") as! RepostCommentTableViewCell
+                return CellConfigureTool().estimateCellHeight(self.view.bounds.width, cell: prototypeCell, wbComentContent: wbComments[indexPath.row])
+            }else{
+                let prototypeCell = tableView.dequeueReusableCellWithIdentifier("repostCommentCell") as! RepostCommentTableViewCell
+                return CellConfigureTool().estimateCellHeight(self.view.bounds.width, cell: prototypeCell, wbContent: repostWeibos[indexPath.row])
+            }
+        }
+       
+        return 33
+    }
+    
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 3
@@ -228,7 +254,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             if showComments {
                 return wbComments.count
             }else{
-                
                 return repostWeibos.count
             }
         }
@@ -257,15 +282,9 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }else if indexPath.section == 2 {
             if let cell = tableView.dequeueReusableCellWithIdentifier("repostCommentCell", forIndexPath: indexPath) as? RepostCommentTableViewCell {
                 if showComments {
-                    cell.name.text = wbComments[indexPath.row].user!.name
-                    cell.mainText.text = wbComments[indexPath.row].text
-                    cell.weiboID = wbComments[indexPath.row].id
-                    cell.wbUserID = wbComments[indexPath.row].user!.id
+                    CellConfigureTool().configureWeiboContentCell(cell, wbComentContent: wbComments[indexPath.row])
                 }else{
-                    cell.name.text = repostWeibos[indexPath.row].belongToWBUser!.name
-                    cell.mainText.text = repostWeibos[indexPath.row].text
-                    cell.weiboID = Int(repostWeibos[indexPath.row].wbID!)
-                    cell.wbUserID = Int(repostWeibos[indexPath.row].belongToWBUser!.userID!)
+                    CellConfigureTool().configureWeiboContentCell(cell, wbContent: repostWeibos[indexPath.row])
                 }
                 return cell
             }
@@ -294,6 +313,14 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         if indexPath.section == 1 {
             weiboContentHeight = cell.frame.origin.y + cell.frame.height - 37
         }
+    }
+    
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.section == 1 {
+            return 38
+        }
+        let height = calculateHeight(heightForRowAtIndexPath: indexPath)
+        return height
     }
     
     func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
