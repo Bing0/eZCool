@@ -20,12 +20,16 @@ enum RetunType {
 
 class HttpTool {
     
-    func httpRequestWith(urlPath: String, callback: (getResult: () throws -> RetunType) -> Void) throws {
+    func httpRequestWith(urlPath: String, httpMethod: String, httpBody: String, callback: (getResult: () throws -> RetunType) -> Void) throws {
         
         guard let url = (NSURL(string: urlPath)) else{
             throw HttpTooLError.WrongURL
         }
-        let request: NSURLRequest = NSURLRequest(URL: url)
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = httpMethod
+        if httpMethod == "POST" {
+            request.HTTPBody = httpBody.dataUsingEncoding(NSUTF8StringEncoding)
+        }
         
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue()) { (response, data, error) in
             guard let data = data else {

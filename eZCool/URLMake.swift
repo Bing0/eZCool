@@ -9,7 +9,8 @@
 import Foundation
 
 class URLMake {
-    func makeURL(mainURL: String, suffix: [String: String]) -> String {
+    func makeURL(mainURL: String, suffix: [(String, String)]) -> String {
+        
         var wholeSuffix = ""
         for (key, value) in suffix {
             wholeSuffix += "&\(key)=\(value)"
@@ -19,4 +20,13 @@ class URLMake {
         
         return mainURL + wholeSuffix
     }
+    
+    func makeHttpbody(parameters: [(String, String)]) -> String {
+        var wholeSuffix = ""
+        for (key, value) in parameters {
+            wholeSuffix += "&\(key)=\(value)"
+        }
+        return wholeSuffix
+    }
+    
 }

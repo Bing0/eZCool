@@ -375,7 +375,20 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
-    @IBAction func repostButtonClicked(sender: UIButton) {
+    @IBAction func repost(sender: UIButton) {
+        print("repost")
+    }
+    
+    @IBAction func comment(sender: UIButton) {
+        print("comment")
+    }
+    
+    @IBAction func like(sender: UIButton) {
+        print("like")
+    }
+    
+    
+    @IBAction func getReposts(sender: UIButton) {
         if showComments {
             showComments = false
             commentButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
@@ -385,7 +398,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
-    @IBAction func commentButtonClicked(sender: UIButton) {
+    @IBAction func getComments(sender: UIButton) {
         if !showComments {
             showComments = true
             commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
@@ -396,7 +409,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
-    @IBAction func likesButtonClicked(sender: UIButton) {
+    @IBAction func getLikes(sender: UIButton) {
     }
     
     // MARK: - Navigation
@@ -408,6 +421,18 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         if let dest = segue.destinationViewController as? PageViewController {
             let imageViewSegueData = sender as! ImageViewSegueData
             dest.imageViewSegueData = imageViewSegueData
+        }else if segue.identifier == "goComment" {
+            let dest = segue.destinationViewController as! RepostCommentViewController
+            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! TimeLineTypeCell
+            dest.weiboID = weiboID
+            dest.originalContentAttributedString = cell.mainText.attributedText
+            dest.isComment = true
+        }else if segue.identifier == "goRepost" {
+            let dest = segue.destinationViewController as! RepostCommentViewController
+            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! TimeLineTypeCell
+            dest.weiboID = weiboID
+            dest.originalContentAttributedString = cell.mainText.attributedText
+            dest.isComment = false
         }
     }
     

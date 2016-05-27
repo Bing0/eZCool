@@ -18,10 +18,10 @@ class WeiboAccessTool {
     private let userDefault = UserDefaults()
     
     func getNewestTimeline(callback: (getJSONResult: () throws -> NSDictionary) -> Void ) throws {
-        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/home_timeline.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "since_id" : "\(userDefault.sinceID)"])
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/home_timeline.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("since_id" , "\(userDefault.sinceID)")])
         
         do {
-            try HttpTool().httpRequestWith(urlPath) {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "GET", httpBody: "") {
                 do{
                     switch try $0() {
                     case .Dictionary(let jsonResult):
@@ -39,10 +39,10 @@ class WeiboAccessTool {
     }
     
     func getLaterTimeline(callback: (getJSONResult: () throws -> NSDictionary) -> Void ) throws {
-        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/home_timeline.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "max_id" : "\(userDefault.maxID)"])
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/home_timeline.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("max_id" , "\(userDefault.maxID)")])
         
         do {
-            try HttpTool().httpRequestWith(urlPath) {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "GET", httpBody: "") {
                 do{
                     switch try $0() {
                     case .Dictionary(let jsonResult):
@@ -60,9 +60,9 @@ class WeiboAccessTool {
     }
     
     func getRepostsCommentsCountsOf(weiboID: Int, callback: (getJSONResult: () throws -> [[String: AnyObject]]) -> Void ) throws {
-       let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/count.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "ids" : "\(weiboID)"])
+       let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/count.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("ids" , "\(weiboID)")])
         do {
-            try HttpTool().httpRequestWith(urlPath) {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "GET", httpBody: "") {
                 do{
                     switch try $0() {
                     case .Arrary(let jsonResult):
@@ -81,9 +81,9 @@ class WeiboAccessTool {
     
     
     func getRepostsTimelineWith(weiboID: Int, callback: (getJSONResult: () throws -> NSDictionary) -> Void) throws {
-        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/repost_timeline.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "id" : "\(weiboID)"])
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/repost_timeline.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("id" , "\(weiboID)")])
         do {
-            try HttpTool().httpRequestWith(urlPath) {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "GET", httpBody: "") {
                 do{
                     switch try $0() {
                     case .Dictionary(let jsonResult):
@@ -102,9 +102,9 @@ class WeiboAccessTool {
     
    
     func getCommentsTimelineOf(weiboID: Int, callback: (getJSONResult: () throws -> NSDictionary) -> Void) throws {
-        let urlPath = URLMake().makeURL("https://api.weibo.com/2/comments/show.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "id" : "\(weiboID)"])
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/comments/show.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("id" , "\(weiboID)")])
         do {
-            try HttpTool().httpRequestWith(urlPath) {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "GET", httpBody: "") {
                 do{
                     switch try $0() {
                     case .Dictionary(let jsonResult):
@@ -122,9 +122,9 @@ class WeiboAccessTool {
     }
     
     func getCommentsTimelineOf(weiboID: Int, maxWeiboID: Int, callback: (getJSONResult: () throws -> NSDictionary) -> Void) throws {
-        let urlPath = URLMake().makeURL("https://api.weibo.com/2/comments/show.json", suffix: ["access_token" : "\(userDefault.wbtoken!)", "id" : "\(weiboID)", "max_id" : "\(maxWeiboID)"])
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/comments/show.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("id" , "\(weiboID)"), ("max_id" , "\(maxWeiboID)")])
         do {
-            try HttpTool().httpRequestWith(urlPath) {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "GET", httpBody: "") {
                 do{
                     switch try $0() {
                     case .Dictionary(let jsonResult):
@@ -166,5 +166,49 @@ class WeiboAccessTool {
     //        }
     //    }
     
+    func sendWeiboComment(toWeiboID weiboID: Int, comment: String, callback: (getJSONResult: () throws -> NSDictionary) -> Void ) throws {
+        let urlPath = "https://api.weibo.com/2/comments/create.json"
+        let httpBody = URLMake().makeHttpbody([("access_token" , "\(userDefault.wbtoken!)"), ("comment" , "\(comment.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)"), ("id" , "\(weiboID)")])
+        
+        do {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "POST", httpBody: httpBody) {
+                do{
+                    switch try $0() {
+                    case .Dictionary(let jsonResult):
+                        callback(getJSONResult: { return jsonResult })
+                    default:
+                        callback(getJSONResult: { throw WeiboAccessError.NotNSDictionaryFormat } )
+                    }
+                }catch{
+                    callback(getJSONResult: { throw error } )
+                }
+            }
+        }catch{
+            throw error
+        }
+        
+    }
+    
+    func repostWeibo(weiboID: Int, status: String, callback: (getJSONResult: () throws -> NSDictionary) -> Void ) throws {
+        let urlPath = "https://api.weibo.com/2/statuses/repost.json"
+        let httpBody = URLMake().makeHttpbody([("access_token" , "\(userDefault.wbtoken!)"), ("id" , "\(weiboID)"), ("status" , "\(status.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!)")])
+        
+        do {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "POST", httpBody: httpBody) {
+                do{
+                    switch try $0() {
+                    case .Dictionary(let jsonResult):
+                        callback(getJSONResult: { return jsonResult })
+                    default:
+                        callback(getJSONResult: { throw WeiboAccessError.NotNSDictionaryFormat } )
+                    }
+                }catch{
+                    callback(getJSONResult: { throw error } )
+                }
+            }
+        }catch{
+            throw error
+        }
+    }
     
 }

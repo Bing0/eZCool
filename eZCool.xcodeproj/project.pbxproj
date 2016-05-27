@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3450D72C1CF7E470005CA37A /* RepostCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3450D72B1CF7E470005CA37A /* RepostCommentViewController.swift */; };
 		C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20025B21CE07F6500587B64 /* TimeLineTypeCell.swift */; };
 		C20025B61CE080E000587B64 /* TimeLineTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20025B81CE080E000587B64 /* TimeLineTypeCell.xib */; };
 		C2BBE3131CDC448B003C2D89 /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */; };
@@ -56,6 +57,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3450D72B1CF7E470005CA37A /* RepostCommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepostCommentViewController.swift; sourceTree = "<group>"; };
 		C20025B21CE07F6500587B64 /* TimeLineTypeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineTypeCell.swift; sourceTree = "<group>"; };
 		C20025B71CE080E000587B64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TimeLineTypeCell.xib; sourceTree = "<group>"; };
 		C2BBE3121CDC448B003C2D89 /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Gif.swift"; path = "eZCool/UIImage+Gif.swift"; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				C2BBE3141CDC62DB003C2D89 /* WeiboDetailViewController.swift */,
 				D7D047EA1CD47F0E008DCC7D /* UserProfileViewController.swift */,
 				D77DA51A1CE869F4000D1153 /* RepostCommentTableViewCell.swift */,
+				3450D72B1CF7E470005CA37A /* RepostCommentViewController.swift */,
 				D758D6751CECB09B0077D492 /* Tools */,
 				C20025B91CE081E700587B64 /* ReuseCell */,
 				C2BBE3191CDC63FA003C2D89 /* JSONFormat */,
@@ -380,6 +383,7 @@
 			files = (
 				D7D047E71CD47CFA008DCC7D /* UserDefaults.swift in Sources */,
 				D7155D231CD6F182009D8726 /* WBUserModel+CoreDataProperties.swift in Sources */,
+				3450D72C1CF7E470005CA37A /* RepostCommentViewController.swift in Sources */,
 				D77DA51B1CE869F4000D1153 /* RepostCommentTableViewCell.swift in Sources */,
 				D758D67F1CEE10B40077D492 /* ImageManager.swift in Sources */,
 				C20025B41CE07F6500587B64 /* TimeLineTypeCell.swift in Sources */,
@@ -484,7 +488,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -524,7 +528,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

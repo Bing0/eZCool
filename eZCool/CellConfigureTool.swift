@@ -216,7 +216,7 @@ class CellConfigureTool {
         
         let size = cell.contentView.systemLayoutSizeFittingSize(fittingSize, withHorizontalFittingPriority: 1000, verticalFittingPriority: 250)
         
-        print("width: \(size.width) height: \(size.height)")
+//        print("width: \(size.width) height: \(size.height)")
         
         return size.height
         
@@ -238,7 +238,7 @@ class CellConfigureTool {
         
         let size = cell.contentView.systemLayoutSizeFittingSize(fittingSize, withHorizontalFittingPriority: 1000, verticalFittingPriority: 250)
         
-        print("width: \(size.width) height: \(size.height) content: \(wbComentContent.text)")
+//        print("width: \(size.width) height: \(size.height) content: \(wbComentContent.text)")
         
         return size.height
         
