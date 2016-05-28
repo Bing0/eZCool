@@ -312,7 +312,7 @@ class DatabaseProcessCenter :NSObject{
         wbUserModel.userID = wbUser.id
         wbUserModel.profileURL = wbUser.profile_url
         wbUserModel.createdDate = dateFormatterFromJSON.dateFromString( wbUser.created_at)
-        wbUserModel.avatarHDURL = wbUser.avatar_hd
+        wbUserModel.avatarHDURL = wbUser.avatar_large
         wbUserModel.isVerified = wbUser.verified
         wbUserModel.name = wbUser.name
         wbUserModel.screenName = wbUser.screen_name

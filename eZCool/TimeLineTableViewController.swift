@@ -14,6 +14,13 @@ class ImageViewSegueData {
     var sourceImageView =  UIImageView()
 }
 
+class FastRepostComentSegueData {
+    var weiboID = 0
+    var isComment: Bool!
+    var originalContentAttributedString: NSAttributedString!
+    var preTypredAttributedString: NSAttributedString!
+}
+
 class TimeLineTableViewController: UITableViewController, CellContentClickedCallback{
     
     // MARK: - Variable
@@ -55,6 +62,8 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         
         self.refreshControl?.addTarget(self, action: #selector(TimeLineTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        
+        updateUserImage()
     }
     
     func handleRefresh(refreshControl: UIRefreshControl) {
@@ -82,6 +91,30 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         }catch{
             print(error)
             refreshControl.endRefreshing()
+        }
+    }
+    
+    func updateUserImage() {
+        do {
+            try WeiboAccessTool().getUserInfo(byUid: Int(UserDefaults().wbCurrentUserID!)!) {
+                do {
+                    let jsonResult = try $0()
+                    let avatar_large = jsonResult["avatar_large"] as! String
+                    let imageData = ImageManager().downloadWeiboImage(avatar_large)
+                    
+                    dispatch_async(dispatch_get_main_queue()){
+                        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+                        imageView.contentMode = .ScaleAspectFit
+                        imageView.image = UIImage(data: imageData!)
+                        
+                        self.navigationItem.titleView = imageView
+                    }
+                }catch{
+                    
+                }
+            }
+        }catch{
+            print(error)
         }
     }
     
@@ -113,7 +146,44 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
     }
     
     func profileImageClicked(weiboID: Int, index: Int) {
+        
+        
         print("profileImageClicked")
+    }
+    
+    
+    func fastCommentClicked(weiboID: Int, index: Int) {
+        do {
+            let wbContent = try cacheTool.getWeiboContent(withIndex: index, andWeiboID: weiboID)
+            let segueData = FastRepostComentSegueData()
+            segueData.weiboID = weiboID
+            segueData.originalContentAttributedString = CellConfigureTool().makeAttributedString(wbContent!.text!)
+            segueData.isComment = true
+            performSegueWithIdentifier("fastRepostComment", sender: segueData)
+        }catch {
+            print(error)
+        }
+    }
+    
+    func fastRepostClicked(weiboID: Int, index: Int) {
+        do {
+            let wbContent = try cacheTool.getWeiboContent(withIndex: index, andWeiboID: weiboID)
+            let segueData = FastRepostComentSegueData()
+            if wbContent!.repostContent == nil {
+                segueData.weiboID = weiboID
+                segueData.originalContentAttributedString = CellConfigureTool().makeAttributedString(wbContent!.text!)
+                segueData.isComment = false
+                segueData.preTypredAttributedString = NSAttributedString()
+            }else{
+                segueData.weiboID = weiboID
+                segueData.originalContentAttributedString = CellConfigureTool().makeAttributedString(wbContent!.repostContent!.text!)
+                segueData.isComment = false
+                segueData.preTypredAttributedString = CellConfigureTool().makeAttributedString("//@\(wbContent!.belongToWBUser!.name!):" + wbContent!.text!)
+            }
+            performSegueWithIdentifier("fastRepostComment", sender: segueData)
+        }catch {
+            print(error)
+        }
     }
     
     // MARK: - Table view data source
@@ -159,9 +229,12 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
             if let cell = tableView.dequeueReusableCellWithIdentifier("bottomBarCell", forIndexPath: indexPath) as? BottomBarCell {
                 // Configure the cell...
                 cell.callbackDelegate = self
+                cell.index = indexPath.section
+                
                 do {
                     let wbContent = try cacheTool.getWeiboContent(withIndex: indexPath.section)
                     CellConfigureTool().configureWeiboBottomBarCell(cell, wbContent: wbContent)
+                    cell.weiboID =  Int(wbContent.wbID!)
                 }catch{
                     print(error)
                 }
@@ -280,6 +353,19 @@ class TimeLineTableViewController: UITableViewController, CellContentClickedCall
         if let dest = segue.destinationViewController as? PageViewController {
             let imageViewSegueData = sender as! ImageViewSegueData
             dest.imageViewSegueData = imageViewSegueData
+        }else if segue.identifier == "fastRepostComment" {
+            let segueData = sender as! FastRepostComentSegueData
+            let dest = segue.destinationViewController as! RepostCommentViewController
+            if segueData.isComment == true{
+                dest.weiboID = segueData.weiboID
+                dest.originalContentAttributedString = segueData.originalContentAttributedString
+                dest.isComment = true
+            }else{
+                dest.weiboID = segueData.weiboID
+                dest.originalContentAttributedString = segueData.originalContentAttributedString
+                dest.isComment = false
+                dest.preTypredAttributedString = segueData.preTypredAttributedString
+            }
         }
     }
 }

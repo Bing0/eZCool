@@ -46,6 +46,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     var weiboScrollOffset: CGFloat!{
         willSet{
+            print("\(weiboContentHeight) \(newValue)")
             floatingViewTopPadConstraint.constant = max(0, weiboContentHeight - newValue)
         }
     }
@@ -62,14 +63,24 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
         tableView.showsVerticalScrollIndicator = false
         
-        getCountOfRepostsComments()
-        commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
-        getCommentsTimeline()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if showComments {
+            getCountOfRepostsComments()
+            commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
+            getCommentsTimeline()
+        }else{
+            getCountOfRepostsComments()
+            repostButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
+            getRepostsTimeline()
+        }
     }
     
     func getCountOfRepostsComments(){
@@ -393,6 +404,7 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             showComments = false
             commentButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
             repostButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
+            self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
             getRepostsTimeline()
         }
         
@@ -403,10 +415,9 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             showComments = true
             commentButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Normal)
             repostButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-            
+            self.tableView.reloadSections(NSIndexSet.init(index: 2), withRowAnimation: UITableViewRowAnimation.None)
             getCommentsTimeline()
         }
-        
     }
     
     @IBAction func getLikes(sender: UIButton) {
@@ -423,16 +434,33 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
             dest.imageViewSegueData = imageViewSegueData
         }else if segue.identifier == "goComment" {
             let dest = segue.destinationViewController as! RepostCommentViewController
-            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! TimeLineTypeCell
-            dest.weiboID = weiboID
-            dest.originalContentAttributedString = cell.mainText.attributedText
-            dest.isComment = true
+            do {
+                let wbContent = try cacheTool.getWeiboContent(withIndex: index, andWeiboID: weiboID)
+                dest.weiboID = weiboID
+                dest.originalContentAttributedString = CellConfigureTool().makeAttributedString(wbContent!.text!)
+                dest.isComment = true
+            }catch {
+                print(error)
+            }
         }else if segue.identifier == "goRepost" {
             let dest = segue.destinationViewController as! RepostCommentViewController
-            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! TimeLineTypeCell
-            dest.weiboID = weiboID
-            dest.originalContentAttributedString = cell.mainText.attributedText
-            dest.isComment = false
+            do {
+                let wbContent = try cacheTool.getWeiboContent(withIndex: index, andWeiboID: weiboID)
+                if wbContent!.repostContent == nil {
+                    dest.weiboID = weiboID
+                    dest.originalContentAttributedString = CellConfigureTool().makeAttributedString(wbContent!.text!)
+                    dest.isComment = false
+                    dest.preTypredAttributedString = NSAttributedString()
+                }else{
+                    dest.weiboID = weiboID
+                    dest.originalContentAttributedString = CellConfigureTool().makeAttributedString(wbContent!.repostContent!.text!)
+                    dest.isComment = false
+                    dest.preTypredAttributedString = CellConfigureTool().makeAttributedString("//@\(wbContent!.belongToWBUser!.name!):" + wbContent!.text!)
+                }
+                
+            }catch {
+                print(error)
+            }
         }
     }
     

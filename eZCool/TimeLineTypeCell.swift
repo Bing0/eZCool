@@ -17,10 +17,12 @@ enum OriginalViewStyle {
     case textWithVideo
 }
 
-protocol  CellContentClickedCallback{
+@objc protocol  CellContentClickedCallback{
     func weiboImageClicked(weiboID: Int, imageIndex: Int, sourceImageView: UIImageView)
     func cellClicked(weiboID: Int, index: Int)
     func profileImageClicked(weiboID: Int, index: Int)
+    optional func fastCommentClicked(weiboID: Int, index: Int)
+    optional func fastRepostClicked(weiboID: Int, index: Int)
 }
 
 class TimeLineTypeCell: UITableViewCell {

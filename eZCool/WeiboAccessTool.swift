@@ -17,6 +17,27 @@ class WeiboAccessTool {
     
     private let userDefault = UserDefaults()
     
+    func getUserInfo(byUid uid: Int, callback: (getJSONResult: () throws -> NSDictionary) -> Void ) throws {
+        let urlPath = URLMake().makeURL("https://api.weibo.com/2/users/show.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("uid" , "\(userDefault.wbCurrentUserID!)")])
+        
+        do {
+            try HttpTool().httpRequestWith(urlPath, httpMethod: "GET", httpBody: "") {
+                do{
+                    switch try $0() {
+                    case .Dictionary(let jsonResult):
+                        callback(getJSONResult: { return jsonResult })
+                    default:
+                        callback(getJSONResult: { throw WeiboAccessError.NotNSDictionaryFormat } )
+                    }
+                }catch{
+                    callback(getJSONResult: { throw error } )
+                }
+            }
+        }catch{
+            throw error
+        }
+    }
+    
     func getNewestTimeline(callback: (getJSONResult: () throws -> NSDictionary) -> Void ) throws {
         let urlPath = URLMake().makeURL("https://api.weibo.com/2/statuses/home_timeline.json", suffix: [("access_token" , "\(userDefault.wbtoken!)"), ("since_id" , "\(userDefault.sinceID)")])
         

@@ -14,6 +14,9 @@ class BottomBarCell: UITableViewCell {
     @IBOutlet weak var attitudeButton: UIButton!
     
     var callbackDelegate: CellContentClickedCallback!
+    var weiboID = 0
+    var index = -1
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,5 +28,11 @@ class BottomBarCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    @IBAction func fastRepost(sender: UIButton) {
+        callbackDelegate.fastRepostClicked!(weiboID, index: index)
+    }
     
+    @IBAction func fastComment(sender: UIButton) {
+        callbackDelegate.fastCommentClicked!(weiboID, index: index)
+    }
 }
