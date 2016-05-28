@@ -31,6 +31,7 @@ class TimeLineTypeCell: UITableViewCell {
     @IBOutlet weak var mainText: UILabel!
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var mainUIView: UIView!
+    @IBOutlet weak var moreButton: UIButton!
     
     @IBOutlet weak var repostedText: UILabel!
 
@@ -163,6 +164,9 @@ class TimeLineTypeCell: UITableViewCell {
         }
     }
     
+    @IBAction func moreButtonTapped(sender: UIButton) {
+        
+    }
 
     func cellTapped(sender: UITapGestureRecognizer) {
         if repostedText.bounds.contains(sender.locationInView(repostedText)) {

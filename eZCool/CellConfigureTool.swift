@@ -74,6 +74,12 @@ class CellConfigureTool {
         cell.weiboIDMain = 0
         cell.weiboIDReposted = 0
         
+        if Int(UserDefaults().wbCurrentUserID!) ==  Int(wbContent.belongToWBUser!.userID!) {
+            cell.moreButton.hidden = false
+        }else{
+            cell.moreButton.hidden = true
+        }
+        
         cell.name.text = wbUser.name
         if cell.isShownWeiboDetail {
             cell.time.text = wbContent.createdDate?.getAbsoluteTime()

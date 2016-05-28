@@ -52,13 +52,25 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fk0-Hz-hBO">
+                                <rect key="frame" x="570" y="0.0" width="30" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="⌵">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="moreButtonTapped:" destination="UO8-eh-Mdl" eventType="touchUpInside" id="guF-TG-962"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Q9L-l5-qgo" secondAttribute="bottom" id="06v-NL-T2A"/>
                             <constraint firstItem="Q9L-l5-qgo" firstAttribute="top" secondItem="rJu-1a-3ZZ" secondAttribute="bottom" constant="8" id="6AC-dW-td5"/>
+                            <constraint firstAttribute="trailing" secondItem="fk0-Hz-hBO" secondAttribute="trailing" id="H6B-E7-Rg6"/>
                             <constraint firstItem="fNU-cO-Mar" firstAttribute="bottom" secondItem="rJu-1a-3ZZ" secondAttribute="bottom" id="IKX-ot-nG2"/>
                             <constraint firstAttribute="trailing" secondItem="Q9L-l5-qgo" secondAttribute="trailing" constant="8" id="N5t-6K-c9I"/>
+                            <constraint firstItem="fk0-Hz-hBO" firstAttribute="top" secondItem="Q99-t9-aIh" secondAttribute="top" id="cmN-OQ-zIs"/>
                             <constraint firstItem="rJu-1a-3ZZ" firstAttribute="leading" secondItem="Q99-t9-aIh" secondAttribute="leading" constant="8" id="eHh-AY-Wqf"/>
                             <constraint firstItem="fNU-cO-Mar" firstAttribute="leading" secondItem="rJu-1a-3ZZ" secondAttribute="trailing" constant="8" id="eWg-VS-wTE"/>
                             <constraint firstAttribute="trailing" secondItem="fNU-cO-Mar" secondAttribute="trailing" constant="8" id="i6D-vk-ZP0"/>
@@ -189,6 +201,7 @@
             <connections>
                 <outlet property="mainText" destination="Q9L-l5-qgo" id="hEF-iA-Iys"/>
                 <outlet property="mainUIView" destination="Q99-t9-aIh" id="coP-At-03Y"/>
+                <outlet property="moreButton" destination="fk0-Hz-hBO" id="VvP-U3-Ccm"/>
                 <outlet property="name" destination="NRg-Jb-xWA" id="44h-7x-8le"/>
                 <outlet property="profileImage" destination="rJu-1a-3ZZ" id="t7F-lZ-zqo"/>
                 <outlet property="repostedText" destination="0Af-VG-5lX" id="C6d-BB-oX2"/>

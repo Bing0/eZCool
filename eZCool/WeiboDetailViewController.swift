@@ -46,7 +46,6 @@ class WeiboDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     var weiboScrollOffset: CGFloat!{
         willSet{
-            print("\(weiboContentHeight) \(newValue)")
             floatingViewTopPadConstraint.constant = max(0, weiboContentHeight - newValue)
         }
     }
